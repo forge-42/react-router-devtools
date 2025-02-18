@@ -11,7 +11,7 @@ export default defineWorkspace([
 			globals: true,
 			environment: "happy-dom",
 			exclude: ["**/node_modules/**", "**/dist/**", "**/docs/**", "**/public/**", "**/test-apps/**"],
-			setupFiles: ["../../test/setup.tsx"],
+			setupFiles: ["../../test/setup.tsx", "../../test/console.ts"],
 			css: true,
 			root: "./src/client",
 			name: "react-router-devtools/client",
@@ -35,6 +35,7 @@ export default defineWorkspace([
 		test: {
 			globals: true,
 			exclude: ["**/node_modules/**", "**/dist/**", "**/docs/**", "**/public/**", "**/test-apps/**"],
+			setupFiles: ["../../test/console.ts"],
 			environment: "happy-dom",
 			root: "./src/server",
 			name: "react-router-devtools/server",
@@ -58,6 +59,7 @@ export default defineWorkspace([
 		test: {
 			globals: true,
 			exclude: ["**/node_modules/**", "**/dist/**", "**/docs/**", "**/public/**", "**/test-apps/**"],
+			setupFiles: ["../../test/console.ts"],
 			environment: "happy-dom",
 			root: "./src/vite",
 			name: "react-router-devtools/vite",
@@ -81,6 +83,7 @@ export default defineWorkspace([
 		test: {
 			globals: true,
 			exclude: ["**/node_modules/**", "**/dist/**", "**/docs/**", "**/public/**", "**/test-apps/**"],
+			setupFiles: ["../../test/console.ts"],
 			environment: "node",
 			root: "./src/shared",
 			name: "react-router-devtools/shared",

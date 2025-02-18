@@ -161,6 +161,7 @@ describe("analyzeCache Test suite", () => {
 	})
 
 	it("should log the cache headers set by the server with a custom max age and s-maxage", () => {
+		vi.clearAllMocks()
 		const loggerSpy = vi.spyOn(console, "log")
 		const config = {
 			logs: {
@@ -171,6 +172,7 @@ describe("analyzeCache Test suite", () => {
 		const headers = new Headers()
 		headers.set("Cache-Control", "max-age=3600, s-maxage=600, private")
 		analyzeCache("test", config, headers)
+
 		expect(loggerSpy).toHaveBeenCalledTimes(2)
 		expect(loggerSpy).nthCalledWith(
 			1,
