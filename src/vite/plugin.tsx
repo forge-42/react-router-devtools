@@ -86,6 +86,22 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					throw new Error("react-router-devtools plugin has to be before the react-router plugin!")
 				}
 			},
+			config(config) {
+				config.optimizeDeps = {
+					...config.optimizeDeps,
+					include: [
+						...(config.optimizeDeps?.include ?? []),
+						"react-router-devtools > beautify",
+						"react-router-devtools > react-diff-viewer-continued",
+						"react-router-devtools > react-d3-tree",
+						"react-router-devtools > classnames",
+						"react-router-devtools > @bkrem/react-transition-group",
+						"react-router-devtools/client",
+						"react-router-devtools/context",
+						"react-router-devtools/server",
+					],
+				}
+			},
 			async transform(code, id) {
 				const isRoot = id.endsWith("/root.tsx") || id.endsWith("/root.jsx")
 				if (!isRoot) {
