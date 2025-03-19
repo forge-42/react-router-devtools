@@ -63,13 +63,13 @@
 	"files": ["dist"],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/forge42dev/react-router-devtools.git"
+		"url": "git+https://github.com/forge-42/react-router-devtools.git"
 	},
 	"bugs": {
-		"url": "https://github.com/forge42dev/react-router-devtools/issues"
+		"url": "https://github.com/forge-42/react-router-devtools/issues"
 	},
 	"homepage": "https://react-router-devtools.forge42.dev/",
-	"readme": "https://github.com/forge42dev/react-router-devtools#readme",
+	"readme": "https://github.com/forge-42/react-router-devtools#readme",
 	"scripts": {
 		"clean": "git clean -fdX --exclude=\"!.env\"",
 		"docs": "npm run dev -w docs",

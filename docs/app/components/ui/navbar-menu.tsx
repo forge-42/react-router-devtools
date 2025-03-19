@@ -119,7 +119,7 @@ export function Navbar({ className }: { className?: string }) {
           <div className="flex flex-col space-y-4 text-sm">
             <ExternalLink url="https://reactrouter.com/en/main" text="React Router" />
             <ExternalLink
-              url="https://github.com/forge42dev/react-router-devtools"
+              url="https://github.com/forge-42/react-router-devtools"
               text="Github"
             />
             <ExternalLink

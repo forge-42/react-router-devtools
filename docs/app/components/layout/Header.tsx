@@ -394,7 +394,7 @@ export default function Header({
                     <a
                       className="group"
                       aria-label="GitHub"
-                      href="https://github.com/forge42dev/react-router-devtools"
+                      href="https://github.com/forge-42/react-router-devtools"
                       target="_blank"
                       rel="noreferrer"
                     >
