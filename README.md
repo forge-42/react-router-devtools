@@ -4,12 +4,12 @@
 
 # react-router-devtools
 
-![GitHub Repo stars](https://img.shields.io/github/stars/forge42dev/react-router-devtools?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/forge-42/react-router-devtools?style=social)
 ![npm](https://img.shields.io/npm/v/react-router-devtools?style=plastic)
-![GitHub](https://img.shields.io/github/license/forge42dev/react-router-devtools?style=plastic)
+![GitHub](https://img.shields.io/github/license/forge-42/react-router-devtools?style=plastic)
 ![npm](https://img.shields.io/npm/dy/react-router-devtools?style=plastic)
 ![npm](https://img.shields.io/npm/dw/react-router-devtools?style=plastic)
-![GitHub top language](https://img.shields.io/github/languages/top/forge42dev/react-router-devtools?style=plastic)
+![GitHub top language](https://img.shields.io/github/languages/top/forge-42/react-router-devtools?style=plastic)
 
 react-router-devtools is an open-source package designed to enhance your development workflow when working with React Router v7+, a full-stack JavaScript framework for building web applications. This package provides a user-friendly interface consisting of three tabs, **Active Page**, **Terminal**, **Settings**, **Errors**, **Network** and **Routes**, along with a side tab called **Timeline**. With react-router-devtools, you can efficiently monitor and manage various aspects of your React Router v7+ projects, including page information, URL parameters, server responses, loader data, routes, and more.
 
@@ -23,7 +23,7 @@ You can also track down hydration issues with the **Errors** tab and view your r
 
 This repository used to be called remix-development-tools, but we decided to rename it to react-router-devtools to better reflect the fact that it's a package for React Router v7+ and not just for Remix.
 
-If you're looking for the old version of this package, you can find it [here](https://github.com/forge42dev/Remix-Dev-Tools/tree/remix-development-tools).
+If you're looking for the old version of this package, you can find it [here](https://github.com/forge-42/react-router-devtools/tree/remix-development-tools).
 
 And the detailed documentation can be found [here](https://remix-development-tools.fly.dev/).
 

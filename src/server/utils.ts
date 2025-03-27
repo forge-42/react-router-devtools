@@ -1,5 +1,6 @@
 import chalk from "chalk"
 import type { ActionFunctionArgs, LoaderFunctionArgs, UNSAFE_DataWithResponseInit } from "react-router"
+import { bigIntReplacer } from "../shared/bigint-util.js"
 import { sendEvent } from "../shared/send-event.js"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
@@ -225,6 +226,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 ) => {
 	const responseHeaders = extractHeadersFromResponseOrRequest(response)
 	const requestHeaders = extractHeadersFromResponseOrRequest(args.request)
+
 	// create the event
 	const event = {
 		type,
@@ -245,7 +247,7 @@ const storeAndEmitActionOrLoaderInfo = async (
 	if (port) {
 		fetch(`http://localhost:${port}/react-router-devtools-request`, {
 			method: "POST",
-			body: JSON.stringify(event),
+			body: JSON.stringify(event, bigIntReplacer),
 		})
 			.then(async (res) => {
 				if (res.ok) {
@@ -295,10 +297,10 @@ export const analyzeLoaderOrAction =
 			unAwaited(() => {
 				const end = diffInMs(start)
 				const endTime = Date.now()
-				storeAndEmitActionOrLoaderInfo(type, routeId, response, end, args)
+				storeAndEmitActionOrLoaderInfo(type, routeId, res, end, args)
 				logTrigger(routeId, type, end)
-				analyzeDeferred(routeId, start, response)
-				analyzeHeaders(routeId, response)
+				analyzeDeferred(routeId, start, res)
+				analyzeHeaders(routeId, res)
 				if (!aborted) {
 					sendEvent({
 						type,
@@ -309,7 +311,7 @@ export const analyzeLoaderOrAction =
 						id: routeId,
 						url: args.request.url,
 						method: args.request.method,
-						status: response && typeof response === "object" ? (response as any).status : undefined,
+						status: res && typeof res === "object" ? (res as any).status : undefined,
 					})
 				}
 			})
