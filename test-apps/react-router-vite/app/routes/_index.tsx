@@ -50,7 +50,7 @@ export const clientLoader =  async ({ request, serverLoader,  devTools }: Client
     const also = await new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve("test");
-      }, 1000);
+      }, 50);
     });
     return {
       custom: "data",
@@ -60,7 +60,7 @@ export const clientLoader =  async ({ request, serverLoader,  devTools }: Client
   const promise =await  new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
-    }, 2000);
+    }, 100);
   });
   return serverLoaderResults
 };

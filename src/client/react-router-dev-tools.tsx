@@ -20,6 +20,7 @@ import {
 	setStorageItem,
 } from "./utils/storage.js"
 import "../input.css"
+import Inspector from "bippy/experiments/inspect"
 /* import Inspector from "bippy/experiments/inspect" */
 import { useHotkeys } from "react-hotkeys-hook"
 import type { RdtPlugin } from "../index.js"
@@ -102,7 +103,7 @@ const DevTools = ({ plugins: pluginArray }: ReactRouterDevtoolsProps) => {
 			<Trigger isOpen={isOpen} setIsOpen={setIsOpen} />
 			<LiveUrls />
 			<Breakpoints />
-			{/* <Inspector enabled={settings.enableInspector} /> */}
+			<Inspector enabled={settings.enableInspector} />
 			<MainPanel isOpen={isOpen}>
 				<div className="flex h-full">
 					<Tabs plugins={plugins} setIsOpen={setIsOpen} />

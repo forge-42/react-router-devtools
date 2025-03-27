@@ -1,4 +1,6 @@
 import { type Fiber, onCommitFiberRoot, traverseFiber } from "bippy"
+/*
+import { getFiberSource } from "bippy/source" */
 import { useCallback, useEffect, useRef } from "react"
 import { useNavigation } from "react-router"
 import type { HTMLError } from "../context/rdtReducer.js"
@@ -155,6 +157,7 @@ export function useReactTreeListeners() {
 
 		onCommitFiberRoot((root) =>
 			traverseFiber(root.current, (fiberNode) => {
+				//	console.log(fiberNode)
 				if (isSourceElement(fiberNode) && typeof import.meta.hot !== "undefined") {
 					const originalSource = fiberNode?._debugSource
 					const source = fiberNode?._debugOwner?._debugSource ?? fiberNode?._debugSource
@@ -166,6 +169,15 @@ export function useReactTreeListeners() {
 						`${fileName}:::${line}` //
 					)
 				}
+				/* 	if (fiberNode.stateNode) {
+					getFiberSource(fiberNode).then((source) => {
+						console.log(source)
+						fiberNode.stateNode?.setAttribute?.(
+							"data-source",
+							`${source.fileName}:::${source.lineNumber}` //
+						)
+					})
+				} */
 
 				if (fiberNode?.stateNode && fiberNode?.elementType === "form") {
 					findIncorrectHtml(fiberNode.child, fiberNode, "form")

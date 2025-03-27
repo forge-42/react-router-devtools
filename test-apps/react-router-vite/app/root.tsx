@@ -21,10 +21,10 @@ export const loader = ({context, devTools }: LoaderFunctionArgs) => {
       const subPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve("test");
-        }, 2000);
+        }, 100);
       });
       resolve({ test: "test", subPromise});
-    }, 2000);
+    }, 100);
   });
   const start =devTools?.tracing.start("test")!;
   devTools?.tracing.end("test", start);
@@ -36,7 +36,7 @@ export const action =async  ({devTools}: ActionFunctionArgs) => {
   await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
-    }, 2000);
+    }, 100);
   });
   devTools?.tracing.end("action submission", start!)
   return  ({ message: "Hello World", bigInt: BigInt(10) });

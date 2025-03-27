@@ -31,12 +31,13 @@ const config = defineRdtConfig({
 
 export default defineConfig({
   plugins: [
-    inspect(),
+  //  inspect(),
     reactRouterDevTools( config),
     reactRouter(),
     tsconfigPaths()
   ],
   optimizeDeps: {
+
     exclude: ["react-router-devtools"]
   },
   server: {
