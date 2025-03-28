@@ -32,6 +32,8 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 		return str.charAt(0).toUpperCase() + str.slice(1)
 	}
 	const transformations: Array<() => void> = []
+
+	const importDeclarations: Babel.ImportDeclaration[] = []
 	trav(ast, {
 		ExportDeclaration(path) {
 			if (path.isExportNamedDeclaration()) {
@@ -91,7 +93,39 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 					? getClientHocId(path, `with${uppercaseFirstLetter(name)}Wrapper`)
 					: getServerHocId(path, `with${uppercaseFirstLetter(name)}Wrapper`)
 				const binding = path.scope.getBinding(name)
-				if (binding?.path.isFunctionDeclaration()) {
+
+				if (path.node.source) {
+					// Special condition: export { loader, action } from "./path"
+					const source = path.node.source.value
+
+					importDeclarations.push(
+						t.importDeclaration(
+							[t.importSpecifier(t.identifier(`_${name}`), t.identifier(name))],
+							t.stringLiteral(source)
+						)
+					)
+					transformations.push(() => {
+						path.insertBefore(
+							t.exportNamedDeclaration(
+								t.variableDeclaration("const", [
+									t.variableDeclarator(
+										t.identifier(name),
+										t.callExpression(uid, [t.identifier(`_${name}`), t.stringLiteral(routeId)])
+									),
+								])
+							)
+						)
+					})
+
+					// Remove the specifier from the exports and add a manual export
+					transformations.push(() => {
+						const remainingSpecifiers = path.node.specifiers.filter(
+							(exportSpecifier) => !(t.isIdentifier(exportSpecifier.exported) && exportSpecifier.exported.name === name)
+						)
+
+						path.replaceWith(t.exportNamedDeclaration(null, remainingSpecifiers, path.node.source))
+					})
+				} else if (binding?.path.isFunctionDeclaration()) {
 					// Replace the function declaration with a wrapped version
 					binding.path.replaceWith(
 						t.variableDeclaration("const", [
@@ -137,6 +171,9 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 	})
 	for (const transformation of transformations) {
 		transformation()
+	}
+	if (importDeclarations.length > 0) {
+		ast.program.body.unshift(...importDeclarations)
 	}
 	if (serverHocs.length > 0) {
 		ast.program.body.unshift(

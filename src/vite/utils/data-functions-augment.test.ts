@@ -74,8 +74,9 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withLoaderWrapper as _withLoaderWrapper   } from "react-router-devtools/server";
-      export { loader as _loader } from "./loader.js";
+      import { loader as _loader } from "./loader.js";
 			export const loader = _withLoaderWrapper(_loader, "test");
+			export {} from "./loader.js";
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
 		})
@@ -240,6 +241,24 @@ describe("transform", () => {
 			`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
 		})
+
+		it("should transform the client action export when it's re-exported from another file", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			export { clientLoader } from "./clientLoader.js";
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientLoaderWrapper as _withClientLoaderWrapper   } from "react-router-devtools/client";
+      import { clientLoader as _clientLoader } from "./clientLoader.js";
+			export const clientLoader = _withClientLoaderWrapper(_clientLoader, "test");
+			export {} from "./clientLoader.js";
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
 		it("should wrap the clientLoader export when it's exported via export { clientLoader } and declared within the file", () => {
 			const result = augmentDataFetchingFunctions(
 				`
@@ -338,8 +357,9 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withActionWrapper as _withActionWrapper   } from "react-router-devtools/server";
-      export { action as _action } from "./action.js";
+      import { action as _action } from "./action.js";
 			export const action = _withActionWrapper(_action, "test");
+			export {} from "./action.js";
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
 		})
@@ -467,6 +487,23 @@ describe("transform", () => {
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
 		})
 
+		it("should transform the client action export when it's re-exported from another file", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			export { clientAction } from "./clientAction.js";
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
+      import { clientAction as _clientAction } from "./clientAction.js";
+			export const clientAction = _withClientActionWrapper(_clientAction, "test");
+			export {} from "./clientAction.js";
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
 		it("should transform the client action export when it's imported from another file and exported", () => {
 			const result = augmentDataFetchingFunctions(
 				`
@@ -511,4 +548,42 @@ describe("transform", () => {
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
 		})
 	})
+})
+
+it("should transform the re-exports when it's re-exported from another file with multiple re-exports", () => {
+	const result = augmentDataFetchingFunctions(
+		`
+	export { action, loader, default } from "./action.js";
+	`,
+		"test",
+		"/file/path"
+	)
+	const expected = removeWhitespace(`
+	import { withActionWrapper as _withActionWrapper, withLoaderWrapper as _withLoaderWrapper   } from "react-router-devtools/server";
+	import { action as _action } from "./action.js";
+	import { loader as _loader } from "./action.js";
+	export const action = _withActionWrapper(_action, "test");
+	export const loader = _withLoaderWrapper(_loader, "test");
+	export { default } from "./action.js";
+`)
+	expect(removeWhitespace(result.code)).toStrictEqual(expected)
+})
+
+it("should transform the re-exports when it's re-exported from another file with multiple re-exports", () => {
+	const result = augmentDataFetchingFunctions(
+		`
+	export { action, loader, default, blah } from "./action.js";
+	`,
+		"test",
+		"/file/path"
+	)
+	const expected = removeWhitespace(`
+	import { withActionWrapper as _withActionWrapper, withLoaderWrapper as _withLoaderWrapper   } from "react-router-devtools/server";
+	import { action as _action } from "./action.js";
+	import { loader as _loader } from "./action.js";
+	export const action = _withActionWrapper(_action, "test");
+	export const loader = _withLoaderWrapper(_loader, "test");
+	export { default, blah } from "./action.js";
+`)
+	expect(removeWhitespace(result.code)).toStrictEqual(expected)
 })
