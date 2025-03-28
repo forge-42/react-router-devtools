@@ -86,32 +86,52 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 				if (!ALL_EXPORTS.includes(name)) {
 					return
 				}
+
 				const uid = CLIENT_COMPONENT_EXPORTS.includes(name)
 					? getClientHocId(path, `with${uppercaseFirstLetter(name)}Wrapper`)
 					: getServerHocId(path, `with${uppercaseFirstLetter(name)}Wrapper`)
-				transformations.push(() => {
-					const uniqueName = path.scope.generateUidIdentifier(name).name
-					path.replaceWith(
-						t.exportNamedDeclaration(
-							null,
-							[t.exportSpecifier(t.identifier(name), t.identifier(uniqueName))],
-							path.node.source
-						)
+				const binding = path.scope.getBinding(name)
+				if (binding?.path.isFunctionDeclaration()) {
+					// Replace the function declaration with a wrapped version
+					binding.path.replaceWith(
+						t.variableDeclaration("const", [
+							t.variableDeclarator(
+								t.identifier(name),
+								t.callExpression(uid, [toFunctionExpression(binding.path.node), t.stringLiteral(routeId)])
+							),
+						])
 					)
+				} else if (binding?.path.isVariableDeclarator()) {
+					// Wrap the variable declarator's initializer
+					const init = binding.path.get("init")
+					if (init.node) {
+						init.replaceWith(t.callExpression(uid, [init.node, t.stringLiteral(routeId)]))
+					}
+				} else {
+					transformations.push(() => {
+						const uniqueName = path.scope.generateUidIdentifier(name).name
+						path.replaceWith(
+							t.exportNamedDeclaration(
+								null,
+								[t.exportSpecifier(t.identifier(name), t.identifier(uniqueName))],
+								path.node.source
+							)
+						)
 
-					// Insert the wrapped export after the modified export statement
-					path.insertAfter(
-						t.exportNamedDeclaration(
-							t.variableDeclaration("const", [
-								t.variableDeclarator(
-									t.identifier(name),
-									t.callExpression(uid, [t.identifier(uniqueName), t.stringLiteral(routeId)])
-								),
-							]),
-							[]
+						// Insert the wrapped export after the modified export statement
+						path.insertAfter(
+							t.exportNamedDeclaration(
+								t.variableDeclaration("const", [
+									t.variableDeclarator(
+										t.identifier(name),
+										t.callExpression(uid, [t.identifier(uniqueName), t.stringLiteral(routeId)])
+									),
+								]),
+								[]
+							)
 						)
-					)
-				})
+					})
+				}
 			}
 		},
 	})
