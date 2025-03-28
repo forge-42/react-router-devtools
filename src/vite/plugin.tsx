@@ -115,21 +115,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				return injectRdtClient(code, config, pluginImports, id)
 			},
 		},
-
-		{
-			name: "react-router-devtools-data-function-augment",
-			apply(config) {
-				return shouldInject(config.mode, includeServer)
-			},
-			transform(code, id) {
-				const routeId = isTransformable(id)
-				if (!routeId) {
-					return
-				}
-				const finalCode = augmentDataFetchingFunctions(code, routeId, id)
-				return finalCode
-			},
-		},
 		{
 			name: "react-router-devtools-inject-context",
 			apply(config) {
@@ -141,6 +126,20 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					return
 				}
 				const finalCode = injectContext(code, routeId, id)
+				return finalCode
+			},
+		},
+		{
+			name: "react-router-devtools-data-function-augment",
+			apply(config) {
+				return shouldInject(config.mode, includeServer)
+			},
+			transform(code, id) {
+				const routeId = isTransformable(id)
+				if (!routeId) {
+					return
+				}
+				const finalCode = augmentDataFetchingFunctions(code, routeId, id)
 				return finalCode
 			},
 		},
