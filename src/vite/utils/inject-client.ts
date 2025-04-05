@@ -30,6 +30,7 @@ const transform = (ast: ParseResult<Babel.File>, clientConfig: string) => {
 	function uppercaseFirstLetter(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1)
 	}
+	const transformations: Array<() => void> = []
 	trav(ast, {
 		ExportDeclaration(path) {
 			if (path.isExportDefaultDeclaration()) {
@@ -83,10 +84,43 @@ const transform = (ast: ParseResult<Babel.File>, clientConfig: string) => {
 						])
 					)
 				}
+
+				// Handle `export { App as default };`
+				const specifiers = path.node.specifiers
+				for (const specifier of specifiers) {
+					if (
+						t.isExportSpecifier(specifier) &&
+						t.isIdentifier(specifier.exported) &&
+						specifier.exported.name === "default" &&
+						t.isIdentifier(specifier.local)
+					) {
+						const localName = specifier.local.name
+						const uid = getHocUid(path, "withViteDevTools")
+
+						// Insert the wrapped default export
+						transformations.push(() => {
+							path.insertBefore(
+								t.exportDefaultDeclaration(t.callExpression(uid, [t.identifier(localName), clientConfigExpression]))
+							)
+
+							// Remove the original export specifier
+							const remainingSpecifiers = path.node.specifiers.filter(
+								(s) => !(t.isExportSpecifier(s) && t.isIdentifier(s.exported) && s.exported.name === "default")
+							)
+							if (remainingSpecifiers.length > 0) {
+								path.replaceWith(t.exportNamedDeclaration(null, remainingSpecifiers, path.node.source))
+							} else {
+								path.remove()
+							}
+						})
+					}
+				}
 			}
 		},
 	})
-
+	for (const transformation of transformations) {
+		transformation()
+	}
 	if (hocs.length > 0) {
 		ast.program.body.unshift(
 			t.importDeclaration(

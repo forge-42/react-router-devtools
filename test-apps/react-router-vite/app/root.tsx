@@ -42,7 +42,7 @@ export const action =async  ({devTools}: ActionFunctionArgs) => {
   return  ({ message: "Hello World", bigInt: BigInt(10) });
 }
 
-export default function App() {
+function App() {
   return (
     <html lang="en">
       <head>
@@ -66,3 +66,5 @@ export default function App() {
     </html>
   );
 }
+
+export { App as default }

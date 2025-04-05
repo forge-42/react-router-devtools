@@ -137,6 +137,56 @@ describe("transform", () => {
 		expect(removeWhitespace(result.code)).toStrictEqual(expected)
 	})
 
+	it("should wrap the default export properly even if it's declared as a variable and then exported via export { name as default }", () => {
+		const result = injectRdtClient(
+			`
+			const App = () => {};
+			export { App as default };
+			`,
+			'{ "config": { }, "plugins": "[]" }',
+			"",
+			"/file/path"
+		)
+		const expected = removeWhitespace(`
+			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
+			import rdtStylesheet from "react-router-devtools/client.css?url";
+			const App = () => {};
+			export default _withViteDevTools(App, {
+			config: { },
+				plugins: []
+			});
+			export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];
+	 `)
+		expect(removeWhitespace(result.code)).toStrictEqual(expected)
+	})
+
+	it("should wrap the default export properly even if it's declared as a variable and then exported via export { name as default }", () => {
+		const result = injectRdtClient(
+			`
+				import { test } from "./file/path";
+			const App = () => {};
+			export { App as default, test };
+			`,
+			'{ "config": { }, "plugins": "[]" }',
+			"",
+			"/file/path"
+		)
+		const expected = removeWhitespace(`
+			import { withViteDevTools as _withViteDevTools } from "react-router-devtools/client";
+			import rdtStylesheet from "react-router-devtools/client.css?url";
+			import { test } from "./file/path";
+			const App = () => {};
+			export default _withViteDevTools(App, {
+			config: { },
+				plugins: []
+			});
+			export { test };
+			export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];
+
+	 `)
+		expect(removeWhitespace(result.code)).toStrictEqual(expected)
+	})
+
 	it("should wrap the default export properly even if it's declared as a function and then exported", () => {
 		const result = injectRdtClient(
 			`
