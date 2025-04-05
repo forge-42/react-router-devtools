@@ -160,7 +160,7 @@ describe("transform", () => {
 		expect(removeWhitespace(result.code)).toStrictEqual(expected)
 	})
 
-	it("should wrap the default export properly even if it's declared as a variable and then exported via export { name as default }", () => {
+	it("should wrap the default export properly even if it's declared as a variable and then exported via export { name as default } and has other exports as well", () => {
 		const result = injectRdtClient(
 			`
 				import { test } from "./file/path";
