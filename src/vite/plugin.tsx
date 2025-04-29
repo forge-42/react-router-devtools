@@ -1,4 +1,3 @@
-import path from "node:path"
 import chalk from "chalk"
 import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
@@ -98,6 +97,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			},
 			async configResolved(resolvedViteConfig) {
 				try {
+					const path = await import("node:path")
 					// Set the route config
 					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), "./app/routes.ts"))).default
 					const routeConfig = await routeConfigExport
