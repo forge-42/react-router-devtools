@@ -1,4 +1,4 @@
-import { type MouseEvent, useState } from "react"
+import { type MouseEvent, useEffect, useState } from "react"
 import { useMatches, useNavigate } from "react-router"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
 import { NewRouteForm } from "../components/NewRouteForm.js"
@@ -22,7 +22,7 @@ const RoutesTab = () => {
 	const { detachedWindow } = useDetachedWindowControls()
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
 	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
-	const [treeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
+	const [treeRoutes, setTreeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
 	const isTreeView = routeViewMode === "tree"
 	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
 		e?.preventDefault()
@@ -32,6 +32,26 @@ const RoutesTab = () => {
 		}
 	}
 
+	useEffect(function fetchAllRoutesOnMount() {
+		import.meta.hot?.send("routes-info")
+		const cb = (event: any) => {
+			const parsed = JSON.parse(event)
+			const data = parsed.data as Record<string, any>[]
+
+			const routeObject: Record<string, any> = {}
+			for (const route of data) {
+				routeObject[route.id] = route
+			}
+
+			routeObject.root = window.__reactRouterManifest?.routes?.root
+
+			setTreeRoutes(createRouteTree(routeObject))
+		}
+		import.meta.hot?.on("routes-info", cb)
+		return () => {
+			import.meta.hot?.off("routes-info", cb)
+		}
+	}, [])
 	return (
 		<div className={clsx("relative h-full w-full ", !isTreeView && "pt-8")}>
 			<RouteToggle />
@@ -40,7 +60,11 @@ const RoutesTab = () => {
 					<Tree
 						translate={{ x: window.innerWidth / 2 - (isTreeView && activeRoute ? 0 : 0), y: 30 }}
 						pathClassFunc={(link) =>
-							activeRoutes.includes((link.target.data.attributes as any).id) ? "stroke-yellow-500" : "stroke-gray-400"
+							activeRoutes.includes((link.target.data.attributes as any).id)
+								? "stroke-yellow-500"
+								: window.__reactRouterManifest?.routes?.[link.target.data.attributes.id]
+									? "stroke-gray-400"
+									: "stroke-gray-400/20"
 						}
 						renderCustomNodeElement={(props) =>
 							RouteNode({

@@ -3,6 +3,7 @@ import type { MouseEvent } from "react"
 import { Link } from "react-router"
 import { useSettingsContext } from "../context/useRDTContext.js"
 import { type ExtendedRoute, constructRoutePath } from "../utils/routing.js"
+import { findParentErrorBoundary } from "../utils/sanitize.js"
 import { Input } from "./Input.js"
 import { Tag } from "./Tag.js"
 import { Icon } from "./icon/Icon.js"
@@ -14,20 +15,22 @@ interface RouteInfoProps {
 	onClose?: () => void
 }
 
-export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfoProps) => {
+export const RouteInfo = ({ route: routeToUse, className, openNewRoute, onClose }: RouteInfoProps) => {
+	const route = window.__reactRouterManifest?.routes[routeToUse.id] || routeToUse
 	const { settings, setSettings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
-	const { hasWildcard, path, pathToOpen } = constructRoutePath(route, routeWildcards)
+	const { hasWildcard, path, pathToOpen } = constructRoutePath(routeToUse, routeWildcards)
 	const isTreeView = routeViewMode === "tree"
-	const hasParentErrorBoundary = route.errorBoundary.errorBoundaryId && route.errorBoundary.errorBoundaryId !== route.id
-	const hasErrorBoundary = route.errorBoundary.hasErrorBoundary
+	const { hasErrorBoundary, errorBoundaryId } = findParentErrorBoundary(route)
+	const hasParentErrorBoundary = errorBoundaryId && errorBoundaryId !== route.id
+
 	return (
 		<div className={clsx(className, "relative")}>
 			{isTreeView && (
 				<>
 					<Icon onClick={onClose} className="absolute right-2 top-2 cursor-pointer text-red-600" name="X" />
 
-					<h1 className="text-xl font-semibold">{route.url}</h1>
+					<h1 className="text-xl font-semibold">{routeToUse.url}</h1>
 					<hr className="mb-4 mt-1" />
 					<h3>
 						<span className="text-gray-500">Path:</span> {path}
@@ -41,11 +44,18 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
 				<span className="whitespace-nowrap text-gray-500">Route file:</span>
 				{route.id}
 			</div>
+
 			<div className="mb-4 mt-4 flex flex-col gap-2">
 				<span className="text-gray-500">Components contained in the route:</span>
-				<div className="flex gap-2">
+				<div className="flex flex-wrap gap-2">
 					<Tag className="h-max" color={route.hasLoader ? "GREEN" : "RED"}>
 						Loader
+					</Tag>
+					<Tag className="h-max" color={route.hasClientLoader ? "GREEN" : "RED"}>
+						Client Loader
+					</Tag>
+					<Tag className="h-max" color={route.hasClientAction ? "GREEN" : "RED"}>
+						Client Action
 					</Tag>
 					<Tag className="h-max" color={route.hasAction ? "GREEN" : "RED"}>
 						Action
@@ -60,9 +70,7 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
 				</div>
 				{hasErrorBoundary ? (
 					<div className="mr-2">
-						{hasParentErrorBoundary
-							? `Covered by parent ErrorBoundary located in: ${route.errorBoundary.errorBoundaryId}`
-							: ""}
+						{hasParentErrorBoundary ? `Covered by parent ErrorBoundary located in: ${errorBoundaryId}` : ""}
 					</div>
 				) : null}
 			</div>
@@ -70,7 +78,7 @@ export const RouteInfo = ({ route, className, openNewRoute, onClose }: RouteInfo
 				<>
 					<p className="mb-2 text-gray-500">Wildcard parameters:</p>
 					<div className={clsx("mb-4 grid w-full grid-cols-2 gap-2", isTreeView && "grid-cols-1")}>
-						{route.url
+						{routeToUse.url
 							.split("/")
 							.filter((p) => p.startsWith(":"))
 							.map((param) => (

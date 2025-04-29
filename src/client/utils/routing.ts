@@ -89,8 +89,7 @@ export const createExtendedRoutes = () => {
 				...route,
 				// biome-ignore lint/style/noNonNullAssertion: <explanation>
 				url: convertReactRouterPathToUrl(window.__reactRouterManifest!.routes, route),
-				// biome-ignore lint/style/noNonNullAssertion: <explanation>
-				errorBoundary: findParentErrorBoundary(window.__reactRouterManifest!.routes, route),
+				errorBoundary: findParentErrorBoundary(route),
 			}
 		})
 		.filter((route) => isLeafRoute(route as any))
