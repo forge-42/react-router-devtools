@@ -78,11 +78,17 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		}
 
 		const isRoute = id.includes(`${appDirName}/root`) || flatRoutes.some((route) => id.endsWith(route.file))
+		// biome-ignore lint/suspicious/noConsole: <explanation>
+		console.log("isRoute", isRoute, id)
 		if (!isRoute) {
 			return
 		}
 
-		const routeId = id.replace(normalizePath(process.cwd()), "").replace(`/${appDirName}/`, "").replace(".tsx", "")
+		const routeId = id
+			.replace(normalizePath(process.cwd()), "")
+			.replace(`/${appDirName}/`, "")
+			.replace(".tsx", "")
+			.replace(".ts", "")
 		return routeId
 	}
 	// Set the server config on the process object so that it can be accessed by the plugin
