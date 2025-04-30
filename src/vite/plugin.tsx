@@ -102,6 +102,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), "./app/routes.ts"))).default
 					const routeConfig = await routeConfigExport
 					routes = routeConfig
+
 					const recursiveFlatten = (routeOrRoutes: Route | Route[]): Route[] => {
 						if (Array.isArray(routeOrRoutes)) {
 							return routeOrRoutes.flatMap((route) => recursiveFlatten(route))
@@ -111,13 +112,26 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 								routeOrRoutes,
 								...recursiveFlatten(
 									routeOrRoutes.children.map((child) => {
-										const withoutExtension = child.file.split(".").slice(0, -1).join(".")
-										const withoutExtensionParent = routeOrRoutes.file.split(".").slice(0, -1).join(".")
-										// remove the trailing ./ and ../
-										const withoutRelative = withoutExtension.replace(/^\.\//, "").replace(/^\.\.\//, "")
+										// ./path.tsx => path
+										// ../path.tsx => path
+										const withoutExtension = child.file
+											.split(".")
+											.slice(0, -1)
+											.join(".")
+											.replace(/^\.\//, "")
+											.replace(/^\.\.\//, "")
+										// ./path.tsx => path
+										// ../path.tsx => path
+										const withoutExtensionParent = routeOrRoutes.file
+											.split(".")
+											.slice(0, -1)
+											.join(".")
+											.replace(/^\.\//, "")
+											.replace(/^\.\.\//, "")
+
 										return {
 											...child,
-											id: child.id ?? withoutRelative,
+											id: child.id ?? withoutExtension,
 											parentId: withoutExtensionParent,
 										}
 									})
@@ -128,9 +142,15 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					}
 					flatRoutes = routes
 						.map((route) => {
-							const withoutExtension = route.file.split(".").slice(0, -1).join(".")
-							const withoutRelative = withoutExtension.replace(/^\.\//, "").replace(/^\.\.\//, "")
-							return { ...route, parentId: "root", id: route.id ?? withoutRelative }
+							// ./path.tsx => path
+							// ../path.tsx => path
+							const withoutExtension = route.file
+								.split(".")
+								.slice(0, -1)
+								.join(".")
+								.replace(/^\.\//, "")
+								.replace(/^\.\.\//, "")
+							return { ...route, parentId: "root", id: route.id ?? withoutExtension }
 						})
 						.flatMap(recursiveFlatten)
 				} catch (e) {}
