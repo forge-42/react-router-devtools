@@ -126,7 +126,13 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 						}
 						return [routeOrRoutes]
 					}
-					flatRoutes = routes.map((route) => ({ ...route, parentId: "root" })).flatMap(recursiveFlatten)
+					flatRoutes = routes
+						.map((route) => {
+							const withoutExtension = route.file.split(".").slice(0, -1).join(".")
+							const withoutRelative = withoutExtension.replace(/^\.\//, "").replace(/^\.\.\//, "")
+							return { ...route, parentId: "root", id: route.id ?? withoutRelative }
+						})
+						.flatMap(recursiveFlatten)
 				} catch (e) {}
 				const reactRouterIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router")
 				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router-devtools")
