@@ -79,7 +79,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 
 		const isRoute = id.includes(`${appDirName}/root`) || flatRoutes.some((route) => id.endsWith(route.file))
 		// biome-ignore lint/suspicious/noConsole: <explanation>
-		console.log("isRoute", isRoute, id)
+		console.log("isRoute", isRoute, id, flatRoutes.length, flatRoutes[0]?.file)
 		if (!isRoute) {
 			return
 		}

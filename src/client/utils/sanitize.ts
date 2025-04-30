@@ -58,12 +58,7 @@ const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 	const routeKeys = Object.keys(routes)
 	for (const key of routeKeys) {
 		const route = routes[key]
-		// biome-ignore lint/suspicious/noConsole: <explanation>
-		console.log({
-			key,
-			route,
-			parentId,
-		})
+
 		if (route.parentId === parentId) {
 			const url = convertReactRouterPathToUrl(routes, route)
 			const node: RawNodeDatum = {
@@ -84,8 +79,6 @@ const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 }
 
 export const createRouteTree = (routes: RouteManifest | undefined) => {
-	// biome-ignore lint/suspicious/noConsole: <explanation>
-	console.log("createRouteTree", routes)
 	return constructTree(routes)
 }
 
