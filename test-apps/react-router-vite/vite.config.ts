@@ -36,7 +36,9 @@ export default defineConfig({
     reactRouter(),
     tsconfigPaths()
   ],
-
+  optimizeDeps: {
+    noDiscovery: true
+  },
   server: {
     open: true,
     port: 3000,

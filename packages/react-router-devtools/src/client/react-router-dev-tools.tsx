@@ -19,7 +19,7 @@ import {
 	setSessionItem,
 	setStorageItem,
 } from "./utils/storage.js"
-import "../input.css"
+import "../client.css"
 /* import Inspector from "bippy/experiments/inspect" */
 import { useHotkeys } from "react-hotkeys-hook"
 import type { RdtPlugin } from "../index.js"

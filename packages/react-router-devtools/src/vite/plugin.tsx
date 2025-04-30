@@ -76,13 +76,14 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
 			return
 		}
-
 		const isRoute = id.includes(`${appDirName}/root`) || flatRoutes.some((route) => id.endsWith(route.file))
+
 		if (!isRoute) {
 			return
 		}
 
 		const routeId = id.replace(normalizePath(process.cwd()), "").replace(`/${appDirName}/`, "").replace(".tsx", "")
+
 		return routeId
 	}
 	// Set the server config on the process object so that it can be accessed by the plugin
@@ -99,16 +100,17 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				try {
 					const path = await import("node:path")
 					// Set the route config
-					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), "./app/routes.ts"))).default
+					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), `${appDir}/routes.ts`))).default
 					const routeConfig = await routeConfigExport
 					routes = routeConfig
+
 					const recursiveFlatten = (routeOrRoutes: Route | Route[]): Route[] => {
 						if (Array.isArray(routeOrRoutes)) {
 							return routeOrRoutes.flatMap((route) => recursiveFlatten(route))
 						}
 						if (routeOrRoutes.children) {
 							return [
-								routeOrRoutes,
+								{ ...routeOrRoutes, children: undefined },
 								...recursiveFlatten(
 									routeOrRoutes.children.map((child) => ({
 										...child,

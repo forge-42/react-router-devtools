@@ -32,7 +32,7 @@ const RoutesTab = () => {
 		}
 	}
 
-	useEffect(function fetchAllRoutesOnMount() {
+	useEffect(() => {
 		import.meta.hot?.send("routes-info")
 		const cb = (event: any) => {
 			const parsed = JSON.parse(event)
@@ -62,7 +62,8 @@ const RoutesTab = () => {
 						pathClassFunc={(link) =>
 							activeRoutes.includes((link.target.data.attributes as any).id)
 								? "stroke-yellow-500"
-								: window.__reactRouterManifest?.routes?.[link.target.data.attributes.id]
+								: // @ts-expect-error
+									window.__reactRouterManifest?.routes?.[link.target.data.attributes?.id]
 									? "stroke-gray-400"
 									: "stroke-gray-400/20"
 						}

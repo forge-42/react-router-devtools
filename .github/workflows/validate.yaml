@@ -1,29 +1,25 @@
-name: 🚀 Validation Pipeline
+name: 🚀 PR
+
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+
+on: [pull_request] # Run only on pull_request, to also get status updates in PRs. We omit push because this would run the steps two times (for push and pull_request).
 
 permissions:
   actions: write
   contents: read
   # Required to put a comment into the pull-request
   pull-requests: write
+
 jobs:
   lint:
-    name: ⬣ Biome lint
+    name: ⬣ Linting
     runs-on: ubuntu-latest
     steps:
-     - name: ⬇️ Checkout repo
-       uses: actions/checkout@v4
-     - name: Setup Biome
-       uses: biomejs/setup-biome@v2
-     - name: Run Biome
-       run: biome ci .
+      - uses: actions/checkout@v4
+      - uses: biomejs/setup-biome@v2
+      - run: biome ci . --reporter=github
 
   typecheck:
     name: 🔎 Type check
@@ -31,18 +27,21 @@ jobs:
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
+
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: "package.json"
+
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+        run: pnpm install
+
       - name: 🔎 Type check
-        run: npm run typecheck
+        run: pnpm run typecheck
 
   vitest:
     name: ⚡ Unit Tests
@@ -50,24 +49,23 @@ jobs:
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
+
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: "package.json"
+
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-      - name: Install dotenv cli
-        run: npm install -g dotenv-cli
+        run: pnpm install
+
       - name: ⚡ Run vitest
-        run: npm run test:cov
-#      - name: "Report Coverage"
-        # Only works if you set `reportOnFailure: true` in your vite config as specified above
-#        if: always()
-#        uses: davelosert/vitest-coverage-report-action@v2
+        run: pnpm run test:cov
 
   deploy-docs-pr-preview:
     if: ${{ github.event_name == 'pull_request' }}

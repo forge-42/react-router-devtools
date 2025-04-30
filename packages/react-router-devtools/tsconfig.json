@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		/* Language and Environment */
+		"target": "ES2022" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"esnext"
+		] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
+		"jsx": "react-jsx",
+		"module": "ESNext" /* Specify what module code is generated. */,
+		"rootDir": "." /* Specify the root folder within your source files. */,
+		"moduleResolution": "Bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
+		"types": ["vitest/globals", "vite/client"],
+		"declaration": true /* Generate .d.ts files from TypeScript and JavaScript files in your project. */,
+		"outDir": "./dist" /* Specify an output folder for all emitted files. */,
+		// "removeComments": true,                           /* Disable emitting comments. */
+		"noEmit": true /* Disable emitting files from a compilation. */,
+		"esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
+		// "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"skipLibCheck": true /* Skip type checking all .d.ts files. */
+	},
+
+	"exclude": [
+		"./bin/**/*.test.ts",
+		"./dist/**/*",
+		"./bin/mocks/**/*",
+		"./test-apps/**/*",
+		"./plugins/**/*",
+		"./src/external/**/*",
+		"./scripts",
+		"./docs"
+	]
+}

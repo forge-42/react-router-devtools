@@ -21,9 +21,7 @@ export const convertReactRouterPathToUrl = (routes: any, route: Route) => {
 	return output === "" ? "/" : output
 }
 
-export const findParentErrorBoundary = (route: Route) => {
-	// biome-ignore lint/style/noNonNullAssertion: <explanation>
-	const routes = window.__reactRouterManifest?.routes!
+export const findParentErrorBoundary = (routes: RouteManifest, route: Route) => {
 	let currentRoute: Route | null = route
 
 	while (currentRoute) {
@@ -66,7 +64,7 @@ const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 					...route,
 					url,
 				},
-				errorBoundary: findParentErrorBoundary(route),
+				errorBoundary: findParentErrorBoundary(routes, route),
 				children: constructTree(routes, route.id),
 			}
 			nodes.push(node)

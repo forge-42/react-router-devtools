@@ -21,7 +21,8 @@ export const RouteInfo = ({ route: routeToUse, className, openNewRoute, onClose 
 	const { routeWildcards, routeViewMode } = settings
 	const { hasWildcard, path, pathToOpen } = constructRoutePath(routeToUse, routeWildcards)
 	const isTreeView = routeViewMode === "tree"
-	const { hasErrorBoundary, errorBoundaryId } = findParentErrorBoundary(route)
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
+	const { hasErrorBoundary, errorBoundaryId } = findParentErrorBoundary(window.__reactRouterManifest?.routes!, route)
 	const hasParentErrorBoundary = errorBoundaryId && errorBoundaryId !== route.id
 
 	return (
