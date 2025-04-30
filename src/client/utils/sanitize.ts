@@ -61,7 +61,7 @@ const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 		if (route.parentId === parentId) {
 			if (routeMap.get(key)) {
 				nodes.push(routeMap.get(key))
-				return nodes
+				continue
 			}
 			const url = convertReactRouterPathToUrl(routes, route)
 			const node: RawNodeDatum = {
