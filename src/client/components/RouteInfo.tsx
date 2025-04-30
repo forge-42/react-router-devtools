@@ -30,13 +30,14 @@ export const RouteInfo = ({ route: routeToUse, className, openNewRoute, onClose 
 				<>
 					<Icon onClick={onClose} className="absolute right-2 top-2 cursor-pointer text-red-600" name="X" />
 
-					<h1 className="text-xl font-semibold">{routeToUse.url}</h1>
+					<h1 className="text-xl text-white font-semibold">{routeToUse.url}</h1>
 					<hr className="mb-4 mt-1" />
 					<h3>
-						<span className="text-gray-500">Path:</span> {path}
+						<span className="text-gray-500">Path:</span>
+						<span className="text-white"> {path}</span>
 					</h3>
 					<h3>
-						<span className="text-gray-500">Url:</span> {pathToOpen}
+						<span className="text-gray-500">Url:</span> <span className="text-white">{pathToOpen}</span>
 					</h3>
 				</>
 			)}

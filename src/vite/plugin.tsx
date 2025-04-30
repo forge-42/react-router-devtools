@@ -110,10 +110,16 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 							return [
 								routeOrRoutes,
 								...recursiveFlatten(
-									routeOrRoutes.children.map((child) => ({
-										...child,
-										parentId: routeOrRoutes.file.split(".").slice(0, -1).join("."),
-									}))
+									routeOrRoutes.children.map((child) => {
+										const withoutExtension = child.file.split(".").slice(0, -1).join(".")
+										// remove the trailing ./ and ../
+										const withoutRelative = withoutExtension.replace(/^\.\//, "").replace(/^\.\.\//, "")
+										return {
+											...child,
+											id: child.id ?? withoutRelative,
+											parentId: withoutExtension,
+										}
+									})
 								),
 							]
 						}
