@@ -42,7 +42,7 @@ export const RouteInfo = ({ route: routeToUse, className, openNewRoute, onClose 
 			)}
 			<div className="flex gap-2">
 				<span className="whitespace-nowrap text-gray-500">Route file:</span>
-				{route.id}
+				{route.module ?? routeToUse.file}
 			</div>
 
 			<div className="mb-4 mt-4 flex flex-col gap-2">

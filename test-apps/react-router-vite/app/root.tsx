@@ -28,7 +28,7 @@ export const loader = ({context, devTools }: LoaderFunctionArgs) => {
   });
   const start =devTools?.tracing.start("test")!;
   devTools?.tracing.end("test", start);
-  return  data({ message: "Hello World", mainPromise, bigInt: BigInt(10) }, { headers: { "Cache-Control": "max-age=3600, private" } });
+  return  data({ message: "Hello World", mainPromise, bigInt: BigInt(10) },  );
 }
 
 export const action =async  ({devTools}: ActionFunctionArgs) => {

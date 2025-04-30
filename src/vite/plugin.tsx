@@ -112,7 +112,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 								...recursiveFlatten(
 									routeOrRoutes.children.map((child) => ({
 										...child,
-										parentId: routeOrRoutes.id,
+										parentId: routeOrRoutes.file.split(".").slice(0, -1).join("."),
 									}))
 								),
 							]

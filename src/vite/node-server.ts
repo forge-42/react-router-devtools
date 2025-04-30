@@ -5,6 +5,8 @@ import { installSourcemapsSupport } from "vite-node/source-map"
 
 // create vite server
 const server = await createServer({
+	mode: "development",
+	root: process.cwd(),
 	server: {
 		preTransformRequests: false,
 		hmr: false,
