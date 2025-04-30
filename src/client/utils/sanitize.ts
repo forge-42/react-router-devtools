@@ -52,13 +52,17 @@ interface RawNodeDatum {
 	children?: RawNodeDatum[]
 	errorBoundary: { hasErrorBoundary: boolean; errorBoundaryId: string | null }
 }
-
+const routeMap = new Map()
 const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 	const nodes: RawNodeDatum[] = []
 	const routeKeys = Object.keys(routes)
 	for (const key of routeKeys) {
 		const route = routes[key]
 		if (route.parentId === parentId) {
+			if (routeMap.get(key)) {
+				nodes.push(routeMap.get(key))
+				return nodes
+			}
 			const url = convertReactRouterPathToUrl(routes, route)
 			const node: RawNodeDatum = {
 				name: url,
@@ -69,6 +73,7 @@ const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 				errorBoundary: findParentErrorBoundary(route),
 				children: constructTree(routes, route.id),
 			}
+			routeMap.set(key, node)
 			nodes.push(node)
 		}
 	}
