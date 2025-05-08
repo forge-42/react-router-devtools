@@ -74,8 +74,10 @@
 		"docs": "npm run dev -w docs",
 		"prepublishOnly": "npm run build",
 		"react-router-vite": "npm run dev -w test-apps/react-router-vite",
+		"react-router-custom": "npm run dev -w test-apps/custom-server",
 		"runner": "npm-run-all -s build -p watch-all",
 		"dev": "npm run runner react-router-vite",
+		"dev:c": "npm run runner react-router-custom",
 		"build": "run-s  tsup:* -- --clean",
 		"watch-all": "npm-run-all -p tsup:index:watch tsup:client:watch tsup:server:watch tsup:context:watch -- --watch",
 		"tsup:index": "tsup",
@@ -102,10 +104,10 @@
 	},
 	"workspaces": [".", "test-apps/*"],
 	"peerDependencies": {
-		"react": ">=17",
-		"react-dom": ">=17",
 		"@types/react": ">=17",
 		"@types/react-dom": ">=17",
+		"react": ">=17",
+		"react-dom": ">=17",
 		"react-router": ">=7.0.0",
 		"vite": ">=5.0.0 || >=6.0.0"
 	},
