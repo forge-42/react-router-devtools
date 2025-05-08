@@ -235,6 +235,11 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				if (server.config.appType !== "custom") {
 					return
 				}
+				if (server.config.server.port) {
+					process.rdt_port = server.config.server.port ?? 5173
+					port = process.rdt_port
+				}
+
 				server.httpServer?.on("listening", () => {
 					process.rdt_port = server.config.server.port ?? 5173
 					port = process.rdt_port
