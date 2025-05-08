@@ -62,7 +62,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	const includeClient = args?.includeInProd?.client ?? false
 	const includeServer = args?.includeInProd?.server ?? false
 	const includeDevtools = args?.includeInProd?.devTools ?? false
-
+	let port = 5173
 	let routes: Route[] = []
 	let flatRoutes: Route[] = []
 	const appDir = args?.appDir || "./app"
@@ -237,13 +237,23 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				}
 				server.httpServer?.on("listening", () => {
 					process.rdt_port = server.config.server.port ?? 5173
+					port = process.rdt_port
 				})
 				//@ts-ignore - vite 5/6 compat
 				const channel = server.hot.channels.find((channel) => channel.name === "ws") ?? server.environments?.client.hot
-
+				const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
+				const openInEditor = async (path: string | undefined, lineNum: string | undefined) => {
+					if (!path) {
+						return
+					}
+					editor.open(path, lineNum)
+				}
 				server.middlewares.use((req, res, next) =>
 					handleDevToolsViteRequest(req, res, next, (parsedData) => {
 						const { type, data, routine } = parsedData
+						if (routine === "open-source") {
+							return handleOpenSource({ data: { type: data.type, data }, openInEditor, appDir })
+						}
 						if (routine === "request-event") {
 							unusedEvents.set(parsedData.id + parsedData.startTime, parsedData)
 							for (const client of server.hot.channels) {
@@ -295,7 +305,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				})
 
 				if (!server.config.isProduction) {
-					channel?.on("remove-event", (data, client) => {
+					channel?.on("remove-event", (data) => {
 						const parsedData = data
 						const { id, startTime } = parsedData
 
@@ -319,13 +329,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 							})
 						)
 					})
-					const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
-					const openInEditor = async (path: string | undefined, lineNum: string | undefined) => {
-						if (!path) {
-							return
-						}
-						editor.open(path, lineNum)
-					}
 
 					server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({ data, openInEditor, appDir }))
 					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor }))
@@ -362,7 +365,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 							}
 
 							const column = line.indexOf("console.")
-							const logMessage = `"${chalk.magenta("LOG")} ${chalk.blueBright(`${id.replace(normalizePath(process.cwd()), "")}:${lineNumber + 1}:${column + 1}`)}\\n → "`
+							const logMessage = `'${chalk.magenta("LOG")} ${chalk.blueBright(`http://localhost:${port}/open-source?source=${id.replace(normalizePath(process.cwd()), "")}&line=${lineNumber + 1}&column=${column + 1}`)}\\n → '`
 							if (line.includes("console.log(")) {
 								const newLine = `console.log(${logMessage},`
 								return line.replace("console.log(", newLine)

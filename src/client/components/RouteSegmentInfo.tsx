@@ -142,7 +142,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 							<button
 								type="button"
 								data-testid={`${route.id}-show-route-boundaries`}
-								className="rounded border border-green-600 rounded border border-[#1F9CF0] px-2.5 py-0.5 text-sm font-medium text-green-600"
+								className="border-green-600 rounded border px-2.5 py-0.5 text-sm font-medium text-green-600"
 								onClick={() => {
 									const routeId = route.id === "root" ? "root" : i.toString()
 									if (routeId !== settings.hoveredRoute) {

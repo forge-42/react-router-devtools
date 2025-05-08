@@ -77,6 +77,7 @@ export default function Index() {
   data.append("person.name", "test1");
   data.append("person.surname", "test1");
   data.append("obj", JSON.stringify({ test: "test" }));
+  console.log(data);
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>

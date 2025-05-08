@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http"
-import type { Connect } from "vite"
+import { type Connect, normalizePath } from "vite"
 
 export async function processPlugins(pluginDirectoryPath: string) {
 	const fs = await import("node:fs")
@@ -28,6 +28,27 @@ export const handleDevToolsViteRequest = (
 	next: Connect.NextFunction,
 	cb: (data: any) => void
 ) => {
+	if (req.url?.includes("open-source")) {
+		const searchParams = new URLSearchParams(req.url.split("?")[1])
+		const source = searchParams.get("source")
+		const line = searchParams.get("line")
+		const column = searchParams.get("column")
+		cb({
+			type: "open-source",
+			routine: "open-source",
+			data: {
+				source: source ? normalizePath(`${process.cwd()}/${source}`) : undefined,
+				line,
+				column,
+			},
+		})
+		res.setHeader("Content-Type", "text/html")
+		res.write(`<script>
+    window.close();
+</script>`)
+		res.end()
+		return
+	}
 	if (!req.url?.includes("react-router-devtools-request")) {
 		return next()
 	}
