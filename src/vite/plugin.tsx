@@ -251,8 +251,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					process.rdt_port = server.config.server.port ?? 5173
 					port = process.rdt_port
 				})
-				//@ts-ignore - vite 5/6 compat
-				const channel = server.hot.channels.find((channel) => channel.name === "ws") ?? server.environments?.client.hot
+				const channel = server.hot
 				const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
 				const openInEditor = async (path: string | undefined, lineNum: string | undefined) => {
 					if (!path) {
@@ -268,9 +267,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 						}
 						if (routine === "request-event") {
 							unusedEvents.set(parsedData.id + parsedData.startTime, parsedData)
-							for (const client of server.hot.channels) {
-								client.send("request-event", JSON.stringify(parsedData))
-							}
+							server.hot.send("request-event", JSON.stringify(parsedData))
 
 							return
 						}
@@ -291,9 +288,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 								routeInfo.set(id, { loader: [], action: [data] })
 							}
 						}
-						for (const client of server.hot.channels) {
-							client.send("route-info", JSON.stringify({ type, data }))
-						}
+						server.hot.send("route-info", JSON.stringify({ type, data }))
 					})
 				)
 
