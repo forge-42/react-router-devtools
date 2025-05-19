@@ -92,8 +92,30 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withLoaderWrapper as _withLoaderWrapper   } from "react-router-devtools/server";
-      import { loader  } from "./loader.js";
-			export { loader as _loader };
+      import { loader as _loader  } from "./loader.js";
+			export const loader = _withLoaderWrapper(_loader, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the loader export when it's imported from another file and exported and used", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			import {  loader } from "./loader.js";
+			const test = () => {
+			  const data = loader();
+			}
+			export { loader };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withLoaderWrapper as _withLoaderWrapper   } from "react-router-devtools/server";
+      import { loader as _loader  } from "./loader.js";
+			const test = () => {
+			  const data = _loader();
+			};
 			export const loader = _withLoaderWrapper(_loader, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -217,8 +239,30 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 				import { withClientLoaderWrapper as _withClientLoaderWrapper   } from "react-router-devtools/client";
-				import { clientLoader  } from "./client-loader.js";
-				export { clientLoader as _clientLoader };
+				import { clientLoader as _clientLoader } from "./client-loader.js";
+				export const clientLoader = _withClientLoaderWrapper(_clientLoader, "test");
+			`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the client loader export when it's re-exported from another file and used by other code", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+				import { clientLoader } from "./client-loader.js";
+				const test = () => {
+					const data = clientLoader();
+				}
+				export { clientLoader };
+				`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+				import { withClientLoaderWrapper as _withClientLoaderWrapper   } from "react-router-devtools/client";
+				import { clientLoader as _clientLoader } from "./client-loader.js";
+				const test = () => {
+					const data = _clientLoader();
+				};
 				export const clientLoader = _withClientLoaderWrapper(_clientLoader, "test");
 			`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -235,8 +279,30 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 				import { withClientLoaderWrapper as _withClientLoaderWrapper   } from "react-router-devtools/client";
-				import { clientLoader  } from "./client-loader.js";
-				export { clientLoader as _clientLoader };
+				import { clientLoader as _clientLoader } from "./client-loader.js";
+				export const clientLoader = _withClientLoaderWrapper(_clientLoader, "test");
+			`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the client loader export when it's imported from another file and exported and used by other code", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+				import { clientLoader } from "./client-loader.js";
+				const test = () => {
+					const data = clientLoader();
+				}
+				export { clientLoader };
+				`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+				import { withClientLoaderWrapper as _withClientLoaderWrapper   } from "react-router-devtools/client";
+				import { clientLoader as _clientLoader } from "./client-loader.js";
+				const test = () => {
+					const data = _clientLoader();
+				};
 				export const clientLoader = _withClientLoaderWrapper(_clientLoader, "test");
 			`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -373,8 +439,30 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withActionWrapper as _withActionWrapper   } from "react-router-devtools/server";
-      import { action  } from "./action.js";
-			export { action as _action };
+      import { action as _action } from "./action.js";
+			export const action = _withActionWrapper(_action, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the action export when it's imported from another file and exported and used by other code", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			import {  action } from "./action.js";
+			const test = () => {
+				const data = action();
+			}
+			export { action };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withActionWrapper as _withActionWrapper   } from "react-router-devtools/server";
+      import { action as _action } from "./action.js";
+			const test = () => {
+				const data = _action();
+			};
 			export const action = _withActionWrapper(_action, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -478,8 +566,31 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
-			import { clientAction  } from "./client-action.js";
-			export { clientAction as _clientAction };
+			import { clientAction as _clientAction  } from "./client-action.js";
+			export const clientAction = _withClientActionWrapper(_clientAction, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should transform the client action export when it's re-exported from another file and keep it working if used somewhere", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			import { clientAction } from "./client-action.js";
+
+			const test = () => {
+				const data = clientAction();
+			}
+			export { clientAction };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
+			import { clientAction as _clientAction  } from "./client-action.js";
+			const test = () => {
+				const data = _clientAction();
+			};
 			export const clientAction = _withClientActionWrapper(_clientAction, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -512,8 +623,54 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
-      import { clientAction  } from "./client-action.js";
-			export { clientAction as _clientAction };
+      import { clientAction as _clientAction } from "./client-action.js";
+			export const clientAction = _withClientActionWrapper(_clientAction, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should transform the client action export when it's imported from another file and exported and used by other code", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			import { clientAction } from "./client-action.js";
+			const test = () => {
+				const data = clientAction();
+			}
+			export { clientAction };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
+      import { clientAction as _clientAction } from "./client-action.js";
+			const test = () => {
+				const data = _clientAction();
+			};
+			export const clientAction = _withClientActionWrapper(_clientAction, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should transform the client action export when it's imported from another file and exported and keep the export around if more things are exported", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			import { clientAction } from "./client-action.js";
+			const test = () => {
+				const data = clientAction();
+			}
+			export { clientAction, test };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
+      import { clientAction as _clientAction } from "./client-action.js";
+			const test = () => {
+				const data = _clientAction();
+			};
+			export { test };
 			export const clientAction = _withClientActionWrapper(_clientAction, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)

@@ -91,8 +91,54 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 				import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
-				import { loader  } from "./loader.js";
-				export { loader as _loader };
+				import { loader as _loader } from "./loader.js";
+				export const loader = _withLoaderContextWrapper(_loader, "test");
+			`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the loader export when it's imported from another file and exported and used by other code", () => {
+			const result = injectContext(
+				`
+				import {  loader } from "./loader.js";
+				const test = () => {
+					return loader();
+				}
+				export { loader };
+				`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+				import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
+				import { loader as _loader } from "./loader.js";
+				const test = () => {
+					return _loader();
+				};
+				export const loader = _withLoaderContextWrapper(_loader, "test");
+			`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the loader export when it's imported from another file and exported and used by other code and doesn't remove export if multiple exports", () => {
+			const result = injectContext(
+				`
+				import {  loader } from "./loader.js";
+				const test = () => {
+					return loader();
+				}
+				export { loader, test };
+				`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+				import { withLoaderContextWrapper as _withLoaderContextWrapper   } from "react-router-devtools/context";
+				import { loader as _loader } from "./loader.js";
+				const test = () => {
+					return _loader();
+				};
+				export { test };
 				export const loader = _withLoaderContextWrapper(_loader, "test");
 			`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -170,8 +216,7 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
-			import { clientLoader  } from "./client-loader.js";
-			export { clientLoader as _clientLoader };
+			import { clientLoader as _clientLoader } from "./client-loader.js";
 			export const clientLoader = _withClientLoaderContextWrapper(_clientLoader, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -188,8 +233,54 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
-      import { clientLoader  } from "./client-loader.js";
-			export { clientLoader as _clientLoader };
+      import { clientLoader as _clientLoader } from "./client-loader.js";
+			export const clientLoader = _withClientLoaderContextWrapper(_clientLoader, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the client loader export when it's imported from another file and exported and used by other code", () => {
+			const result = injectContext(
+				`
+			import { clientLoader } from "./client-loader.js";
+			const test = () => {
+				return clientLoader();
+			}
+			export { clientLoader };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
+      import { clientLoader as _clientLoader } from "./client-loader.js";
+			const test = () => {
+				return _clientLoader();
+			};
+			export const clientLoader = _withClientLoaderContextWrapper(_clientLoader, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the client loader export when it's imported from another file and exported and used by other code and doesn't remove multiple export", () => {
+			const result = injectContext(
+				`
+			import { clientLoader } from "./client-loader.js";
+			const test = () => {
+				return clientLoader();
+			}
+			export { clientLoader, test };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper   } from "react-router-devtools/context";
+      import { clientLoader as _clientLoader } from "./client-loader.js";
+			const test = () => {
+				return _clientLoader();
+			};
+			export { test };
 			export const clientLoader = _withClientLoaderContextWrapper(_clientLoader, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -299,8 +390,54 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
-      import { action  } from "./action.js";
-			export { action as _action };
+      import { action as _action } from "./action.js";
+			export const action = _withActionContextWrapper(_action, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the action export when it's imported from another file and exported and used by other code", () => {
+			const result = injectContext(
+				`
+			import {  action } from "./action.js";
+			const test = () => {
+				return action();
+			}
+			export { action };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
+      import { action as _action } from "./action.js";
+			const test = () => {
+				return _action();
+			};
+			export const action = _withActionContextWrapper(_action, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should wrap the action export when it's imported from another file and exported and used by other code and doesn't remove multiple export", () => {
+			const result = injectContext(
+				`
+			import {  action } from "./action.js";
+			const test = () => {
+				return action();
+			}
+			export { action, test };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withActionContextWrapper as _withActionContextWrapper   } from "react-router-devtools/context";
+      import { action as _action } from "./action.js";
+			const test = () => {
+				return _action();
+			};
+			export { test };
 			export const action = _withActionContextWrapper(_action, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -378,8 +515,54 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
-			import { clientAction  } from "./client-action.js";
-			export { clientAction as _clientAction };
+			import { clientAction as _clientAction } from "./client-action.js";
+			export const clientAction = _withClientActionContextWrapper(_clientAction, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should transform the client action export when it's re-exported from another file and used by other code", () => {
+			const result = injectContext(
+				`
+			import { clientAction } from "./client-action.js";
+			const test = () => {
+				return clientAction();
+			}
+			export { clientAction };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
+			import { clientAction as _clientAction } from "./client-action.js";
+			const test = () => {
+				return _clientAction();
+			};
+			export const clientAction = _withClientActionContextWrapper(_clientAction, "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should transform the client action export when it's re-exported from another file and used by other code and doesn't remove multiple export", () => {
+			const result = injectContext(
+				`
+			import { clientAction } from "./client-action.js";
+			const test = () => {
+				return clientAction();
+			}
+			export { clientAction, test };
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
+			import { clientAction as _clientAction } from "./client-action.js";
+			const test = () => {
+				return _clientAction();
+			};
+			export { test };
 			export const clientAction = _withClientActionContextWrapper(_clientAction, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
@@ -396,8 +579,7 @@ describe("transform", () => {
 			)
 			const expected = removeWhitespace(`
 			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
-      import { clientAction  } from "./client-action.js";
-			export { clientAction as _clientAction };
+      import { clientAction as _clientAction } from "./client-action.js";
 			export const clientAction = _withClientActionContextWrapper(_clientAction, "test");
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
