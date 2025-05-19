@@ -37,11 +37,14 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 				if (!ALL_EXPORTS.includes(name)) {
 					continue
 				}
-				const uniqueName = path.scope.generateUidIdentifier(name)
+				const isReimported = specifier.local.name !== name
+				const uniqueName = isReimported ? specifier.local : path.scope.generateUidIdentifier(name)
 				imports.push([name, uniqueName])
 				specifier.local = uniqueName
 				// Replace the import specifier with a new one
-				path.scope.rename(name, uniqueName.name)
+				if (!isReimported) {
+					path.scope.rename(name, uniqueName.name)
+				}
 			}
 		},
 		ExportDeclaration(path) {
@@ -64,7 +67,7 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 
 					return
 				}
-
+				// not this
 				if (decl.isFunctionDeclaration()) {
 					const { id } = decl.node
 					if (!id) return
@@ -100,21 +103,16 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 				if (path.node.source) {
 					// Special condition: export { loader, action } from "./path"
 					const source = path.node.source.value
-
+					const unique = path.scope.generateUidIdentifier(name)
 					importDeclarations.push(
-						t.importDeclaration(
-							[t.importSpecifier(t.identifier(`_${name}`), t.identifier(name))],
-							t.stringLiteral(source)
-						)
+						t.importDeclaration([t.importSpecifier(unique, t.identifier(name))], t.stringLiteral(source))
 					)
+
 					transformations.push(() => {
 						path.insertBefore(
 							t.exportNamedDeclaration(
 								t.variableDeclaration("const", [
-									t.variableDeclarator(
-										t.identifier(name),
-										t.callExpression(uid, [t.identifier(`_${name}`), t.stringLiteral(routeId)])
-									),
+									t.variableDeclarator(t.identifier(name), t.callExpression(uid, [unique, t.stringLiteral(routeId)])),
 								])
 							)
 						)
@@ -150,6 +148,7 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 						init.replaceWith(t.callExpression(uid, [init.node, t.stringLiteral(routeId)]))
 					}
 				} else {
+					// not this
 					transformations.push(() => {
 						const existingImport = imports.find(([existingName]) => existingName === name)
 						const uniqueName = existingImport?.[1].name ?? path.scope.generateUidIdentifier(name).name

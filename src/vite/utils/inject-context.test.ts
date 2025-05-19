@@ -584,6 +584,25 @@ describe("transform", () => {
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
 		})
+		it("should transform the client action export when it's imported from another file and exported and already transformed", () => {
+			const result = injectContext(
+				`
+				import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
+      import { clientAction as _clientAction } from "./client-action.js";
+
+			export const clientAction = _withClientActionWrapper(_clientAction, "test");
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
+      import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
+			import { clientAction as _clientAction } from "./client-action.js";
+			export const clientAction = _withClientActionContextWrapper(_withClientActionWrapper(_clientAction, "test"),"test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
 
 		it("should transform the clientAction export when it's re-exported from another file and remove empty export declaration", () => {
 			const result = injectContext(

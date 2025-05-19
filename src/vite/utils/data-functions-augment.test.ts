@@ -675,6 +675,24 @@ describe("transform", () => {
 		`)
 			expect(removeWhitespace(result.code)).toStrictEqual(expected)
 		})
+		it("should transform the client action export when it's imported from another file and exported and keep the export around if more things are exported", () => {
+			const result = augmentDataFetchingFunctions(
+				`
+			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
+      import { clientAction as _clientAction } from "./client-action.js";
+			export const clientAction = _withClientActionContextWrapper(_clientAction, "test");
+			`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+			import { withClientActionWrapper as _withClientActionWrapper   } from "react-router-devtools/client";
+			import { withClientActionContextWrapper as _withClientActionContextWrapper   } from "react-router-devtools/context";
+      import { clientAction as _clientAction } from "./client-action.js";
+			export const clientAction = _withClientActionWrapper(_withClientActionContextWrapper(_clientAction, "test"), "test");
+		`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
 
 		it("should wrap the clientAction export when it's exported via export { clientAction } and declared within the file", () => {
 			const result = augmentDataFetchingFunctions(

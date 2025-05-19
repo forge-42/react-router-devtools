@@ -47,11 +47,14 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 				if (!ALL_EXPORTS.includes(name)) {
 					continue
 				}
-				const uniqueName = path.scope.generateUidIdentifier(name)
+				const isReimported = specifier.local.name !== name
+				const uniqueName = isReimported ? specifier.local : path.scope.generateUidIdentifier(name)
 				imports.push([name, uniqueName])
 				specifier.local = uniqueName
 				// Replace the import specifier with a new one
-				path.scope.rename(name, uniqueName.name)
+				if (!isReimported) {
+					path.scope.rename(name, uniqueName.name)
+				}
 			}
 		},
 		ExportDeclaration(path) {
