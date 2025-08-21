@@ -1,0 +1,160 @@
+{
+  "paths": {
+    "installation": "started/installation",
+    "client": "configuration/client",
+    "general": "configuration/general",
+    "editor": "configuration/editor",
+    "server": "configuration/server",
+    "shortcuts": "features/shortcuts",
+    "active-page-tab": "features/active-page-tab",
+    "devtools": "features/devtools",
+    "routes-tab": "features/routes-tab",
+    "network-tab": "features/network-tab",
+    "errors-tab": "features/errors-tab",
+    "settings-tab": "features/settings-tab",
+    "detach": "features/detach",
+    "examples": "features/examples",
+    "migration": "guides/migration",
+    "plugins": "guides/plugins",
+    "hydrogen": "guides/hydrogen-oxygen",
+    "contributing": "guides/contributing"
+  },
+  "sections": [
+    "Getting Started",
+    "Configuration",
+    "Features",
+    "Guides"
+  ],
+  "meta": {
+    "installation": {
+      "title": "Setting up React Router Devtools",
+      "alternateTitle": "Installation",
+      "description": "Learn how to setup react-router-devtools in your project.",
+      "section": "Getting Started",
+      "slug": "installation",
+      "spacer": true
+    },
+    "general": {
+      "title": "General config",
+      "alternateTitle": "General config",
+      "description": "Learn about everything you can configure inside of react-router-devtools general part.",
+      "section": "Configuration",
+      "slug": "general",
+      "spacer": true
+    },
+    "client": {
+      "title": "Client config",
+      "alternateTitle": "Client config",
+      "description": "Learn about everything you can configure inside of react-router-devtools client-side part.",
+      "section": "Configuration",
+      "slug": "client",
+      "spacer": true
+    },
+    "editor": {
+      "title": "Editor config",
+      "alternateTitle": "Editor config",
+      "description": "Learn about everything you can configure with the custom editor you are using.",
+      "section": "Configuration",
+      "slug": "editor",
+      "spacer": true
+    },
+    "server": {
+      "title": "Server config",
+      "alternateTitle": "Server config",
+      "description": "Learn about everything you can configure inside of react-router-devtools server-side part.",
+      "section": "Configuration",
+      "slug": "server",
+      "spacer": true
+    },
+    "shortcuts": {
+      "title": "Keyboard Shortcuts",
+      "description": "Learn about all keyboard shortcuts",
+      "section": "Features",
+      "slug": "shortcuts",
+      "spacer": true
+    },
+    "devtools": {
+      "title": "Development Tools context",
+      "alternateTitle": "Development Tools context",
+      "description": "Detailed overview of all the features offered on the Dev Tools context.",
+      "section": "Features",
+      "slug": "devtools",
+      "spacer": true
+    },
+    "active-page-tab": {
+      "title": "Active Page Tab",
+      "alternateTitle": "Active Page Tab",
+      "description": "Detailed overview of all the features offered on the active page tab.",
+      "section": "Features",
+      "slug": "active-page-tab",
+      "spacer": true
+    },
+    "routes-tab": {
+      "title": "Routes Tab",
+      "alternateTitle": "Routes Tab",
+      "description": "Detailed overview of all the features offered on the Routes tab.",
+      "section": "Features",
+      "slug": "routes-tab",
+      "spacer": true
+    },
+    "network-tab": {
+      "title": "Network Tab",
+      "alternateTitle": "Network Tab",
+      "description": "Detailed overview of all the features offered on the Network tab.",
+      "section": "Features",
+      "slug": "network-tab",
+      "spacer": true
+    },
+    "errors-tab": {
+      "title": "Errors Tab",
+      "alternateTitle": "Errors Tab",
+      "description": "Detailed overview of all the features offered on the Errors tab.",
+      "section": "Features",
+      "slug": "errors-tab",
+      "spacer": true
+    },
+    "settings-tab": {
+      "title": "Settings Tab",
+      "alternateTitle": "Settings Tab",
+      "description": "Detailed overview of all the features offered on the Settings tab.",
+      "section": "Features",
+      "slug": "settings-tab",
+      "spacer": true
+    },
+    "detach": {
+      "title": "Detach mode",
+      "alternateTitle": "Detach mode",
+      "description": "Explanation on detach mode and how to use it.",
+      "section": "Features",
+      "slug": "detach"
+    },
+    "migration": {
+      "title": "Migrating from remix-development-tools",
+      "alternateTitle": "Migrating from remix-development-tools",
+      "description": "How to migrate your project to react-router-devtools",
+      "section": "Guides",
+      "slug": "migration"
+    },
+    "plugins": {
+      "title": "Plugins",
+      "alternateTitle": "Plugins",
+      "description": "Using plugins with react-router-devtools.",
+      "section": "Guides",
+      "slug": "plugins"
+    },
+    "hydrogen": {
+      "title": "Hydrogen + Oxygen integration",
+      "description": "Using react-router-devtools with Hydrogen and Oxygen from Shopify.",
+      "section": "Guides",
+      "slug": "hydrogen"
+    },
+    "contributing": {
+      "title": "Contributing",
+      "alternateTitle": "Contributing",
+      "description": "Contributing to react-router-devtools.",
+      "section": "Guides",
+      "slug": "contributing"
+    }
+  },
+  "hasIndex": true
+}

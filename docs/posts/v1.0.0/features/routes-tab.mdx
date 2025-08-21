@@ -1,0 +1,52 @@
+---
+title: "Routes Tab"
+description: "Detailed overview of all features on the Routes Tab."
+---
+
+import Info from "./info.tsx";
+
+The Routes tab shows you all the routes in your React Router application either in the tree view or a list view.
+The default is the tree view which shows the routes in a nested tree structure. You can switch to the list view by
+ clicking the list icon in the top left corner of the tab.
+
+The featureset is identical across both but only shown differently based on your preference.
+
+The only difference is the fact that the **tree view** shows you which routes are currently active on the page. This is
+ indicated by a golden line going through the tree from the root to the active route. The **list view** does not have this
+  feature.
+
+## Route types
+
+There are three types of routes in react-router-devtools:
+- *root* - The root route is the first route that is loaded when you open the application.
+It is the first route in the tree. (purple)
+- *route* - A route is a route that is not a root route. It is a route that is nested under another route and has
+a url segment. (green)
+- *layout* - A layout is a route that is not a root route and is a special kind of route that does not have a url
+segment but provides only an outlet with some layout for the child routes (blue)
+
+## Route info
+
+Clicking on any route name will show you detailed information about that route. This includes the route's name, the
+route's path, the route's url, the route's file and does it contain the following things:
+- *loader* - The loader is the function that is called when the route is loaded. It is responsible for fetching the data
+ needed for the route.
+- *action* - The action is the function that is called when the route is submitted. It is responsible for handling the
+  form submission.
+- *ErrorBoundary* - The ErrorBoundary is the component that is called when the route has an error. It is responsible for
+  showing the error message to the user.
+
+All of these segments are colored in either red or green indicating if it exists or not.
+
+<Info>
+  The error boundary will tell you if the error boundary for the current route comes from the route itself or is inherited
+  from a parent route. If it is inherited, it will show you the name of the parent route.
+</Info>
+
+## Wildcard parameters
+
+If a route has a wildcard parameter, it will be shown in the **Wildcard parameters** section which allows you to enter
+any value for the wildcard parameter. This is useful when combined with the **Open in Browser** button that redirects
+you to the route with the wildcard parameter.
+
+The wildcard values are saved in the browser so you can persist them across development sessions.

@@ -17,6 +17,7 @@ const config = defineRdtConfig({
       name: "Staging",
     }],
   },
+  enhancedLogs: true,
   pluginDir: "./plugins",
   includeInProd: {
     client: true,
