@@ -40,6 +40,7 @@ type ReactRouterViteConfig = {
 	/** The directory where the react router app is located. Defaults to the "./app" relative to where vite.config is being defined. */
 	appDir?: string
 	editor?: EditorConfig
+	enhancedLogs?: boolean
 }
 
 type Route = {
@@ -59,12 +60,12 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		...args?.client,
 		editorName: args?.editor?.name,
 	}
+	const enhancedLogs = args?.enhancedLogs ?? true
 	const includeClient = args?.includeInProd?.client ?? false
 	const includeServer = args?.includeInProd?.server ?? false
 	const includeDevtools = args?.includeInProd?.devTools ?? false
 	let port = 5173
-	let routes: Route[] = []
-	let flatRoutes: Route[] = []
+	const routesMap = new Map<string, Route[]>()
 	const appDir = args?.appDir || "./app"
 	const appDirName = appDir.replace("./", "")
 	const shouldInject = (mode: string | undefined, include: boolean) => mode === "development" || include
@@ -79,7 +80,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 
 		const isRoute =
 			id.includes(`${appDirName}/root`) ||
-			flatRoutes.some((route) => id.endsWith(route.file.replace(/^\.\//, "").replace(/^\.\.\//, "")))
+			routesMap.get("flat")?.some((route) => id.endsWith(route.file.replace(/^\.\//, "").replace(/^\.\.\//, "")))
 
 		if (!isRoute) {
 			return
@@ -108,7 +109,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					// Set the route config
 					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), "./app/routes.ts"))).default
 					const routeConfig = await routeConfigExport
-					routes = routeConfig
+					routesMap.set("routes", routeConfig)
 
 					const recursiveFlatten = (routeOrRoutes: Route | Route[]): Route[] => {
 						if (Array.isArray(routeOrRoutes)) {
@@ -147,19 +148,24 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 						}
 						return [routeOrRoutes]
 					}
-					flatRoutes = routes
-						.map((route) => {
-							// ./path.tsx => path
-							// ../path.tsx => path
-							const withoutExtension = route.file
-								.split(".")
-								.slice(0, -1)
-								.join(".")
-								.replace(/^\.\//, "")
-								.replace(/^\.\.\//, "")
-							return { ...route, parentId: "root", id: route.id ?? withoutExtension }
-						})
-						.flatMap(recursiveFlatten)
+					routesMap.set(
+						"flat",
+						// biome-ignore lint/style/noNonNullAssertion: set right above
+						routesMap
+							.get("routes")!
+							.map((route) => {
+								// ./path.tsx => path
+								// ../path.tsx => path
+								const withoutExtension = route.file
+									.split(".")
+									.slice(0, -1)
+									.join(".")
+									.replace(/^\.\//, "")
+									.replace(/^\.\.\//, "")
+								return { ...route, parentId: "root", id: route.id ?? withoutExtension }
+							})
+							.flatMap(recursiveFlatten)
+					)
 				} catch (e) {}
 				const reactRouterIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router")
 				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router-devtools")
@@ -306,7 +312,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 						"routes-info",
 						JSON.stringify({
 							type: "routes-info",
-							data: flatRoutes,
+							data: routesMap.get("flat"),
 						})
 					)
 				})
@@ -343,10 +349,10 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			},
 		},
 		{
-			name: "better-console-logs",
+			name: "react-router-devtools:better-console-logs",
 			enforce: "pre",
 			apply(config) {
-				return config.mode === "development"
+				return config.mode === "development" && enhancedLogs
 			},
 			async transform(code, id) {
 				// Ignore anything external

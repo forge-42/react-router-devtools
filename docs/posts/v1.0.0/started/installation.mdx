@@ -1,0 +1,69 @@
+---
+title: "Setting up React Router Devtools"
+alternateTitle: "Beginner's Guide"
+description: "Follow this page to learn how to set up React Router Devtools in your React Router project."
+---
+
+import Warn from "./warn.tsx";
+
+
+## Installation
+Adding React Router Devtools to your project is easy. First install it into your project by running:
+
+```bash
+npm install react-router-devtools -D
+```
+
+This will install it as a dev dependency in your project.
+
+## Enabling the tools
+
+After you have installed the tools, you need to go to your `vite.config.ts` file which will probably look something like this:
+
+```ts
+import { reactRouter } from '@react-router/dev/vite'
+import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
+
+export default defineConfig({
+  plugins: [reactRouter(), tsconfigPaths()],
+})
+
+```
+
+All you have to do is add the plugin into the `plugins` array in your `vite.config.ts` file.
+
+```diff
+import { reactRouter } from '@react-router/dev/vite'
+import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
++import { reactRouterDevTools } from "react-router-devtools";
+
+export default defineConfig({
+-  plugins: [reactRouter(), tsconfigPaths()],
++  plugins: [reactRouterDevTools(), reactRouter(), tsconfigPaths()],
+})
+
+```
+<Warn title="Warning">
+Make sure your plugin is BEFORE the react router one!
+</Warn>
+
+### CloudFlare
+
+If you're trying to spin it up on CF, try adding this to your `optimizeDeps` in your `vite.config.js` file:
+```ts
+optimizeDeps: {
+  include: [
+    // other optimized deps
+    "beautify",
+    "react-diff-viewer-continued",
+    "classnames",
+    "@bkrem/react-transition-group",
+  ],
+},
+```
+
+**That's it!**
+
+You should now see the React Router Devtools in your browser when you run your app.

@@ -1,0 +1,90 @@
+---
+title: "Integration with Shopify Hydrogen and Oxygen"
+description: "Guide on getting react-router-devtools working with Shopify Hydrogen and Oxygen"
+---
+
+## Adding react-router-devtools to your project
+
+Even though react-router-devtools is an ESM package, some of the dependencies it relies on are unfortunately not. This means that
+these dependencies will break the shopify CLI when running your React Router app built on top of Shopify Hydrogen and Oxygen.
+
+In case your package.json script `dev` command looks like this:
+
+```json
+  "dev": "shopify hydrogen dev --codegen",
+```
+
+This means you'll have to do the following to get it working.
+
+Go to your `vite.config.ts` and add `react-router-devtools`, depending on your project the file will look something like this:
+```diff
+import { defineConfig } from 'vite';
+import { hydrogen } from '@shopify/hydrogen/vite';
+import { oxygen } from '@shopify/mini-oxygen/vite';
+import { reactRouter } from '@react-router/dev/vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
++ import { reactRouterDevTools } from 'react-router-devtools';
+export default defineConfig({
+  plugins: [
++   reactRouterDevTools(),
+    hydrogen(),
+    oxygen(),
+    reactRouter({
+      presets: [hydrogen.preset()]
+    }),
+    tsconfigPaths(),
+  ],
+  build: {
+    assetsInlineLimit: 0,
+  },
+  ssr: {
+    optimizeDeps: {
+      include: [],
+    },
+  },
+});
+
+```
+## Adding problematic dependencies
+
+Add the following dependencies to `ssr.optimizeDeps.include` array:
+```diff
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools(),
+    hydrogen(),
+    oxygen(),
+    reactRouter({
+      presets: [hydrogen.preset()]
+    }),
+    tsconfigPaths(),
+  ],
+  build: {
+    assetsInlineLimit: 0,
+  },
++  ssr: {
++    optimizeDeps: {
++      include: [
++        'beautify',
++        'react-diff-viewer-continued',
++        'react-d3-tree',
++      ],
++    },
++  },
+});
+```
+
+### Debugging issues
+If you're still having issues, look at the error log output by the Shopify CLI and see if there are any errors related to the dependencies, the usual errors you might see are:
+- `require is not defined`
+- `module.exports is not defined`
+- `Cannot find module 'X'`
+
+This all indicated that there is a problem with a dependency that is used by react-router-devtools. Sometimes it's even a dependency not
+directly used by react-router-devtools, but it's a dependency of a dependency that is used by react-router-devtools.
+
+So if adding the first depedency in the error stack strace does not work, see if there are any additional dependencies in the stack trace before
+react-router-devtools. This package will be the last one in the stack trace.
+
+
+Enjoy your new react-router-devtools 🚀
