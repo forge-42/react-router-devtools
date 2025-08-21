@@ -107,7 +107,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				try {
 					const path = await import("node:path")
 					// Set the route config
-					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), "./app/routes.ts"))).default
+					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), appDir, "routes.ts"))).default
 					const routeConfig = await routeConfigExport
 					routesMap.set("routes", routeConfig)
 
@@ -344,7 +344,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					})
 
 					server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({ data, openInEditor, appDir }))
-					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor }))
+					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor, appDir }))
 				}
 			},
 		},
