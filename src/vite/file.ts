@@ -5,7 +5,7 @@ import { GENERATORS, type Generator } from "./generators"
 export type WriteFileData = {
 	type: "write-file"
 	path: string
-	openInEditor: (path: string, lineNum: string | undefined) => void
+	openInEditor: (path: string, lineNum: string | undefined, columnNum: string | undefined) => void
 	options: {
 		loader: boolean
 		clientLoader: boolean
@@ -66,5 +66,5 @@ export const handleWriteFile = async ({ path, options, openInEditor, appDir }: W
 		.filter(Boolean)
 		.join("\n\n")
 	await writeFile(outputFile, fileContent)
-	openInEditor(outputFile, undefined)
+	openInEditor(outputFile, undefined, undefined)
 }

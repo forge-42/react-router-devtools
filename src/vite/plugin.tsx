@@ -12,6 +12,7 @@ import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
 import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
 import { injectRdtClient } from "./utils/inject-client.js"
 import { injectContext } from "./utils/inject-context.js"
+import { addSourceToJsx } from "./utils/inject-source.js"
 // this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
@@ -98,6 +99,19 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		process.rdt_config = serverConfig
 	}
 	return [
+		{
+			enforce: "pre",
+			name: "react-router-devtools:inject-source",
+			apply(config) {
+				return config.mode === "development"
+			},
+			transform(code, id) {
+				if (id.includes("node_modules") || id.includes("?raw") || id.includes("dist") || id.includes("build"))
+					return code
+
+				return addSourceToJsx(code, id)
+			},
+		},
 		{
 			name: "react-router-devtools",
 			apply(config) {
@@ -259,11 +273,15 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				})
 				const channel = server.hot
 				const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
-				const openInEditor = async (path: string | undefined, lineNum: string | undefined) => {
+				const openInEditor = async (
+					path: string | undefined,
+					lineNum: string | undefined,
+					columnNum: string | undefined
+				) => {
 					if (!path) {
 						return
 					}
-					editor.open(path, lineNum)
+					editor.open(path, lineNum, columnNum)
 				}
 				server.middlewares.use((req, res, next) =>
 					handleDevToolsViteRequest(req, res, next, (parsedData) => {
@@ -343,7 +361,19 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 						)
 					})
 
-					server.hot.on("open-source", (data: OpenSourceData) => handleOpenSource({ data, openInEditor, appDir }))
+					server.hot.on("open-source", (data: OpenSourceData) =>
+						handleOpenSource({
+							data: {
+								...data,
+								data: {
+									...data.data,
+									source: data.data.source ? normalizePath(`${process.cwd()}/${data.data.source}`) : undefined,
+								},
+							},
+							openInEditor,
+							appDir,
+						})
+					)
 					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor, appDir }))
 				}
 			},

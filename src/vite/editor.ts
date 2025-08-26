@@ -17,14 +17,16 @@ export type OpenSourceData = {
 
 export type EditorConfig = {
 	name: string
-	open(path: string, lineNumber: string | undefined): void
+	open(path: string, lineNumber: string | undefined, columnNumber: string | undefined): void
 }
 
 export const DEFAULT_EDITOR_CONFIG: EditorConfig = {
 	name: "VSCode",
-	open: async (path, lineNumber) => {
+	open: async (path, lineNumber, columnNumber) => {
 		const { exec } = await import("node:child_process")
-		exec(`code -g "${normalizePath(path).replaceAll("$", "\\$")}${lineNumber ? `:${lineNumber}` : ""}"`)
+		exec(
+			`code -g "${normalizePath(path).replaceAll("$", "\\$")}${lineNumber ? `:${lineNumber}` : ""}${columnNumber ? `:${columnNumber}` : ""}"`
+		)
 	},
 }
 
@@ -35,14 +37,16 @@ export const handleOpenSource = async ({
 }: {
 	data: OpenSourceData
 	appDir: string
-	openInEditor: (path: string, lineNum: string | undefined) => Promise<void>
+	openInEditor: (path: string, lineNum: string | undefined, columnNum: string | undefined) => Promise<void>
 }) => {
-	const { source, line, routeID } = data.data
+	const { source, line, column, routeID } = data.data
+
 	const lineNum = line ? `${line}` : undefined
+	const columnNum = column ? `${column}` : undefined
 	const fs = await import("node:fs")
 	const path = await import("node:path")
 	if (source) {
-		return openInEditor(source, lineNum)
+		return openInEditor(source, lineNum, columnNum)
 	}
 
 	if (routeID) {
@@ -64,7 +68,7 @@ export const handleOpenSource = async ({
 			if (!fs.existsSync(appDir)) return
 			const filesInReactRouterPath = fs.readdirSync(appDir)
 			const rootFile = findFileByExtension("root", filesInReactRouterPath)
-			rootFile && openInEditor(path.join(appDir, rootFile), lineNum)
+			rootFile && openInEditor(path.join(appDir, rootFile), lineNum, columnNum)
 			return
 		}
 
@@ -74,9 +78,9 @@ export const handleOpenSource = async ({
 		if (type === "directory") {
 			const filesInFolderRoute = fs.readdirSync(validPath)
 			const routeFile = findFileByExtension("route", filesInFolderRoute)
-			routeFile && openInEditor(path.join(appDir, routeID, routeFile), lineNum)
+			routeFile && openInEditor(path.join(appDir, routeID, routeFile), lineNum, columnNum)
 			return
 		}
-		return openInEditor(validPath, lineNum)
+		return openInEditor(validPath, lineNum, columnNum)
 	}
 }

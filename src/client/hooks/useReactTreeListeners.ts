@@ -6,18 +6,6 @@ import { useHtmlErrors } from "../context/useRDTContext.js"
 
 export const ROUTE_CLASS = "outlet-route"
 
-const isSourceElement = (fiberNode: any) => {
-	return (
-		fiberNode?.elementType &&
-		fiberNode?.stateNode &&
-		fiberNode?._debugSource &&
-		!fiberNode?.stateNode?.getAttribute?.("data-source")
-	)
-}
-
-const isJsxFile = (fiberNode: Fiber<any>) =>
-	fiberNode?._debugSource?.fileName?.includes("tsx") || fiberNode?._debugSource?.fileName?.includes("jsx")
-
 export function useReactTreeListeners() {
 	const invalidHtmlCollection = useRef<HTMLError[]>([])
 	const { setHtmlErrors } = useHtmlErrors()
@@ -155,18 +143,6 @@ export function useReactTreeListeners() {
 
 		onCommitFiberRoot((root) =>
 			traverseFiber(root.current, (fiberNode) => {
-				if (isSourceElement(fiberNode) && typeof import.meta.hot !== "undefined") {
-					const originalSource = fiberNode?._debugSource
-					const source = fiberNode?._debugOwner?._debugSource ?? fiberNode?._debugSource
-					const line = source?.fileName?.startsWith("/") ? originalSource?.lineNumber : source?.lineNumber
-					const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName
-
-					fiberNode.stateNode?.setAttribute?.(
-						"data-source",
-						`${fileName}:::${line}` //
-					)
-				}
-
 				if (fiberNode?.stateNode && fiberNode?.elementType === "form") {
 					findIncorrectHtml(fiberNode.child, fiberNode, "form")
 				}

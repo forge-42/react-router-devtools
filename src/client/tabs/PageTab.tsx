@@ -1,12 +1,10 @@
 import clsx from "clsx"
-import { useMemo } from "react"
 import { useMatches, useRevalidator } from "react-router"
 
 import { RouteSegmentInfo } from "../components/RouteSegmentInfo.js"
 
 const PageTab = () => {
 	const routes = useMatches()
-	const reversed = useMemo(() => routes.reverse(), [routes])
 	const { revalidate, state } = useRevalidator()
 
 	return (
@@ -32,7 +30,7 @@ const PageTab = () => {
 				<ol
 					className={clsx("relative border-l border-gray-700", state === "loading" && "pointer-events-none opacity-50")}
 				>
-					{reversed.map((route, i) => (
+					{routes.map((route, i) => (
 						<RouteSegmentInfo route={route} i={i} key={route.id} />
 					))}
 				</ol>
