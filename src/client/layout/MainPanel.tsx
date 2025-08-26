@@ -45,7 +45,7 @@ const MainPanel = ({ children, isOpen, isEmbedded = false, className }: MainPane
 				className
 			)}
 		>
-			{panelLocation === "bottom" && (
+			{panelLocation === "bottom" && !isEmbedded && (
 				<div
 					onMouseDown={enableResize}
 					onMouseUp={disableResize}
