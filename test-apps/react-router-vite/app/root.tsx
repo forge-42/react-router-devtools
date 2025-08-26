@@ -26,6 +26,7 @@ export const loader = ({context, devTools }: LoaderFunctionArgs) => {
       resolve({ test: "test", subPromise});
     }, 2000);
   });
+  console.log("loader called");
   const start =devTools?.tracing.start("test")!;
   devTools?.tracing.end("test", start);
   return  data({ message: "Hello World", mainPromise, bigInt: BigInt(10) },  );
@@ -39,6 +40,7 @@ export const action =async  ({devTools}: ActionFunctionArgs) => {
     }, 2000);
   });
   devTools?.tracing.end("action submission", start!)
+  console.log("action called");
   return  ({ message: "Hello World", bigInt: BigInt(10) });
 }
 

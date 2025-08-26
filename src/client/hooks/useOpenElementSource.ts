@@ -12,10 +12,10 @@ const useOpenElementSource = () => {
 		e.stopPropagation()
 		e.preventDefault()
 		const target = e.target as HTMLElement
-		const rdtSource = target?.getAttribute("data-source")
+		const rdtSource = target?.getAttribute("data-rrdt-source")
 
 		if (rdtSource) {
-			const [source, line, column] = rdtSource.split(":::")
+			const [source, line, column] = rdtSource.split(":")
 			return sendJsonMessage({
 				type: "open-source",
 				data: { source, line, column },
