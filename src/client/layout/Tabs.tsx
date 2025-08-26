@@ -90,7 +90,7 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 	}
 
 	const getErrorCount = () => {
-		return htmlErrors.length + (window.HYDRATION_OVERLAY.ERROR ? 1 : 0)
+		return htmlErrors.length + (window.HYDRATION_OVERLAY?.ERROR ? 1 : 0)
 	}
 
 	const hasErrors = getErrorCount() > 0
