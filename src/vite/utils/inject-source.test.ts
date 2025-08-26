@@ -6,6 +6,64 @@ const removeEmptySpace = (str: string) => {
 }
 
 describe("inject source", () => {
+	it("shouldn't augment react fragments", () => {
+		const output = removeEmptySpace(
+			addSourceToJsx(
+				`
+      export const Route = createFileRoute("/test")({
+      component: function() { return <>Hello World</> },
+      })
+        `,
+				"test.jsx"
+			).code
+		)
+		expect(output).toBe(
+			removeEmptySpace(`
+            export const Route = createFileRoute("/test")({
+      component: function() { return <>Hello World</> },
+      })
+        `)
+		)
+	})
+
+	it("shouldn't augment react fragments if they start with Fragment ", () => {
+		const output = removeEmptySpace(
+			addSourceToJsx(
+				`
+      export const Route = createFileRoute("/test")({
+      component: function() { return <Fragment>Hello World</Fragment> },
+      })
+        `,
+				"test.jsx"
+			).code
+		)
+		expect(output).toBe(
+			removeEmptySpace(`
+            export const Route = createFileRoute("/test")({
+      component: function() { return <Fragment>Hello World</Fragment> },
+      })
+        `)
+		)
+	})
+	it("shouldn't augment react fragments if they start with React.Fragment ", () => {
+		const output = removeEmptySpace(
+			addSourceToJsx(
+				`
+      export const Route = createFileRoute("/test")({
+      component: function() { return <React.Fragment>Hello World</React.Fragment> },
+      })
+        `,
+				"test.jsx"
+			).code
+		)
+		expect(output).toBe(
+			removeEmptySpace(`
+            export const Route = createFileRoute("/test")({
+      component: function() { return <React.Fragment>Hello World</React.Fragment> },
+      })
+        `)
+		)
+	})
 	describe("FunctionExpression", () => {
 		it("should work with deeply nested custom JSX syntax", () => {
 			const output = removeEmptySpace(
