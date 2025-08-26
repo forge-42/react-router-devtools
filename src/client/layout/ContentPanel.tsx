@@ -28,7 +28,7 @@ const ContentPanel = ({ plugins }: ContentPanelProps) => {
 			{!hideTimeline && (
 				<Fragment>
 					<div className="w-1 bg-gray-500/20" />
-					<div className={clsx("z-10 hidden lg:block h-full w-1/3 p-2")}>
+					<div className={clsx("z-10 hidden lg:block h-full w-1/3 p-2 overflow-y-auto")}>
 						<TimelineTab />
 					</div>
 				</Fragment>

@@ -27,7 +27,10 @@ const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: Embed
 	const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin))
 	if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null
 	return (
-		<div id={REACT_ROUTER_DEV_TOOLS} className={clsx("react-router-dev-tools react-router-dev-tools-reset", className)}>
+		<div
+			id={REACT_ROUTER_DEV_TOOLS}
+			className={clsx("react-router-dev-tools react-router-dev-tools-reset h-full flex-row", className)}
+		>
 			<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
 				<Tabs plugins={plugins} />
 				<ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />
