@@ -140,3 +140,4 @@ dist
 .content-collections
 build
 generated-docs
+.nx
