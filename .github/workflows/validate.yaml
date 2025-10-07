@@ -37,12 +37,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Install dependencies
+        run: pnpm install
       - name: 🔎 Validate
-        run: npm run test
+        run: pnpm run test
 
   deploy-docs-pr-preview:
     if: ${{ github.event_name == 'pull_request' }}
