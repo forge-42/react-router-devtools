@@ -10,7 +10,7 @@
 		"execute": "tsx",
 		"clean": "git clean -fdX --exclude=\"!.env\"",
 		"script": "tsx scripts/setup.ts",
-		"build": "react-router build",
+		"build": "pnpm run content-collections:build && react-router build",
 		"predev": "run-s typegen verify:docs",
 		"dev": "react-router dev",
 		"start": "NODE_ENV=production node ./build/server/index.js",

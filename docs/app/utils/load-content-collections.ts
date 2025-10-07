@@ -3,7 +3,6 @@ import { pathToFileURL } from "node:url"
 import type { Page } from "content-collections-types"
 import type { Section } from "content-collections-types"
 import type { Version } from "./version-resolvers"
-import { getServerEnv } from "~/env.server"
 
 /**
  * Load content-collections outputs
@@ -13,9 +12,8 @@ import { getServerEnv } from "~/env.server"
  */
 export async function loadContentCollections(version: Version) {
 	const projectRoot = process.cwd()
-	const isDev = getServerEnv().APP_ENV === "development"
 	// locally we use the actual content-collections source for DX and hot-reloads
-	if (isDev) {
+	if (process.env.NODE_ENV === "development") {
 		const { allPages, allSections } = await import("content-collections")
 		return { allPages, allSections }
 	}
