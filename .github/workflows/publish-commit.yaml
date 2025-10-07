@@ -24,6 +24,6 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm run build
+        run: pnpm run build:all
 
       - run: npx pkg-pr-new publish ./packages/*
