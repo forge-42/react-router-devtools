@@ -59,7 +59,12 @@ jobs:
         env:
           FLY_ORG: ${{ vars.FLY_ORG }}
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          FLY_REGION: fra
+          FLY_REGION: ${{ vars.FLY_REGION }}
         with:
           workspace_name: docs
           app_name: react-router-devtools-docs-pr-${{ github.event.number }}
+          env_vars: |
+            APP_ENV=production
+            GITHUB_OWNER=${{ github.repository_owner }}
+            GITHUB_REPO=${{ github.event.repository.name }}
+            GITHUB_REPO_URL=https://github.com/${{ github.repository }}
