@@ -28,7 +28,7 @@
 	"scripts": {
 		"build": "nx affected --targets=build --exclude=test-apps/**,docs/**",
 		"build:all": "nx run-many --targets=build --exclude=test-apps/**,docs/**",
-		"docs": "pnpm --filter=\"react-router-devtools-docs\" dev",
+		"docs": "pnpm --filter=\"docs\" dev",
 		"clean": "git clean -fdX .",
 		"clean:build": "git clean -fdx -e node_modules .",
 		"typecheck": "pnpm run --filter=\"./packages/**/*\" --parallel typecheck",
