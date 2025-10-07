@@ -1,0 +1,17 @@
+
+> react-router-devtools-monorepo@1.0.0 test:deps C:\Users\AlemTuzlak\projects\Remix-Dev-Tools
+> sherif -i tailwindcss
+
+
+1 issue found in .\packages\react-router-devtools/package.json:
+
+ ⨯ error devDependencies should be ordered alphabetically. unordered-dependencies
+  │ {
+  │   "devDependencies": {
+  ~     ...   ← keys aren't sorted.
+  │   }
+  │ }
+
+1 issue found (1 ⨯, 0 ⚠️, 0 ✓) across 4 packages in 3.0589ms.
+ Note: use `-i` to ignore dependencies, `-r` to ignore rules, `-p` to ignore packages, and `-f` to autofix fixable issues.
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m

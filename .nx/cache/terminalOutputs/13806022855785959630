@@ -1,0 +1,68 @@
+
+> react-router-devtools@5.1.3 test:types C:\Users\AlemTuzlak\projects\Remix-Dev-Tools\packages\react-router-devtools
+> tsc --noEmit
+
+src/server/hof.test.ts(22,18): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(31,32): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(49,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(65,17): error TS2345: Argument of type '{ request: Request; params: { test: string; }; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: { test: string; }; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(75,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(90,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(107,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(129,18): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(138,32): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(156,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(172,17): error TS2345: Argument of type '{ request: Request; params: { test: string; }; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: { test: string; }; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(182,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(197,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(214,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/vite/utils/babel.ts(6,22): error TS7016: Could not find a declaration file for module '@babel/generator'. 'C:/Users/AlemTuzlak/projects/Remix-Dev-Tools/node_modules/.pnpm/@babel+generator@7.28.3/node_modules/@babel/generator/lib/index.js' implicitly has an 'any' type.
+  If the '@babel/generator' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__generator'
+src/vite/utils/babel.ts(7,22): error TS7016: Could not find a declaration file for module '@babel/traverse'. 'C:/Users/AlemTuzlak/projects/Remix-Dev-Tools/node_modules/.pnpm/@babel+traverse@7.28.4/node_modules/@babel/traverse/lib/index.js' implicitly has an 'any' type.
+  If the '@babel/traverse' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse'
+src/vite/utils/babel.ts(12,48): error TS7016: Could not find a declaration file for module '@babel/traverse'. 'C:/Users/AlemTuzlak/projects/Remix-Dev-Tools/node_modules/.pnpm/@babel+traverse@7.28.4/node_modules/@babel/traverse/lib/index.js' implicitly has an 'any' type.
+  If the '@babel/traverse' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse'
+src/vite/utils/babel.ts(19,48): error TS7016: Could not find a declaration file for module '@babel/generator'. 'C:/Users/AlemTuzlak/projects/Remix-Dev-Tools/node_modules/.pnpm/@babel+generator@7.28.3/node_modules/@babel/generator/lib/index.js' implicitly has an 'any' type.
+  If the '@babel/generator' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__generator'
+src/vite/utils/data-functions-augment.ts(3,31): error TS7016: Could not find a declaration file for module '@babel/traverse'. 'C:/Users/AlemTuzlak/projects/Remix-Dev-Tools/node_modules/.pnpm/@babel+traverse@7.28.4/node_modules/@babel/traverse/lib/index.js' implicitly has an 'any' type.
+  If the '@babel/traverse' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse'
+src/vite/utils/data-functions-augment.ts(40,21): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/data-functions-augment.ts(60,21): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/data-functions-augment.ts(103,26): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/data-functions-augment.ts(145,9): error TS7006: Parameter 'exportSpecifier' implicitly has an 'any' type.
+src/vite/utils/data-functions-augment.ts(177,9): error TS7006: Parameter 'exportSpecifier' implicitly has an 'any' type.
+src/vite/utils/inject-client.ts(3,31): error TS7016: Could not find a declaration file for module '@babel/traverse'. 'C:/Users/AlemTuzlak/projects/Remix-Dev-Tools/node_modules/.pnpm/@babel+traverse@7.28.4/node_modules/@babel/traverse/lib/index.js' implicitly has an 'any' type.
+  If the '@babel/traverse' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse'
+src/vite/utils/inject-client.ts(36,21): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/inject-client.ts(109,10): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/vite/utils/inject-context.ts(3,31): error TS7016: Could not find a declaration file for module '@babel/traverse'. 'C:/Users/AlemTuzlak/projects/Remix-Dev-Tools/node_modules/.pnpm/@babel+traverse@7.28.4/node_modules/@babel/traverse/lib/index.js' implicitly has an 'any' type.
+  If the '@babel/traverse' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse'
+src/vite/utils/inject-context.ts(30,21): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/inject-context.ts(50,21): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/inject-context.ts(89,26): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/inject-context.ts(124,9): error TS7006: Parameter 'exportSpecifier' implicitly has an 'any' type.
+src/vite/utils/inject-context.ts(156,9): error TS7006: Parameter 'exportSpecifier' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(133,23): error TS7006: Parameter 'functionDeclaration' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(136,23): error TS7006: Parameter 'element' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(144,27): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(147,23): error TS7006: Parameter 'element' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(155,22): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(158,23): error TS7006: Parameter 'element' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(166,23): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(167,61): error TS7006: Parameter 'decl' implicitly has an 'any' type.
+src/vite/utils/inject-source.ts(176,23): error TS7006: Parameter 'element' implicitly has an 'any' type.
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

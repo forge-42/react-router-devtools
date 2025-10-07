@@ -1,9 +1,8 @@
 {
-	"name": "react-router-devtools",
+	"name": "react-router-devtools-monorepo",
+	"version": "1.0.0",
 	"description": "Devtools for React Router - debug, trace, find hydration errors, catch bugs and inspect server/client data with react-router-devtools",
 	"author": "Alem Tuzlak",
-	"version": "5.1.3",
-	"license": "MIT",
 	"keywords": [
 		"react-router",
 		"react-router-dev-tools",
@@ -17,49 +16,6 @@
 		"react-router-dev-server",
 		"hydration-mismatch"
 	],
-	"private": false,
-	"type": "module",
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			},
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
-		},
-		"./client": {
-			"import": {
-				"types": "./dist/client.d.ts",
-				"default": "./dist/client.js"
-			},
-			"types": "./dist/client.d.ts",
-			"default": "./dist/client.js"
-		},
-		"./context": {
-			"import": {
-				"types": "./dist/context.d.ts",
-				"default": "./dist/context.js"
-			},
-			"types": "./dist/context.d.ts",
-			"default": "./dist/context.js"
-		},
-		"./server": {
-			"import": {
-				"types": "./dist/server.d.ts",
-				"default": "./dist/server.js"
-			},
-			"types": "./dist/server.d.ts",
-			"default": "./dist/server.js"
-		},
-		"./client.css": {
-			"import": "./dist/client.css",
-			"require": "./dist/client.css"
-		}
-	},
-	"files": ["dist"],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/forge-42/react-router-devtools.git"
@@ -70,101 +26,46 @@
 	"homepage": "https://react-router-devtools.forge42.dev/",
 	"readme": "https://github.com/forge-42/react-router-devtools#readme",
 	"scripts": {
-		"clean": "git clean -fdX --exclude=\"!.env\"",
-		"docs": "npm run dev -w docs",
-		"prepublishOnly": "npm run build",
-		"react-router-vite": "npm run dev -w test-apps/react-router-vite",
-		"react-router-custom": "npm run dev -w test-apps/custom-server",
-		"runner": "npm-run-all -s build -p watch-all",
-		"dev": "npm run runner react-router-vite",
-		"dev:c": "npm run runner react-router-custom",
-		"build": "run-s  tsup:* -- --clean",
-		"watch-all": "npm-run-all -p tsup:index:watch tsup:client:watch tsup:server:watch tsup:context:watch -- --watch",
-		"tsup:index": "tsup",
-		"tsup:index:watch": "tsup --watch",
-		"tsup:client": "tsup --config tsup-client.config.ts",
-		"tsup:context": "tsup --config tsup-context.config.ts",
-		"tsup:server": "tsup --config tsup-server.config.ts",
-		"tsup:context:watch": "npm run tsup:context -- --watch",
-		"tsup:client:watch": "npm run tsup:client -- --watch",
-		"tsup:server:watch": "npm run tsup:server -- --watch",
+		"build": "nx affected --targets=build --exclude=test-apps/**,docs/**",
+		"build:all": "nx run-many --targets=build --exclude=test-apps/**,docs/**",
+		"docs": "pnpm --filter=\"react-router-devtools-docs\" dev",
+		"clean": "git clean -fdX .",
+		"clean:build": "git clean -fdx -e node_modules .",
+		"typecheck": "pnpm run --filter=\"./packages/**/*\" --parallel typecheck",
+		"test": "pnpm run test:ci",
+		"test:ci": "nx run-many --targets=test:unused,check,test:deps,test:lib,test:types,test:build,build",
+		"test:cov": "pnpm run --filter=\"./packages/**/*\" --parallel test:cov",
+		"dev": "pnpm run watch",
 		"check": "biome check .",
 		"check:fix": "biome check --fix .",
-		"test": "vitest run",
-		"test:ui": "vitest --ui --api 6532",
-		"test:debug": "jest-preview",
-		"test:live": "npm-run-all -p test:ui test:debug",
-		"test:cov": "vitest run --coverage",
-		"typecheck": "tsc --noEmit",
-		"validate": "npm run check && npm run typecheck && npm run test",
-		"run:scripts": "tsx",
-		"script": "npm run run:scripts scripts/setup.ts",
-		"icons": "npm run run:scripts scripts/icons.ts",
-		"check:unused": "knip "
+		"changeset": "changeset",
+		"release": "changeset publish",
+		"local-release": "changeset version && changeset publish",
+		"version": "changeset version",
+		"test:unused": "knip",
+		"test:deps": "sherif -i tailwindcss",
+		"watch": "pnpm run build:all && nx watch --all -- pnpm run build:all"
 	},
-	"workspaces": [".", "test-apps/*"],
-	"peerDependencies": {
-		"@types/react": ">=17",
-		"@types/react-dom": ">=17",
-		"react": ">=17",
-		"react-dom": ">=17",
-		"react-router": ">=7.0.0",
-		"vite": ">=5.0.0 || >=6.0.0"
-	},
+	"license": "MIT",
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"@react-router/dev": "7.1.4",
-		"@react-router/node": "7.1.4",
-		"@react-router/serve": "7.1.4",
-		"@testing-library/dom": "^10.4.0",
-		"@testing-library/react": "^16.2.0",
-		"@types/babel__core": "^7.20.5",
-		"@types/beautify": "^0.0.3",
-		"@types/node": "^22.12.0",
-		"@vitest/coverage-v8": "^3.0.4",
-		"@vitest/ui": "^3.0.4",
-		"autoprefixer": "^10.4.20",
-		"glob": "^11.0.1",
-		"happy-dom": "^16.8.1",
-		"jest-preview": "^0.3.1",
-		"knip": "^5.43.6",
-		"lefthook": "^1.10.10",
-		"node-html-parser": "^7.0.1",
-		"npm-run-all": "^4.1.5",
-		"postcss": "^8.5.1",
-		"prompt": "^1.3.0",
-		"tailwindcss": "^3.4.0",
-		"tailwindcss-animate": "^1.0.7",
-		"tsup": "^8.3.6",
-		"tsx": "^4.19.2",
-		"typescript": "^5.7.3",
-		"vite": "^6.0.11",
-		"vite-node": "^3.1.2",
-		"vitest": "^3.0.4"
+		"@biomejs/biome": "^1.9.4",
+		"@changesets/cli": "^2.29.0",
+		"@types/node": "22.13.1",
+		"knip": "5.43.6",
+		"lefthook": "^1.11.10",
+		"nx": "^21.6.3",
+		"sherif": "^1.6.1"
 	},
-	"dependencies": {
-		"@babel/core": "^7.26.10",
-		"@babel/generator": "^7.26.5",
-		"@babel/parser": "^7.26.10",
-		"@babel/traverse": "^7.26.10",
-		"@babel/types": "^7.26.10",
-		"@radix-ui/react-accordion": "^1.2.2",
-		"@radix-ui/react-select": "^2.1.5",
-		"beautify": "^0.0.8",
-		"bippy": "^0.3.7",
-		"chalk": "^5.4.1",
-		"clsx": "^2.1.1",
-		"date-fns": "^4.1.0",
-		"framer-motion": "^12.0.6",
-		"react-d3-tree": "^3.6.4",
-		"react-diff-viewer-continued": "^4.0.5",
-		"react-hotkeys-hook": "^4.6.1",
-		"react-tooltip": "^5.28.0",
-		"tailwind-merge": "^3.0.1"
+	"packageManager": "pnpm@10.18.0",
+	"engines": {
+		"pnpm": ">=10.18.0",
+		"node": ">=20.0.0"
 	},
-	"optionalDependencies": {
-		"@biomejs/cli-darwin-arm64": "^1.9.4",
-		"@rollup/rollup-darwin-arm64": "^4.32.1",
-		"@rollup/rollup-linux-x64-gnu": "^4.32.1"
-	}
+	"nx": {
+		"includedScripts": ["test:unused", "check", "test:deps"]
+	},
+	"overrides": {
+		"react-router-devtools": "workspace:*"
+	},
+	"private": true
 }

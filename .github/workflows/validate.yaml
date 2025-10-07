@@ -18,15 +18,15 @@ jobs:
     name: ⬣ Biome lint
     runs-on: ubuntu-latest
     steps:
-     - name: ⬇️ Checkout repo
-       uses: actions/checkout@v4
-     - name: Setup Biome
-       uses: biomejs/setup-biome@v2
-     - name: Run Biome
-       run: biome ci .
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+      - name: Run Biome
+        run: biome ci .
 
-  typecheck:
-    name: 🔎 Type check
+  validate:
+    name: 🔎 Validate
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -41,38 +41,13 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
-      - name: 🔎 Type check
-        run: npm run typecheck
-
-  vitest:
-    name: ⚡ Unit Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-      - name: Install dotenv cli
-        run: npm install -g dotenv-cli
-      - name: ⚡ Run vitest
-        run: npm run test:cov
-#      - name: "Report Coverage"
-        # Only works if you set `reportOnFailure: true` in your vite config as specified above
-#        if: always()
-#        uses: davelosert/vitest-coverage-report-action@v2
+      - name: 🔎 Validate
+        run: npm run test
 
   deploy-docs-pr-preview:
     if: ${{ github.event_name == 'pull_request' }}
     name: "🚀 Deploy Docs"
-    needs: [lint, typecheck, vitest]
+    needs: [lint, validate]
     runs-on: ubuntu-latest
     environment:
       name: docs-release

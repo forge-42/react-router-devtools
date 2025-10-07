@@ -5,14 +5,14 @@ import type * as T from "react-router/route-module"
 
 
 
-type Module = typeof import("../root")
+type Module = typeof import("../root.js")
 
 export type Info = {
   parents: [],
   id: "root"
   file: "root.tsx"
   path: ""
-  params: {}
+  params: {} & { [key: string]: string | undefined }
   module: Module
   loaderData: T.CreateLoaderData<Module>
   actionData: T.CreateActionData<Module>
@@ -25,6 +25,9 @@ export namespace Route {
   export type MetaArgs = T.CreateMetaArgs<Info>
   export type MetaDescriptors = T.MetaDescriptors
   export type MetaFunction = (args: MetaArgs) => MetaDescriptors
+
+  export type HeadersArgs = T.HeadersArgs
+  export type HeadersFunction = (args: HeadersArgs) => Headers | HeadersInit
 
   export type LoaderArgs = T.CreateServerLoaderArgs<Info>
   export type ClientLoaderArgs = T.CreateClientLoaderArgs<Info>

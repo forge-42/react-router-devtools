@@ -1,0 +1,408 @@
+
+> react-router-devtools-monorepo@1.0.0 check:fix C:\Users\AlemTuzlak\projects\Remix-Dev-Tools
+> biome check --fix .
+
+.\plugins\tailwind-palette\tailwind-palette.tsx:222:10 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    220 │ 							<div>
+    221 │ 								{colorVariants[color].map((variant: string) => (
+  > 222 │ 									<div
+        │ 									^^^^
+  > 223 │ 										key={variant}
+  > 224 │ 										onClick={() => navigator.clipboard.writeText(variant)}
+  > 225 │ 										className={`h-12 w-12 cursor-pointer ${variant}`}
+  > 226 │ 									></div>
+        │ 									^^^^^^^
+    227 │ 								))}
+    228 │ 							</div>
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    226 │ → → → → → → → → → ></div>
+        │                   -- --- 
+
+.\plugins\tailwind-palette\tailwind-palette.tsx:222:10 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    220 │ 							<div>
+    221 │ 								{colorVariants[color].map((variant: string) => (
+  > 222 │ 									<div
+        │ 									^^^^
+  > 223 │ 										key={variant}
+  > 224 │ 										onClick={() => navigator.clipboard.writeText(variant)}
+  > 225 │ 										className={`h-12 w-12 cursor-pointer ${variant}`}
+  > 226 │ 									></div>
+        │ 									^
+    227 │ 								))}
+    228 │ 							</div>
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+.\plugins\tailwind-palette\tailwind-palette.tsx:240:3 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    238 │ 	// Adds palette icon, you can change
+    239 │ 	icon: (
+  > 240 │ 		<svg
+        │ 		^^^^
+  > 241 │ 			xmlns="http://www.w3.org/2000/svg"
+         ...
+  > 249 │ 			strokeLinejoin="round"
+  > 250 │ 		>
+        │ 		^
+    251 │ 			<circle cx="13.5" cy="6.5" r=".5" />
+    252 │ 			<circle cx="17.5" cy="10.5" r=".5" />
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+.\plugins\icon-library\icon-library.tsx:16:9 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    14 │ // TODO Import your icon component
+    15 │ const Icon = (props: IconProps) => {
+  > 16 │ 	return <div></div>
+       │ 	       ^^^^^^^^^^^
+    17 │ }
+    18 │ 
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    14 14 │   // TODO Import your icon component
+    15 15 │   const Icon = (props: IconProps) => {
+    16    │ - → return·<div></div>
+       16 │ + → return·<div·/>
+    17 17 │   }
+    18 18 │   
+  
+
+.\plugins\icon-library\icon-library.tsx:52:5 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    50 │ 		<div className="flex flex-col gap-4 p-2">
+    51 │ 			<div className="flex items-center justify-end gap-2">
+  > 52 │ 				<label className="text-white">Icon classes:</label>
+       │ 				^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    53 │ 				<input
+    54 │ 					placeholder="Optional classes to apply to icons"
+  
+  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  
+
+.\plugins\icon-library\icon-library.tsx:15:15 lint/correctness/noUnusedFunctionParameters  FIXABLE  ━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    13 │ }
+    14 │ // TODO Import your icon component
+  > 15 │ const Icon = (props: IconProps) => {
+       │               ^^^^^
+    16 │ 	return <div></div>
+    17 │ }
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+  i Unsafe fix: If this is intentional, prepend props with an underscore.
+  
+    13 13 │   }
+    14 14 │   // TODO Import your icon component
+    15    │ - const·Icon·=·(props:·IconProps)·=>·{
+       15 │ + const·Icon·=·(_props:·IconProps)·=>·{
+    16 16 │   	return <div></div>
+    17 17 │   }
+  
+
+.\plugins\icon-library\icon-library.tsx:15:15 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    13 │ }
+    14 │ // TODO Import your icon component
+  > 15 │ const Icon = (props: IconProps) => {
+       │               ^^^^^
+    16 │ 	return <div></div>
+    17 │ }
+  
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend props with an underscore.
+  
+    13 13 │   }
+    14 14 │   // TODO Import your icon component
+    15    │ - const·Icon·=·(props:·IconProps)·=>·{
+       15 │ + const·Icon·=·(_props:·IconProps)·=>·{
+    16 16 │   	return <div></div>
+    17 17 │   }
+  
+
+.\docs\app\components\ui\Meteors.tsx:13:3 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    12 │ 	return meteors.map((el, idx) => (
+  > 13 │ 		<span
+       │ 		^^^^^
+  > 14 │ 			key={"meteor" + idx}
+        ...
+  > 25 │ 			}}
+  > 26 │ 		></span>
+       │ 		^^^^^^^^
+    27 │ 	))
+    28 │ }
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    26 │ → → ></span>
+       │     -- ---- 
+
+.\docs\app\components\ui\Meteors.tsx:14:9 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Template literals are preferred over string concatenation.
+  
+    12 │ 	return meteors.map((el, idx) => (
+    13 │ 		<span
+  > 14 │ 			key={"meteor" + idx}
+       │ 			     ^^^^^^^^^^^^^^
+    15 │ 			className={cn(
+    16 │ 				"absolute left-1/2 top-1/2 h-0.5 w-0.5 rotate-[215] animate-meteor-effect rounded-full bg-slate-500 shadow-[0_0_0_1px_#ffffff10]",
+  
+  i Unsafe fix: Use a template literal.
+  
+    12 12 │   	return meteors.map((el, idx) => (
+    13 13 │   		<span
+    14    │ - → → → key={"meteor"·+·idx}
+       14 │ + → → → key={`meteor${idx}`}
+    15 15 │   			className={cn(
+    16 16 │   				"absolute left-1/2 top-1/2 h-0.5 w-0.5 rotate-[215] animate-meteor-effect rounded-full bg-slate-500 shadow-[0_0_0_1px_#ffffff10]",
+  
+
+.\docs\app\components\ui\Meteors.tsx:22:11 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Template literals are preferred over string concatenation.
+  
+    20 │ 			style={{
+    21 │ 				top: 0,
+  > 22 │ 				left: Math.floor(Math.random() * (1920 - -1920) + -1920) + "px",
+       │ 				      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    23 │ 				animationDelay: Math.random() * (0.8 - 0.2) + 0.2 + "s",
+    24 │ 				animationDuration: Math.floor(Math.random() * (10 - 2) + 2) + "s",
+  
+  i Unsafe fix: Use a template literal.
+  
+    20 20 │   			style={{
+    21 21 │   				top: 0,
+    22    │ - → → → → left:·Math.floor(Math.random()·*·(1920·-·-1920)·+·-1920)·+·"px",
+       22 │ + → → → → left:·`${Math.floor(Math.random()·*·(1920·-·-1920)·+·-1920)}px`,
+    23 23 │   				animationDelay: Math.random() * (0.8 - 0.2) + 0.2 + "s",
+    24 24 │   				animationDuration: Math.floor(Math.random() * (10 - 2) + 2) + "s",
+  
+
+.\docs\app\components\ui\Meteors.tsx:23:21 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Template literals are preferred over string concatenation.
+  
+    21 │ 				top: 0,
+    22 │ 				left: Math.floor(Math.random() * (1920 - -1920) + -1920) + "px",
+  > 23 │ 				animationDelay: Math.random() * (0.8 - 0.2) + 0.2 + "s",
+       │ 				                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    24 │ 				animationDuration: Math.floor(Math.random() * (10 - 2) + 2) + "s",
+    25 │ 			}}
+  
+  i Unsafe fix: Use a template literal.
+  
+    21 21 │   				top: 0,
+    22 22 │   				left: Math.floor(Math.random() * (1920 - -1920) + -1920) + "px",
+    23    │ - → → → → animationDelay:·Math.random()·*·(0.8·-·0.2)·+·0.2·+·"s",
+       23 │ + → → → → animationDelay:·`${Math.random()·*·(0.8·-·0.2)·+·0.2}s`,
+    24 24 │   				animationDuration: Math.floor(Math.random() * (10 - 2) + 2) + "s",
+    25 25 │   			}}
+  
+
+.\docs\app\components\ui\Meteors.tsx:24:24 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Template literals are preferred over string concatenation.
+  
+    22 │ 				left: Math.floor(Math.random() * (1920 - -1920) + -1920) + "px",
+    23 │ 				animationDelay: Math.random() * (0.8 - 0.2) + 0.2 + "s",
+  > 24 │ 				animationDuration: Math.floor(Math.random() * (10 - 2) + 2) + "s",
+       │ 				                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    25 │ 			}}
+    26 │ 		></span>
+  
+  i Unsafe fix: Use a template literal.
+  
+    22 22 │   				left: Math.floor(Math.random() * (1920 - -1920) + -1920) + "px",
+    23 23 │   				animationDelay: Math.random() * (0.8 - 0.2) + 0.2 + "s",
+    24    │ - → → → → animationDuration:·Math.floor(Math.random()·*·(10·-·2)·+·2)·+·"s",
+       24 │ + → → → → animationDuration:·`${Math.floor(Math.random()·*·(10·-·2)·+·2)}s`,
+    25 25 │   			}}
+    26 26 │   		></span>
+  
+
+.\docs\app\components\ui\Meteors.tsx:12:22 lint/correctness/noUnusedFunctionParameters  FIXABLE  ━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    10 │ 	const meteors = new Array(number || 20).fill(true)
+    11 │ 
+  > 12 │ 	return meteors.map((el, idx) => (
+       │ 	                    ^^
+    13 │ 		<span
+    14 │ 			key={"meteor" + idx}
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+  i Unsafe fix: If this is intentional, prepend el with an underscore.
+  
+    10 10 │   	const meteors = new Array(number || 20).fill(true)
+    11 11 │   
+    12    │ - → return·meteors.map((el,·idx)·=>·(
+       12 │ + → return·meteors.map((_el,·idx)·=>·(
+    13 13 │   		<span
+    14 14 │   			key={"meteor" + idx}
+  
+
+.\docs\app\components\ui\Meteors.tsx:12:22 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    10 │ 	const meteors = new Array(number || 20).fill(true)
+    11 │ 
+  > 12 │ 	return meteors.map((el, idx) => (
+       │ 	                    ^^
+    13 │ 		<span
+    14 │ 			key={"meteor" + idx}
+  
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend el with an underscore.
+  
+    10 10 │   	const meteors = new Array(number || 20).fill(true)
+    11 11 │   
+    12    │ - → return·meteors.map((el,·idx)·=>·(
+       12 │ + → return·meteors.map((_el,·idx)·=>·(
+    13 13 │   		<span
+    14 14 │   			key={"meteor" + idx}
+  
+
+.\docs\app\components\ui\Meteors.tsx:14:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    12 │ 	return meteors.map((el, idx) => (
+    13 │ 		<span
+  > 14 │ 			key={"meteor" + idx}
+       │ 			                ^^^
+    15 │ 			className={cn(
+    16 │ 				"absolute left-1/2 top-1/2 h-0.5 w-0.5 rotate-[215] animate-meteor-effect rounded-full bg-slate-500 shadow-[0_0_0_1px_#ffffff10]",
+  
+  i This is the source of the key value.
+  
+    10 │ 	const meteors = new Array(number || 20).fill(true)
+    11 │ 
+  > 12 │ 	return meteors.map((el, idx) => (
+       │ 	                        ^^^
+    13 │ 		<span
+    14 │ 			key={"meteor" + idx}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+.\docs\app\components\ui\Button.tsx:18:7 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    16 │ 	borderRadius?: string
+    17 │ 	children: React.ReactNode
+  > 18 │ 	as?: any
+       │ 	     ^^^
+    19 │ 	containerClassName?: string
+    20 │ 	borderClassName?: string
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:23:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    21 │ 	duration?: number
+    22 │ 	className?: string
+  > 23 │ 	[key: string]: any
+       │ 	               ^^^
+    24 │ }) {
+    25 │ 	return (
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:70:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    68 │ 	rx?: string
+    69 │ 	ry?: string
+  > 70 │ 	[key: string]: any
+       │ 	               ^^^
+    71 │ }) => {
+    72 │ 	const pathRef = useRef<any>(null)
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:72:25 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    70 │ 	[key: string]: any
+    71 │ }) => {
+  > 72 │ 	const pathRef = useRef<any>(null)
+       │ 	                       ^^^
+    73 │ 	const progress = useMotionValue<number>(0)
+    74 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:90:4 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    88 │ 	return (
+    89 │ 		<>
+  > 90 │ 			<svg
+       │ 			^^^^
+  > 91 │ 				xmlns="http://www.w3.org/2000/svg"
+        ...
+  > 96 │ 				{...otherProps}
+  > 97 │ 			>
+       │ 			^
+    98 │ 				<rect fill="none" width="100%" height="100%" rx={rx} ry={ry} ref={pathRef} />
+    99 │ 			</svg>
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+Skipped 80 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --fix --unsafe
+
+The number of diagnostics exceeds the number allowed by Biome.
+Diagnostics not shown: 324.
+Checked 345 files in 158ms. Fixed 5 files.
+Found 311 errors.
+Found 2 warnings.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m

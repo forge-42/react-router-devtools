@@ -1,0 +1,362 @@
+
+> react-router-devtools-docs@0.0.1 check:fix C:\Users\AlemTuzlak\projects\Remix-Dev-Tools\docs
+> biome check --fix .
+
+.\vite.config.ts:44:3 suppressions/unused ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Suppression comment has no effect. Remove the suppression or make sure you are suppressing the correct rule.
+  
+    42 │ 	server: {
+    43 │ 		open: true,
+  > 44 │ 		// biome-ignore lint/nursery/noProcessEnv: Its ok to use process.env here
+       │ 		^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    45 │ 		port: Number(process.env.PORT || 4280),
+    46 │ 	},
+  
+
+.\app\env.server.ts:19:2 suppressions/unused ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Suppression comment has no effect. Remove the suppression or make sure you are suppressing the correct rule.
+  
+    17 │  */
+    18 │ function initEnv() {
+  > 19 │ 	// biome-ignore lint/nursery/noProcessEnv: This should be the only place to use process.env directly
+       │ 	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    20 │ 	const envData = envSchema.safeParse(process.env)
+    21 │ 
+  
+
+.\app\components\ui\MaskContainer.tsx:19:53 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    17 │ }) => {
+    18 │ 	const [isHovered, setIsHovered] = useState(false)
+  > 19 │ 	const [mousePosition, setMousePosition] = useState<any>({ x: null, y: null })
+       │ 	                                                   ^^^
+    20 │ 	const containerRef = useRef<any>(null)
+    21 │ 	const updateMousePosition = (e: any) => {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\MaskContainer.tsx:20:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    18 │ 	const [isHovered, setIsHovered] = useState(false)
+    19 │ 	const [mousePosition, setMousePosition] = useState<any>({ x: null, y: null })
+  > 20 │ 	const containerRef = useRef<any>(null)
+       │ 	                            ^^^
+    21 │ 	const updateMousePosition = (e: any) => {
+    22 │ 		const rect = containerRef.current.getBoundingClientRect()
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\MaskContainer.tsx:21:34 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    19 │ 	const [mousePosition, setMousePosition] = useState<any>({ x: null, y: null })
+    20 │ 	const containerRef = useRef<any>(null)
+  > 21 │ 	const updateMousePosition = (e: any) => {
+       │ 	                                ^^^
+    22 │ 		const rect = containerRef.current.getBoundingClientRect()
+    23 │ 		setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\MaskContainer.tsx:26:2 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━━━━━
+
+  × This hook does not specify all of its dependencies: updateMousePosition
+  
+    24 │ 	}
+    25 │ 
+  > 26 │ 	useEffect(() => {
+       │ 	^^^^^^^^^
+    27 │ 		containerRef.current.addEventListener("mousemove", updateMousePosition)
+    28 │ 		return () => {
+  
+  i This dependency is not specified in the hook dependency list.
+  
+    26 │ 	useEffect(() => {
+  > 27 │ 		containerRef.current.addEventListener("mousemove", updateMousePosition)
+       │ 		                                                   ^^^^^^^^^^^^^^^^^^^
+    28 │ 		return () => {
+    29 │ 			if (containerRef.current) {
+  
+  i This dependency is not specified in the hook dependency list.
+  
+    28 │ 		return () => {
+    29 │ 			if (containerRef.current) {
+  > 30 │ 				containerRef.current.removeEventListener("mousemove", updateMousePosition)
+       │ 				                                                      ^^^^^^^^^^^^^^^^^^^
+    31 │ 			}
+    32 │ 		}
+  
+  i Either include them or remove the dependency array
+  
+
+.\app\components\ui\Button.tsx:18:7 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    16 │ 	borderRadius?: string
+    17 │ 	children: React.ReactNode
+  > 18 │ 	as?: any
+       │ 	     ^^^
+    19 │ 	containerClassName?: string
+    20 │ 	borderClassName?: string
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\Button.tsx:23:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    21 │ 	duration?: number
+    22 │ 	className?: string
+  > 23 │ 	[key: string]: any
+       │ 	               ^^^
+    24 │ }) {
+    25 │ 	return (
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\Button.tsx:70:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    68 │ 	rx?: string
+    69 │ 	ry?: string
+  > 70 │ 	[key: string]: any
+       │ 	               ^^^
+    71 │ }) => {
+    72 │ 	const pathRef = useRef<any>(null)
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\Button.tsx:72:25 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    70 │ 	[key: string]: any
+    71 │ }) => {
+  > 72 │ 	const pathRef = useRef<any>(null)
+       │ 	                       ^^^
+    73 │ 	const progress = useMotionValue<number>(0)
+    74 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\Button.tsx:90:4 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    88 │ 	return (
+    89 │ 		<>
+  > 90 │ 			<svg
+       │ 			^^^^
+  > 91 │ 				xmlns="http://www.w3.org/2000/svg"
+        ...
+  > 96 │ 				{...otherProps}
+  > 97 │ 			>
+       │ 			^
+    98 │ 				<rect fill="none" width="100%" height="100%" rx={rx} ry={ry} ref={pathRef} />
+    99 │ 			</svg>
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+.\app\components\ui\sticky-scroll-reveral.tsx:13:31 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    11 │ 		title: string
+    12 │ 		description: React.ReactNode | string
+  > 13 │ 		content?: React.ReactNode | any
+       │ 		                            ^^^
+    14 │ 	}[]
+    15 │ 	contentClassName?: string
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\sticky-scroll-reveral.tsx:18:21 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    16 │ }) => {
+    17 │ 	const [activeCard, setActiveCard] = React.useState(0)
+  > 18 │ 	const ref = useRef<any>(null)
+       │ 	                   ^^^
+    19 │ 	const { scrollYProgress } = useScroll({
+    20 │ 		// uncomment line 22 and comment line 23 if you DONT want the overflow container and want to have it change on the entire page scroll
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\sticky-scroll-reveral.tsx:56:30 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    54 │ 				<div className="max-w-2xl">
+    55 │ 					{content.map((item, index) => (
+  > 56 │ 						<div key={item.title + index} className="my-20">
+       │ 						                       ^^^^^
+    57 │ 							<motion.h2
+    58 │ 								initial={{
+  
+  i This is the source of the key value.
+  
+    53 │ 			<div className="div relative flex items-start px-4">
+    54 │ 				<div className="max-w-2xl">
+  > 55 │ 					{content.map((item, index) => (
+       │ 					                    ^^^^^
+    56 │ 						<div key={item.title + index} className="my-20">
+    57 │ 							<motion.h2
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+.\app\components\ui\navbar-menu.tsx:77:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    75 │ }
+    76 │ 
+  > 77 │ const HoveredLink = ({ children, ...rest }: any) => {
+       │                                             ^^^
+    78 │ 	return (
+    79 │ 		<Link {...rest} className="text-neutral-200 hover:text-slate-400 dark:text-neutral-200 ">
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\app\components\ui\Lamp.tsx:29:24 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  × Do not use template literals if interpolation and special-character handling are not needed.
+  
+    27 │ 					}}
+    28 │ 					style={{
+  > 29 │ 						backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+       │ 						                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    30 │ 					}}
+    31 │ 					className="bg-gradient-conic absolute inset-auto right-1/2 h-56 w-[30rem] overflow-visible from-green-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+  
+  i Unsafe fix: Replace with string literal
+  
+    27 27 │   					}}
+    28 28 │   					style={{
+    29    │ - → → → → → → backgroundImage:·`conic-gradient(var(--conic-position),·var(--tw-gradient-stops))`,
+       29 │ + → → → → → → backgroundImage:·"conic-gradient(var(--conic-position),·var(--tw-gradient-stops))",
+    30 30 │   					}}
+    31 31 │   					className="bg-gradient-conic absolute inset-auto right-1/2 h-56 w-[30rem] overflow-visible from-green-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+  
+
+.\app\components\ui\Lamp.tsx:45:24 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  × Do not use template literals if interpolation and special-character handling are not needed.
+  
+    43 │ 					}}
+    44 │ 					style={{
+  > 45 │ 						backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+       │ 						                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    46 │ 					}}
+    47 │ 					className="bg-gradient-conic absolute inset-auto left-1/2 h-56 w-[30rem] from-transparent via-transparent to-green-500 text-white [--conic-position:from_290deg_at_center_top]"
+  
+  i Unsafe fix: Replace with string literal
+  
+    43 43 │   					}}
+    44 44 │   					style={{
+    45    │ - → → → → → → backgroundImage:·`conic-gradient(var(--conic-position),·var(--tw-gradient-stops))`,
+       45 │ + → → → → → → backgroundImage:·"conic-gradient(var(--conic-position),·var(--tw-gradient-stops))",
+    46 46 │   					}}
+    47 47 │   					className="bg-gradient-conic absolute inset-auto left-1/2 h-56 w-[30rem] from-transparent via-transparent to-green-500 text-white [--conic-position:from_290deg_at_center_top]"
+  
+
+.\app\components\ui\Lamp.tsx:52:5 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    50 │ 					<div className="absolute  bottom-0 right-0 z-20 h-40 w-[100%] bg-slate-950 [mask-image:linear-gradient(to_top,white,transparent)]" />
+    51 │ 				</motion.div>
+  > 52 │ 				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+       │ 				^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    53 │ 				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+    54 │ 				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    50 50 │   					<div className="absolute  bottom-0 right-0 z-20 h-40 w-[100%] bg-slate-950 [mask-image:linear-gradient(to_top,white,transparent)]" />
+    51 51 │   				</motion.div>
+    52    │ - → → → → <div·className="absolute·top-1/2·h-48·w-full·translate-y-12·scale-x-150·bg-slate-950·blur-2xl"></div>
+       52 │ + → → → → <div·className="absolute·top-1/2·h-48·w-full·translate-y-12·scale-x-150·bg-slate-950·blur-2xl"·/>
+    53 53 │   				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+    54 54 │   				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+  
+
+.\app\components\ui\Lamp.tsx:53:5 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    51 │ 				</motion.div>
+    52 │ 				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+  > 53 │ 				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+       │ 				^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    54 │ 				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+    55 │ 				<motion.div
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    51 51 │   				</motion.div>
+    52 52 │   				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+    53    │ - → → → → <div·className="absolute·top-1/2·z-50·h-48·w-full·bg-transparent·opacity-10·backdrop-blur-md"></div>
+       53 │ + → → → → <div·className="absolute·top-1/2·z-50·h-48·w-full·bg-transparent·opacity-10·backdrop-blur-md"·/>
+    54 54 │   				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+    55 55 │   				<motion.div
+  
+
+.\app\components\ui\Lamp.tsx:54:5 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    52 │ 				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+    53 │ 				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+  > 54 │ 				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+       │ 				^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    55 │ 				<motion.div
+    56 │ 					initial={{ width: "8rem" }}
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    52 52 │   				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+    53 53 │   				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+    54    │ - → → → → <div·className="absolute·inset-auto·z-50·h-36·w-[28rem]·-translate-y-1/2·rounded-full·bg-green-500·opacity-50·blur-3xl"></div>
+       54 │ + → → → → <div·className="absolute·inset-auto·z-50·h-36·w-[28rem]·-translate-y-1/2·rounded-full·bg-green-500·opacity-50·blur-3xl"·/>
+    55 55 │   				<motion.div
+    56 56 │   					initial={{ width: "8rem" }}
+  
+
+Skipped 26 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --fix --unsafe
+
+The number of diagnostics exceeds the number allowed by Biome.
+Diagnostics not shown: 102.
+Checked 143 files in 52ms. No fixes applied.
+Found 89 errors.
+Found 2 warnings.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m

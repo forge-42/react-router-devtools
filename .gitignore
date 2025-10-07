@@ -137,3 +137,6 @@ dist
 .idea
 .tsup
 .react-router
+.content-collections
+build
+generated-docs

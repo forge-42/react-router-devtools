@@ -1,0 +1,35 @@
+
+> custom-server@ build C:\Users\AlemTuzlak\projects\Remix-Dev-Tools\test-apps\custom-server
+> react-router build
+
+[36mvite v6.3.6 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 44 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mbuild/client/[22m[32m.vite/manifest.json                [39m[1m[2m  1.54 kB[22m[1m[22m[2m │ gzip:  0.45 kB[22m
+[2mbuild/client/[22m[32massets/logo-dark-BkaVeYbq.svg      [39m[1m[2m  6.12 kB[22m[1m[22m[2m │ gzip:  2.40 kB[22m
+[2mbuild/client/[22m[32massets/logo-light-DjWqHNIw.svg     [39m[1m[2m  6.15 kB[22m[1m[22m[2m │ gzip:  2.41 kB[22m
+[2mbuild/client/[22m[35massets/root-B7UGA1V5.css           [39m[1m[2m  7.74 kB[22m[1m[22m[2m │ gzip:  2.43 kB[22m
+[2mbuild/client/[22m[36massets/root-C4t58rFz.js            [39m[1m[2m  1.09 kB[22m[1m[22m[2m │ gzip:  0.62 kB[22m
+[2mbuild/client/[22m[36massets/home-JQK00ndZ.js            [39m[1m[2m  3.78 kB[22m[1m[22m[2m │ gzip:  1.73 kB[22m
+[2mbuild/client/[22m[36massets/chunk-NISHYRIK-D__BmwgW.js  [39m[1m[2m116.56 kB[22m[1m[22m[2m │ gzip: 39.33 kB[22m
+[2mbuild/client/[22m[36massets/entry.client-BVsf2ff0.js    [39m[1m[2m193.89 kB[22m[1m[22m[2m │ gzip: 61.13 kB[22m
+[32m✓ built in 814ms[39m
+[36mvite v6.3.6 [32mbuilding SSR bundle for production...[36m[39m
+transforming...
+[32m✓[39m 10 modules transformed.
+rendering chunks...
+[2mbuild/server/[22m[32m.vite/manifest.json               [39m[1m[2m 0.80 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/logo-dark-BkaVeYbq.svg     [39m[1m[2m 6.12 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/logo-light-DjWqHNIw.svg    [39m[1m[2m 6.15 kB[22m[1m[22m
+[2mbuild/server/[22m[35massets/server-build-B7UGA1V5.css  [39m[1m[2m 7.74 kB[22m[1m[22m
+[2mbuild/server/[22m[36mindex.js                          [39m[1m[2m 0.34 kB[22m[1m[22m
+[2mbuild/server/[22m[36massets/server-build-DlfVh_rJ.js   [39m[1m[2m11.23 kB[22m[1m[22m
+
+[32m✓[39m 3 assets cleaned from React Router server build.
+[2mbuild\client\assets\logo-dark-BkaVeYbq.svg[22m
+[2mbuild\client\assets\logo-light-DjWqHNIw.svg[22m
+[2mbuild\server\assets\server-build-B7UGA1V5.css[22m
+
+[32m✓ built in 74ms[39m

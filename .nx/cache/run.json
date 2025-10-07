@@ -1,0 +1,109 @@
+{
+  "run": {
+    "command": "nx run-many --targets=test:unused,check,test:deps,test:lib,test:types,test:build,build",
+    "startTime": "2025-10-07T09:38:21.947Z",
+    "endTime": "2025-10-07T09:38:45.045Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "react-router-devtools-monorepo:check",
+      "target": "check",
+      "projectName": "react-router-devtools-monorepo",
+      "hash": "8812483581131365940",
+      "startTime": "2025-10-07T09:38:21.968Z",
+      "endTime": "2025-10-07T09:38:22.774Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "react-router-devtools-monorepo:test:deps",
+      "target": "test:deps",
+      "projectName": "react-router-devtools-monorepo",
+      "hash": "2053067467976063154",
+      "startTime": "2025-10-07T09:38:22.779Z",
+      "endTime": "2025-10-07T09:38:24.386Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "react-router-devtools-monorepo:test:unused",
+      "target": "test:unused",
+      "projectName": "react-router-devtools-monorepo",
+      "hash": "8945349419059204476",
+      "startTime": "2025-10-07T09:38:21.968Z",
+      "endTime": "2025-10-07T09:38:27.765Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "react-router-devtools:test:types",
+      "target": "test:types",
+      "projectName": "react-router-devtools",
+      "hash": "10662189454213803074",
+      "startTime": "2025-10-07T09:38:21.968Z",
+      "endTime": "2025-10-07T09:38:28.144Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "react-router-devtools:test:lib",
+      "target": "test:lib",
+      "projectName": "react-router-devtools",
+      "hash": "732508310800295274",
+      "startTime": "2025-10-07T09:38:21.968Z",
+      "endTime": "2025-10-07T09:38:29.897Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "react-router-devtools:build",
+      "target": "build",
+      "projectName": "react-router-devtools",
+      "hash": "9659332904531404585",
+      "startTime": "2025-10-07T09:38:21.968Z",
+      "endTime": "2025-10-07T09:38:37.148Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "custom-server:build",
+      "target": "build",
+      "projectName": "custom-server",
+      "hash": "8998730896607206743",
+      "startTime": "2025-10-07T09:38:37.396Z",
+      "endTime": "2025-10-07T09:38:40.343Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "remix-vite:build",
+      "target": "build",
+      "projectName": "remix-vite",
+      "hash": "16042342065978016534",
+      "startTime": "2025-10-07T09:38:37.396Z",
+      "endTime": "2025-10-07T09:38:42.775Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "react-router-devtools-docs:build",
+      "target": "build",
+      "projectName": "react-router-devtools-docs",
+      "hash": "6035856255750018200",
+      "startTime": "2025-10-07T09:38:37.396Z",
+      "endTime": "2025-10-07T09:38:44.957Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    }
+  ]
+}

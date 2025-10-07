@@ -1,0 +1,390 @@
+
+> react-router-devtools-monorepo@1.0.0 check:fix C:\Users\AlemTuzlak\projects\Remix-Dev-Tools
+> biome check --fix .
+
+.\plugins\tailwind-palette\tailwind-palette.tsx:223:19 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    221 │               <div>
+    222 │                 {colorVariants[color].map((variant: string) => (
+  > 223 │                   <div
+        │                   ^^^^
+  > 224 │                     key={variant}
+  > 225 │                     onClick={() => navigator.clipboard.writeText(variant)}
+  > 226 │                     className={`h-12 w-12 cursor-pointer ${variant}`}
+  > 227 │                   ></div>
+        │                   ^^^^^^^
+    228 │                 ))}
+    229 │               </div>
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    227 │ ··················></div>␍
+        │                   -- --- 
+
+.\plugins\tailwind-palette\tailwind-palette.tsx:223:19 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    221 │               <div>
+    222 │                 {colorVariants[color].map((variant: string) => (
+  > 223 │                   <div
+        │                   ^^^^
+  > 224 │                     key={variant}
+  > 225 │                     onClick={() => navigator.clipboard.writeText(variant)}
+  > 226 │                     className={`h-12 w-12 cursor-pointer ${variant}`}
+  > 227 │                   ></div>
+        │                   ^
+    228 │                 ))}
+    229 │               </div>
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+.\plugins\tailwind-palette\tailwind-palette.tsx:241:5 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    239 │   // Adds palette icon, you can change
+    240 │   icon: (
+  > 241 │     <svg
+        │     ^^^^
+  > 242 │       xmlns="http://www.w3.org/2000/svg"
+         ...
+  > 250 │       strokeLinejoin="round"
+  > 251 │     >
+        │     ^
+    252 │       <circle cx="13.5" cy="6.5" r=".5" />
+    253 │       <circle cx="17.5" cy="10.5" r=".5" />
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+.\plugins\icon-library\icon-library.tsx:16:10 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    14 │ // TODO Import your icon component
+    15 │ const Icon = (props: IconProps) => {
+  > 16 │   return <div></div>;
+       │          ^^^^^^^^^^^
+    17 │ };
+    18 │ 
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    14 14 │   // TODO Import your icon component␍
+    15 15 │   const Icon = (props: IconProps) => {␍
+    16    │ - ··return·<div></div>;␍
+       16 │ + ··return·<div·/>;␍
+    17 17 │   };␍
+    18 18 │   ␍
+  
+
+.\plugins\icon-library\icon-library.tsx:52:9 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    50 │     <div className="flex flex-col gap-4 p-2">
+    51 │       <div className="flex items-center justify-end gap-2">
+  > 52 │         <label className="text-white">Icon classes:</label>
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    53 │         <input
+    54 │           placeholder="Optional classes to apply to icons"
+  
+  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  
+
+.\plugins\icon-library\icon-library.tsx:15:15 lint/correctness/noUnusedFunctionParameters  FIXABLE  ━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    13 │ }
+    14 │ // TODO Import your icon component
+  > 15 │ const Icon = (props: IconProps) => {
+       │               ^^^^^
+    16 │   return <div></div>;
+    17 │ };
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+  i Unsafe fix: If this is intentional, prepend props with an underscore.
+  
+    13 13 │   }␍
+    14 14 │   // TODO Import your icon component␍
+    15    │ - const·Icon·=·(props:·IconProps)·=>·{␍
+       15 │ + const·Icon·=·(_props:·IconProps)·=>·{␍
+    16 16 │     return <div></div>;␍
+    17 17 │   };␍
+  
+
+.\plugins\icon-library\icon-library.tsx:15:15 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    13 │ }
+    14 │ // TODO Import your icon component
+  > 15 │ const Icon = (props: IconProps) => {
+       │               ^^^^^
+    16 │   return <div></div>;
+    17 │ };
+  
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend props with an underscore.
+  
+    13 13 │   }␍
+    14 14 │   // TODO Import your icon component␍
+    15    │ - const·Icon·=·(props:·IconProps)·=>·{␍
+       15 │ + const·Icon·=·(_props:·IconProps)·=>·{␍
+    16 16 │     return <div></div>;␍
+    17 17 │   };␍
+  
+
+.\docs\app\components\ui\MaskContainer.tsx:19:53 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    17 │ }) => {
+    18 │ 	const [isHovered, setIsHovered] = useState(false)
+  > 19 │ 	const [mousePosition, setMousePosition] = useState<any>({ x: null, y: null })
+       │ 	                                                   ^^^
+    20 │ 	const containerRef = useRef<any>(null)
+    21 │ 	const updateMousePosition = (e: any) => {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\MaskContainer.tsx:20:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    18 │ 	const [isHovered, setIsHovered] = useState(false)
+    19 │ 	const [mousePosition, setMousePosition] = useState<any>({ x: null, y: null })
+  > 20 │ 	const containerRef = useRef<any>(null)
+       │ 	                            ^^^
+    21 │ 	const updateMousePosition = (e: any) => {
+    22 │ 		const rect = containerRef.current.getBoundingClientRect()
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\MaskContainer.tsx:21:34 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    19 │ 	const [mousePosition, setMousePosition] = useState<any>({ x: null, y: null })
+    20 │ 	const containerRef = useRef<any>(null)
+  > 21 │ 	const updateMousePosition = (e: any) => {
+       │ 	                                ^^^
+    22 │ 		const rect = containerRef.current.getBoundingClientRect()
+    23 │ 		setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\MaskContainer.tsx:26:2 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━
+
+  × This hook does not specify all of its dependencies: updateMousePosition
+  
+    24 │ 	}
+    25 │ 
+  > 26 │ 	useEffect(() => {
+       │ 	^^^^^^^^^
+    27 │ 		containerRef.current.addEventListener("mousemove", updateMousePosition)
+    28 │ 		return () => {
+  
+  i This dependency is not specified in the hook dependency list.
+  
+    26 │ 	useEffect(() => {
+  > 27 │ 		containerRef.current.addEventListener("mousemove", updateMousePosition)
+       │ 		                                                   ^^^^^^^^^^^^^^^^^^^
+    28 │ 		return () => {
+    29 │ 			if (containerRef.current) {
+  
+  i This dependency is not specified in the hook dependency list.
+  
+    28 │ 		return () => {
+    29 │ 			if (containerRef.current) {
+  > 30 │ 				containerRef.current.removeEventListener("mousemove", updateMousePosition)
+       │ 				                                                      ^^^^^^^^^^^^^^^^^^^
+    31 │ 			}
+    32 │ 		}
+  
+  i Either include them or remove the dependency array
+  
+
+.\docs\app\components\ui\Button.tsx:18:7 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    16 │ 	borderRadius?: string
+    17 │ 	children: React.ReactNode
+  > 18 │ 	as?: any
+       │ 	     ^^^
+    19 │ 	containerClassName?: string
+    20 │ 	borderClassName?: string
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:23:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    21 │ 	duration?: number
+    22 │ 	className?: string
+  > 23 │ 	[key: string]: any
+       │ 	               ^^^
+    24 │ }) {
+    25 │ 	return (
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:70:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    68 │ 	rx?: string
+    69 │ 	ry?: string
+  > 70 │ 	[key: string]: any
+       │ 	               ^^^
+    71 │ }) => {
+    72 │ 	const pathRef = useRef<any>(null)
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:72:25 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    70 │ 	[key: string]: any
+    71 │ }) => {
+  > 72 │ 	const pathRef = useRef<any>(null)
+       │ 	                       ^^^
+    73 │ 	const progress = useMotionValue<number>(0)
+    74 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\docs\app\components\ui\Button.tsx:90:4 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    88 │ 	return (
+    89 │ 		<>
+  > 90 │ 			<svg
+       │ 			^^^^
+  > 91 │ 				xmlns="http://www.w3.org/2000/svg"
+        ...
+  > 96 │ 				{...otherProps}
+  > 97 │ 			>
+       │ 			^
+    98 │ 				<rect fill="none" width="100%" height="100%" rx={rx} ry={ry} ref={pathRef} />
+    99 │ 			</svg>
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+.\docs\app\components\ui\Lamp.tsx:29:24 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━
+
+  × Do not use template literals if interpolation and special-character handling are not needed.
+  
+    27 │ 					}}
+    28 │ 					style={{
+  > 29 │ 						backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+       │ 						                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    30 │ 					}}
+    31 │ 					className="bg-gradient-conic absolute inset-auto right-1/2 h-56 w-[30rem] overflow-visible from-green-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+  
+  i Unsafe fix: Replace with string literal
+  
+    27 27 │   					}}
+    28 28 │   					style={{
+    29    │ - → → → → → → backgroundImage:·`conic-gradient(var(--conic-position),·var(--tw-gradient-stops))`,
+       29 │ + → → → → → → backgroundImage:·"conic-gradient(var(--conic-position),·var(--tw-gradient-stops))",
+    30 30 │   					}}
+    31 31 │   					className="bg-gradient-conic absolute inset-auto right-1/2 h-56 w-[30rem] overflow-visible from-green-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+  
+
+.\docs\app\components\ui\Lamp.tsx:45:24 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━
+
+  × Do not use template literals if interpolation and special-character handling are not needed.
+  
+    43 │ 					}}
+    44 │ 					style={{
+  > 45 │ 						backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+       │ 						                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    46 │ 					}}
+    47 │ 					className="bg-gradient-conic absolute inset-auto left-1/2 h-56 w-[30rem] from-transparent via-transparent to-green-500 text-white [--conic-position:from_290deg_at_center_top]"
+  
+  i Unsafe fix: Replace with string literal
+  
+    43 43 │   					}}
+    44 44 │   					style={{
+    45    │ - → → → → → → backgroundImage:·`conic-gradient(var(--conic-position),·var(--tw-gradient-stops))`,
+       45 │ + → → → → → → backgroundImage:·"conic-gradient(var(--conic-position),·var(--tw-gradient-stops))",
+    46 46 │   					}}
+    47 47 │   					className="bg-gradient-conic absolute inset-auto left-1/2 h-56 w-[30rem] from-transparent via-transparent to-green-500 text-white [--conic-position:from_290deg_at_center_top]"
+  
+
+.\docs\app\components\ui\Lamp.tsx:52:5 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    50 │ 					<div className="absolute  bottom-0 right-0 z-20 h-40 w-[100%] bg-slate-950 [mask-image:linear-gradient(to_top,white,transparent)]" />
+    51 │ 				</motion.div>
+  > 52 │ 				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+       │ 				^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    53 │ 				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+    54 │ 				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    50 50 │   					<div className="absolute  bottom-0 right-0 z-20 h-40 w-[100%] bg-slate-950 [mask-image:linear-gradient(to_top,white,transparent)]" />
+    51 51 │   				</motion.div>
+    52    │ - → → → → <div·className="absolute·top-1/2·h-48·w-full·translate-y-12·scale-x-150·bg-slate-950·blur-2xl"></div>
+       52 │ + → → → → <div·className="absolute·top-1/2·h-48·w-full·translate-y-12·scale-x-150·bg-slate-950·blur-2xl"·/>
+    53 53 │   				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+    54 54 │   				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+  
+
+.\docs\app\components\ui\Lamp.tsx:53:5 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    51 │ 				</motion.div>
+    52 │ 				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+  > 53 │ 				<div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+       │ 				^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    54 │ 				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+    55 │ 				<motion.div
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    51 51 │   				</motion.div>
+    52 52 │   				<div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+    53    │ - → → → → <div·className="absolute·top-1/2·z-50·h-48·w-full·bg-transparent·opacity-10·backdrop-blur-md"></div>
+       53 │ + → → → → <div·className="absolute·top-1/2·z-50·h-48·w-full·bg-transparent·opacity-10·backdrop-blur-md"·/>
+    54 54 │   				<div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-green-500 opacity-50 blur-3xl"></div>
+    55 55 │   				<motion.div
+  
+
+Skipped 92 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --fix --unsafe
+
+The number of diagnostics exceeds the number allowed by Biome.
+Diagnostics not shown: 327.
+Checked 345 files in 208ms. Fixed 72 files.
+Found 314 errors.
+Found 2 warnings.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m

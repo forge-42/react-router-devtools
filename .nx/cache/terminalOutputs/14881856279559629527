@@ -1,0 +1,5 @@
+
+> react-router-devtools-monorepo@1.0.0 check:fix C:\Users\AlemTuzlak\projects\Remix-Dev-Tools
+> biome check --fix .
+
+Checked 155 files in 153ms. Fixed 6 files.

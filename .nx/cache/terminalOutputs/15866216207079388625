@@ -1,0 +1,135 @@
+
+> react-router-devtools-docs@0.0.1 build C:\Users\AlemTuzlak\projects\Remix-Dev-Tools\docs
+> react-router build
+
+[33mThe unstable_viteEnvironmentApi is enabled.
+This is experimental and may break your build.[0m
+
+Using Vite Environment API (experimental)
+[36mvite v6.3.6 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 647 modules transformed.
+[33mGenerated an empty chunk: "search".[39m
+[33mGenerated an empty chunk: "sitemap-index_._xml".[39m
+[33mGenerated an empty chunk: "robots_._txt".[39m
+[33mGenerated an empty chunk: "resource.locales".[39m
+[33mGenerated an empty chunk: "sitemap._lang_._xml".[39m
+[33mGenerated an empty chunk: "llms_._txt".[39m
+rendering chunks...
+computing gzip size...
+[2mbuild/client/[22m[32massets/icon-CsZp6x4_.svg                                 [39m[1m[2m  9.70 kB[22m[1m[22m[2m │ gzip:  1.94 kB[22m
+[2mbuild/client/[22m[32m.vite/manifest.json                                      [39m[1m[2m 12.27 kB[22m[1m[22m[2m │ gzip:  1.70 kB[22m
+[2mbuild/client/[22m[32massets/Space-CvM5uLnY.woff2                              [39m[1m[2m 42.00 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/DynaPuff-Regular-DeyYCe6T.ttf                     [39m[1m[2m 90.34 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/DynaPuff-Bold-AwUrqW4h.ttf                        [39m[1m[2m 90.36 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/DynaPuff-Medium-BTL4pj1I.ttf                      [39m[1m[2m 90.43 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/DynaPuff-SemiBold-DmhU0VCw.ttf                    [39m[1m[2m 90.45 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-Regular-BPx6xqqj.ttf                        [39m[1m[2m342.73 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-Medium-CWuwCVva.ttf                         [39m[1m[2m342.94 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-Thin-D2WGqpa1.ttf                           [39m[1m[2m342.94 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-Light-BFKa5A5X.ttf                          [39m[1m[2m343.44 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-ExtraLight-B5UcxMAE.ttf                     [39m[1m[2m343.52 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-SemiBold-BQskPSi-.ttf                       [39m[1m[2m343.64 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-Bold-Dw-n3Ytu.ttf                           [39m[1m[2m344.03 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-Black-D6Y9fSfR.ttf                          [39m[1m[2m344.76 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-ExtraBold-0nTgKIn_.ttf                      [39m[1m[2m344.80 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-Italic-CsTT2-df.ttf                         [39m[1m[2m346.58 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-ThinItalic-BUQTw2Fz.ttf                     [39m[1m[2m346.98 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-MediumItalic-DrcOYt4T.ttf                   [39m[1m[2m347.00 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-LightItalic-CGC1o-Hn.ttf                    [39m[1m[2m347.30 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-ExtraLightItalic-CFWmYZC0.ttf               [39m[1m[2m347.35 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-SemiBoldItalic-B3ysfErS.ttf                 [39m[1m[2m347.62 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-BoldItalic-BLmxYVKH.ttf                     [39m[1m[2m347.95 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-BlackItalic-DoX4eKOA.ttf                    [39m[1m[2m348.61 kB[22m[1m[22m
+[2mbuild/client/[22m[32massets/Inter-ExtraBoldItalic-BreZ0lrH.ttf                [39m[1m[2m348.90 kB[22m[1m[22m
+[2mbuild/client/[22m[35massets/tailwind-CcCh5_4w.css                             [39m[1m[2m 87.03 kB[22m[1m[22m[2m │ gzip: 14.15 kB[22m
+[2mbuild/client/[22m[36massets/search-l0sNRNKZ.js                                [39m[1m[2m  0.00 kB[22m[1m[22m[2m │ gzip:  0.02 kB[22m
+[2mbuild/client/[22m[36massets/sitemap-index_._xml-l0sNRNKZ.js                   [39m[1m[2m  0.00 kB[22m[1m[22m[2m │ gzip:  0.02 kB[22m
+[2mbuild/client/[22m[36massets/robots_._txt-l0sNRNKZ.js                          [39m[1m[2m  0.00 kB[22m[1m[22m[2m │ gzip:  0.02 kB[22m
+[2mbuild/client/[22m[36massets/resource.locales-l0sNRNKZ.js                      [39m[1m[2m  0.00 kB[22m[1m[22m[2m │ gzip:  0.02 kB[22m
+[2mbuild/client/[22m[36massets/sitemap._lang_._xml-l0sNRNKZ.js                   [39m[1m[2m  0.00 kB[22m[1m[22m[2m │ gzip:  0.02 kB[22m
+[2mbuild/client/[22m[36massets/llms_._txt-l0sNRNKZ.js                            [39m[1m[2m  0.00 kB[22m[1m[22m[2m │ gzip:  0.02 kB[22m
+[2mbuild/client/[22m[36massets/theme-BmUR_GNB.js                                 [39m[1m[2m  0.54 kB[22m[1m[22m[2m │ gzip:  0.30 kB[22m
+[2mbuild/client/[22m[36massets/compiler-runtime-D5PUarl6.js                      [39m[1m[2m  0.57 kB[22m[1m[22m[2m │ gzip:  0.41 kB[22m
+[2mbuild/client/[22m[36massets/context-D2hz8Jem.js                               [39m[1m[2m  0.99 kB[22m[1m[22m[2m │ gzip:  0.60 kB[22m
+[2mbuild/client/[22m[36massets/documentation-homepage-CB5inzRD.js                [39m[1m[2m  1.11 kB[22m[1m[22m[2m │ gzip:  0.66 kB[22m
+[2mbuild/client/[22m[36massets/use-documentation-layout-loader-data-BYzPFbkn.js  [39m[1m[2m  1.45 kB[22m[1m[22m[2m │ gzip:  0.67 kB[22m
+[2mbuild/client/[22m[36massets/title-CmbRSE7U.js                                 [39m[1m[2m  1.68 kB[22m[1m[22m[2m │ gzip:  0.88 kB[22m
+[2mbuild/client/[22m[36massets/_-BsmaXbIe.js                                     [39m[1m[2m  2.98 kB[22m[1m[22m[2m │ gzip:  1.35 kB[22m
+[2mbuild/client/[22m[36massets/useTranslation-BChPOuEZ.js                        [39m[1m[2m  3.17 kB[22m[1m[22m[2m │ gzip:  1.57 kB[22m
+[2mbuild/client/[22m[36massets/index-CDVUZT8k.js                                 [39m[1m[2m  3.90 kB[22m[1m[22m[2m │ gzip:  1.53 kB[22m
+[2mbuild/client/[22m[36massets/chunk-65XJMMLO-Bztc3lI8.js                        [39m[1m[2m  5.59 kB[22m[1m[22m[2m │ gzip:  2.50 kB[22m
+[2mbuild/client/[22m[36massets/browser-ponyfill-CHTczGYG.js                      [39m[1m[2m 10.31 kB[22m[1m[22m[2m │ gzip:  3.53 kB[22m
+[2mbuild/client/[22m[36massets/root-VpybJUCT.js                                  [39m[1m[2m 12.14 kB[22m[1m[22m[2m │ gzip:  4.42 kB[22m
+[2mbuild/client/[22m[36massets/seo-Bn9IB7hk.js                                   [39m[1m[2m 15.01 kB[22m[1m[22m[2m │ gzip:  5.90 kB[22m
+[2mbuild/client/[22m[36massets/documentation-page-Dqal5LrN.js                    [39m[1m[2m 18.56 kB[22m[1m[22m[2m │ gzip:  8.68 kB[22m
+[2mbuild/client/[22m[36massets/css-BOnrSDhi.js                                   [39m[1m[2m 21.95 kB[22m[1m[22m[2m │ gzip:  7.37 kB[22m
+[2mbuild/client/[22m[36massets/chunk-NISHYRIK-Dyy5TzzE.js                        [39m[1m[2m118.91 kB[22m[1m[22m[2m │ gzip: 40.21 kB[22m
+[2mbuild/client/[22m[36massets/index-Dxw6lLPD.js                                 [39m[1m[2m151.05 kB[22m[1m[22m[2m │ gzip: 50.23 kB[22m
+[2mbuild/client/[22m[36massets/entry.client-CE9XdNn8.js                          [39m[1m[2m248.82 kB[22m[1m[22m[2m │ gzip: 77.44 kB[22m
+[2mbuild/client/[22m[36massets/documentation-layout-CXpHb1d8.js                  [39m[1m[2m255.46 kB[22m[1m[22m[2m │ gzip: 61.79 kB[22m
+[32m✓ built in 3.90s[39m
+[36mvite v6.3.6 [32mbuilding SSR bundle for production...[36m[39m
+transforming...
+[32m✓[39m 190 modules transformed.
+rendering chunks...
+[2mbuild/server/[22m[32m.vite/manifest.json                         [39m[1m[2m  6.49 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/icon-CsZp6x4_.svg                    [39m[1m[2m  9.70 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Space-CvM5uLnY.woff2                 [39m[1m[2m 42.00 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/DynaPuff-Regular-DeyYCe6T.ttf        [39m[1m[2m 90.34 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/DynaPuff-Bold-AwUrqW4h.ttf           [39m[1m[2m 90.36 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/DynaPuff-Medium-BTL4pj1I.ttf         [39m[1m[2m 90.43 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/DynaPuff-SemiBold-DmhU0VCw.ttf       [39m[1m[2m 90.45 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-Regular-BPx6xqqj.ttf           [39m[1m[2m342.73 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-Medium-CWuwCVva.ttf            [39m[1m[2m342.94 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-Thin-D2WGqpa1.ttf              [39m[1m[2m342.94 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-Light-BFKa5A5X.ttf             [39m[1m[2m343.44 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-ExtraLight-B5UcxMAE.ttf        [39m[1m[2m343.52 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-SemiBold-BQskPSi-.ttf          [39m[1m[2m343.64 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-Bold-Dw-n3Ytu.ttf              [39m[1m[2m344.03 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-Black-D6Y9fSfR.ttf             [39m[1m[2m344.76 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-ExtraBold-0nTgKIn_.ttf         [39m[1m[2m344.80 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-Italic-CsTT2-df.ttf            [39m[1m[2m346.58 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-ThinItalic-BUQTw2Fz.ttf        [39m[1m[2m346.98 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-MediumItalic-DrcOYt4T.ttf      [39m[1m[2m347.00 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-LightItalic-CGC1o-Hn.ttf       [39m[1m[2m347.30 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-ExtraLightItalic-CFWmYZC0.ttf  [39m[1m[2m347.35 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-SemiBoldItalic-B3ysfErS.ttf    [39m[1m[2m347.62 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-BoldItalic-BLmxYVKH.ttf        [39m[1m[2m347.95 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-BlackItalic-DoX4eKOA.ttf       [39m[1m[2m348.61 kB[22m[1m[22m
+[2mbuild/server/[22m[32massets/Inter-ExtraBoldItalic-BreZ0lrH.ttf   [39m[1m[2m348.90 kB[22m[1m[22m
+[2mbuild/server/[22m[35massets/tailwind-CcCh5_4w.css                [39m[1m[2m 87.03 kB[22m[1m[22m
+[2mbuild/server/[22m[36mindex.js                                    [39m[1m[2m  0.34 kB[22m[1m[22m
+[2mbuild/server/[22m[36massets/index-_5or7Ozo.js                    [39m[1m[2m 30.64 kB[22m[1m[22m
+[2mbuild/server/[22m[36massets/index-4MGseuZN.js                    [39m[1m[2m141.18 kB[22m[1m[22m
+[2mbuild/server/[22m[36massets/index-CY05nEiU.js                    [39m[1m[2m147.83 kB[22m[1m[22m
+[2mbuild/server/[22m[36massets/server-build.js                      [39m[1m[2m220.80 kB[22m[1m[22m
+
+[32m✓[39m 25 assets cleaned from React Router server build.
+[2mbuild\client\assets\tailwind-CcCh5_4w.css[22m
+[2mbuild\client\assets\DynaPuff-Bold-AwUrqW4h.ttf[22m
+[2mbuild\client\assets\DynaPuff-Medium-BTL4pj1I.ttf[22m
+[2mbuild\client\assets\DynaPuff-Regular-DeyYCe6T.ttf[22m
+[2mbuild\client\assets\DynaPuff-SemiBold-DmhU0VCw.ttf[22m
+[2mbuild\client\assets\Inter-Black-D6Y9fSfR.ttf[22m
+[2mbuild\client\assets\Inter-BlackItalic-DoX4eKOA.ttf[22m
+[2mbuild\client\assets\Inter-Bold-Dw-n3Ytu.ttf[22m
+[2mbuild\client\assets\Inter-BoldItalic-BLmxYVKH.ttf[22m
+[2mbuild\client\assets\Inter-ExtraBold-0nTgKIn_.ttf[22m
+[2mbuild\client\assets\Inter-ExtraBoldItalic-BreZ0lrH.ttf[22m
+[2mbuild\client\assets\Inter-ExtraLight-B5UcxMAE.ttf[22m
+[2mbuild\client\assets\Inter-ExtraLightItalic-CFWmYZC0.ttf[22m
+[2mbuild\client\assets\Inter-Italic-CsTT2-df.ttf[22m
+[2mbuild\client\assets\Inter-Light-BFKa5A5X.ttf[22m
+[2mbuild\client\assets\Inter-LightItalic-CGC1o-Hn.ttf[22m
+[2mbuild\client\assets\Inter-Medium-CWuwCVva.ttf[22m
+[2mbuild\client\assets\Inter-MediumItalic-DrcOYt4T.ttf[22m
+[2mbuild\client\assets\Inter-Regular-BPx6xqqj.ttf[22m
+[2mbuild\client\assets\Inter-SemiBold-BQskPSi-.ttf[22m
+[2mbuild\client\assets\Inter-SemiBoldItalic-B3ysfErS.ttf[22m
+[2mbuild\client\assets\Inter-Thin-D2WGqpa1.ttf[22m
+[2mbuild\client\assets\Inter-ThinItalic-BUQTw2Fz.ttf[22m
+[2mbuild\client\assets\Space-CvM5uLnY.woff2[22m
+[2mbuild\client\assets\icon-CsZp6x4_.svg[22m
+
+[32m✓ built in 1.60s[39m

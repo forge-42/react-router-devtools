@@ -1,0 +1,33 @@
+
+> react-router-devtools@5.1.3 test:types C:\Users\AlemTuzlak\projects\Remix-Dev-Tools\packages\react-router-devtools
+> tsc --noEmit
+
+src/server/hof.test.ts(22,18): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(31,32): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(49,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(65,17): error TS2345: Argument of type '{ request: Request; params: { test: string; }; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: { test: string; }; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(75,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(90,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(107,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(129,18): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(138,32): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(156,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(172,17): error TS2345: Argument of type '{ request: Request; params: { test: string; }; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: { test: string; }; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(182,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(197,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+src/server/hof.test.ts(214,17): error TS2345: Argument of type '{ request: Request; params: {}; }' is not assignable to parameter of type 'LoaderFunctionArgs<any> | ActionFunctionArgs<any>'.
+  Property 'context' is missing in type '{ request: Request; params: {}; }' but required in type 'ActionFunctionArgs<any>'.
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

@@ -1,0 +1,57 @@
+name: 📚🚀 Build documentation on release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+concurrency:
+  group: docs-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - name: Install deps
+        run: pnpm install --prefer-offline --frozen-lockfile
+
+      - name: Generate docs
+        working-directory: docs
+        run: pnpm run generate:docs
+
+  deploy:
+    name: 🚀 Deploy Release
+    needs: [build-docs]
+    runs-on: ubuntu-latest
+    environment:
+      name: docs-release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: forge-42/fly-deploy@v1.0.0-rc.2
+        id: deploy
+        env:
+          FLY_ORG: ${{ vars.FLY_ORG }}
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_REGION: ${{ vars.FLY_REGION }}
+        with:
+          workspace_name: docs
+          app_name: ${{github.event.repository.name}}-${{ github.ref_name }}
+          use_isolated_workspace: true
+          env_vars: |
+            APP_ENV=production
+            GITHUB_OWNER=${{ github.repository_owner }}
+            GITHUB_REPO=${{ github.event.repository.name }}
+            GITHUB_REPO_URL=https://github.com/${{ github.repository }}

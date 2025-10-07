@@ -1,0 +1,33 @@
+---
+title: "Quick Start"
+summary: "Get up and running with React Router Devtools in a React Router 7+ project using Vite and ESM."
+description: "Learn the prerequisites and benefits of using React Router Devtools, including loader data display, route visualization, error and hydration tracking, server logs, and route boundaries."
+---
+
+This documentation covers everything you need to know to get started with `react-router-devtools`.
+
+## Prerequisites
+
+- React Router version **7.0** or higher.
+- Your project needs to run on **ESM**. If you are using CommonJS, you will need to convert your project to ESM.
+
+## Why ESM?
+
+In order to use the full feature-set of **Vite** the project has to run on ESM. This is because Vite exposes a websocket
+that **react-router-devtools** uses to communicate with the server. This websocket is **only** available in ESM projects
+because it's exposed by `import.meta` which is only available in ESM.
+
+To avoid creating user confusion and giving you a subpar experience, we have decided to only support ESM projects running on Vite.
+
+
+## Why use `react-router-devtools`?
+
+`react-router-devtools` is a set of tools that help you to develop your React Router application.
+
+They help you, but are not limited to, to do the following things:
+- **Loader data display** - You can see the data that is being loaded by your loaders.
+- **Route display** - You can see the routes that are being used by your application in list/tree format.
+- **Error tracking** - You can see invalid HTML rendered on your page and where it's coming from.
+- **Hydration mismatch tracking** - You can see if there are any hydration mismatches in your application, what was rendered on the client and what was rendered on the server.
+- **Server logs** - You can see the logs of your server in the browser.
+- **Route boundaries** - You can see the route boundaries by hovering over elements.

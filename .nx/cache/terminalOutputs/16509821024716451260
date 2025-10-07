@@ -1,0 +1,34 @@
+
+> react-router-devtools@5.1.3 test:lib C:\Users\AlemTuzlak\projects\Remix-Dev-Tools\packages\react-router-devtools
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv3.0.5 [39m[90mC:/Users/AlemTuzlak/projects/Remix-Dev-Tools/packages/react-router-devtools[39m
+
+ [32m✓[39m [7m[33m react-router-devtools/shared [39m[27m bigint-util.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [7m[32m react-router-devtools/server [39m[27m config.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [7m[32m react-router-devtools/server [39m[27m perf.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [7m[32m react-router-devtools/server [39m[27m parser.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [7m[32m react-router-devtools/server [39m[27m utils.test.ts [2m([22m[2m43 tests[22m[2m)[22m[33m 312[2mms[22m[39m
+ [32m✓[39m [7m[36m react-router-devtools/vite [39m[27m utils/inject-context.test.ts [2m([22m[2m37 tests[22m[2m)[22m[90m 74[2mms[22m[39m
+ [32m✓[39m [7m[36m react-router-devtools/vite [39m[27m utils/inject-client.test.ts [2m([22m[2m15 tests[22m[2m)[22m[90m 54[2mms[22m[39m
+ [32m✓[39m [7m[36m react-router-devtools/vite [39m[27m utils/data-functions-augment.test.ts [2m([22m[2m40 tests[22m[2m)[22m[90m 81[2mms[22m[39m
+ [32m✓[39m [7m[36m react-router-devtools/vite [39m[27m utils/inject-source.test.ts [2m([22m[2m48 tests[22m[2m)[22m[90m 96[2mms[22m[39m
+ [32m✓[39m [7m[32m react-router-devtools/server [39m[27m hof.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 440[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m utils/sanitize.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 2[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m utils/routing.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m utils/storage.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m context/rdtReducer.test.ts [2m([22m[2m20 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m context/RDTContext.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m hof.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 442[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m tabs/ErrorsTab.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 584[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m tabs/PageTab.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1025[2mms[22m[39m
+   [33m[2m✓[22m[39m PageTab[2m > [22mshould show all route segments on active page tab when there are multiple route segments [33m491[2mms[22m[39m
+ [32m✓[39m [7m[35m react-router-devtools/client [39m[27m react-router-dev-tools.test.tsx [2m([22m[2m32 tests[22m[2m)[22m[33m 2522[2mms[22m[39m
+   [33m[2m✓[22m[39m General tests[2m > [22mshould open and close dev tools with another hotkey [33m310[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+[2m      Tests [22m [1m[32m319 passed[39m[22m[90m (319)[39m
+[2m   Start at [22m 11:32:04
+[2m   Duration [22m 6.61s[2m (transform 2.52s, setup 26.06s, collect 6.30s, tests 5.68s, environment 10.53s, prepare 4.31s)[22m
+

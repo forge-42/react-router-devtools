@@ -1,0 +1,240 @@
+
+> react-router-devtools-monorepo@1.0.0 test:deps C:\Users\AlemTuzlak\projects\Remix-Dev-Tools
+> sherif
+
+
+1 issue found in ./package.json:
+
+ ⨯ error The root package.json should be private to prevent accidentaly publishing it to a registry. root-package-private-field
+  │ {
+  +   "private": "true"   ← missing private field.
+  │ }
+
+1 issue found in .\test-apps\custom-server/package.json:
+
+ ⨯ error devDependencies should be ordered alphabetically. unordered-dependencies
+  │ {
+  │   "devDependencies": {
+  ~     ...   ← keys aren't sorted.
+  │   }
+  │ }
+
+2 issues found in .\test-apps\react-router-vite/package.json:
+
+ ⨯ error dependencies should be ordered alphabetically. unordered-dependencies
+  │ {
+  │   "dependencies": {
+  ~     ...   ← keys aren't sorted.
+  │   }
+  │ }
+
+ ⨯ error devDependencies should be ordered alphabetically. unordered-dependencies
+  │ {
+  │   "devDependencies": {
+  ~     ...   ← keys aren't sorted.
+  │   }
+  │ }
+
+27 issues found in ./:
+
+ ⨯ error Dependency @biomejs/biome has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      ./                        ^1.9.4   ↑ highest
+  
+      .\docs                    1.9.4   ↓ lowest
+
+ ⨯ error Dependency @types/node has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    22.13.1   ↑ highest
+  
+      .\packages\react-router-devtools   ^22.12.0   ∼ between
+  
+      ./                        ^20.17.30   ∼ between
+  
+      .\test-apps\custom-server ^20   ↓ lowest
+
+ ⨯ error Dependency lefthook has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      ./                        ^1.11.10   ↑ highest
+  
+      .\docs                    1.10.10   ↓ lowest
+
+ ⨯ error Dependency chalk has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    5.4.1   ↑ highest
+  
+      .\packages\react-router-devtools   ^5.4.1   ↓ lowest
+
+ ⨯ error Dependency clsx has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    2.1.1   ↑ highest
+  
+      .\packages\react-router-devtools   ^2.1.1   ↓ lowest
+
+ ⨯ error Dependency framer-motion has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\packages\react-router-devtools   ^12.0.6   ↑ highest
+  
+      .\docs                    ^11.0.8   ↓ lowest
+
+ ⨯ error Dependency tailwind-merge has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    3.0.1   ↑ highest
+  
+      .\packages\react-router-devtools   ^3.0.1   ↓ lowest
+
+ ⨯ error Dependency @react-router/dev has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^7.5.3   ↑ highest
+  
+      .\docs                    7.2.0   ∼ between
+  
+      .\packages\react-router-devtools   7.1.4   ↓ lowest
+  
+      .\test-apps\react-router-vite   7.1.4   ↓ lowest
+
+ ⨯ error Dependency @react-router/node has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^7.5.3   ↑ highest
+  
+      .\docs                    7.2.0   ∼ between
+  
+      .\packages\react-router-devtools   7.1.4   ↓ lowest
+  
+      .\test-apps\react-router-vite   7.1.4   ↓ lowest
+
+ ⨯ error Dependency @testing-library/react has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    16.2.0   ↑ highest
+  
+      .\packages\react-router-devtools   ^16.2.0   ↓ lowest
+
+ ⨯ error Dependency @vitest/coverage-v8 has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    3.0.5   ↑ highest
+  
+      .\packages\react-router-devtools   ^3.0.4   ↓ lowest
+
+ ⨯ error Dependency @vitest/ui has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    3.0.5   ↑ highest
+  
+      .\packages\react-router-devtools   ^3.0.4   ↓ lowest
+
+ ⨯ error Dependency happy-dom has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    16.8.1   ↑ highest
+  
+      .\packages\react-router-devtools   ^16.8.1   ↓ lowest
+
+ ⨯ error Dependency npm-run-all has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    4.1.5   ↑ highest
+  
+      .\packages\react-router-devtools   ^4.1.5   ↓ lowest
+
+ ⨯ error Dependency tailwindcss has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^4.1.4   ↑ highest
+  
+      .\docs                    4.0.9   ∼ between
+  
+      .\packages\react-router-devtools   ^3.4.0   ↓ lowest
+
+ ⨯ error Dependency tsx has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    4.19.2   ↑ highest
+  
+      .\packages\react-router-devtools   ^4.19.2   ↓ lowest
+
+ ⨯ error Dependency typescript has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^5.8.3   ↑ highest
+  
+      .\docs                    5.7.3   ∼ between
+  
+      .\packages\react-router-devtools   ^5.7.3   ↓ lowest
+  
+      .\test-apps\react-router-vite   ^5.7.3   ↓ lowest
+
+ ⨯ error Dependency vite has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^6.3.3   ↑ highest
+  
+      .\docs                    6.2.0   ∼ between
+  
+      .\packages\react-router-devtools   ^6.0.11   ↓ lowest
+  
+      .\test-apps\react-router-vite   ^6.0.11   ↓ lowest
+
+ ⨯ error Dependency vitest has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    3.0.5   ↑ highest
+  
+      .\packages\react-router-devtools   ^3.0.4   ↓ lowest
+
+ ⨯ error Dependency isbot has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^5.1.27   ↑ highest
+  
+      .\docs                    5.1.22   ∼ between
+  
+      .\test-apps\react-router-vite   ^5.1.22   ↓ lowest
+
+ ⨯ error Dependency react has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^19.1.0   ↑ highest
+  
+      .\docs                    19.0.0   ∼ between
+  
+      .\test-apps\react-router-vite   ^19.0.0   ↓ lowest
+
+ ⨯ error Dependency react-dom has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^19.1.0   ↑ highest
+  
+      .\docs                    19.0.0   ∼ between
+  
+      .\test-apps\react-router-vite   ^19.0.0   ↓ lowest
+
+ ⨯ error Dependency react-router has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^7.5.3   ↑ highest
+  
+      .\docs                    7.2.0   ∼ between
+  
+      .\test-apps\react-router-vite   7.1.4   ↓ lowest
+
+ ⨯ error Dependency @tailwindcss/vite has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^4.1.4   ↑ highest
+  
+      .\docs                    4.0.9   ↓ lowest
+
+ ⨯ error Dependency @types/react has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^19.1.2   ↑ highest
+  
+      .\docs                    19.0.8   ∼ between
+  
+      .\test-apps\react-router-vite   ^19.0.8   ↓ lowest
+
+ ⨯ error Dependency @types/react-dom has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\test-apps\custom-server ^19.1.2   ↑ highest
+  
+      .\docs                    19.0.3   ∼ between
+  
+      .\test-apps\react-router-vite   ^19.0.3   ↓ lowest
+
+ ⨯ error Dependency vite-tsconfig-paths has multiple versions defined in the workspace. multiple-dependency-versions
+  
+      .\docs                    5.1.4   ↑ highest
+  
+      .\test-apps\custom-server ^5.1.4   ↓ lowest
+  
+      .\test-apps\react-router-vite   ^5.1.4   ↓ lowest
+
+31 issues found (31 ⨯, 0 ⚠️, 0 ✓) across 4 packages in 1.4785ms.
+ Note: use `-i` to ignore dependencies, `-r` to ignore rules, `-p` to ignore packages, and `-f` to autofix fixable issues.
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m
