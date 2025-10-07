@@ -63,6 +63,7 @@ jobs:
         with:
           workspace_name: docs
           app_name: react-router-devtools-docs-pr-${{ github.event.number }}
+          use_isolated_workspace: true
           env_vars: |
             APP_ENV=production
             GITHUB_OWNER=${{ github.repository_owner }}
