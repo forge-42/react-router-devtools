@@ -54,7 +54,7 @@ jobs:
       url: ${{ steps.deploy.outputs.app_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: forge-42/fly-deploy@v1.0.0-rc.1
+      - uses: forge-42/fly-deploy@v1.0.0-rc.2
         id: deploy
         env:
           FLY_ORG: ${{ vars.FLY_ORG }}
