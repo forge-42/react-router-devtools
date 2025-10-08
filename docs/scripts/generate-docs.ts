@@ -36,7 +36,6 @@ const outputDir = "generated-docs"
 const APP_ENV = getServerEnv().APP_ENV as "development" | "production"
 const currentDocsWorkspace = process.cwd()
 
-// Derive path of docs relative to repo root; tolerate odd CI/git states
 let docsRelative = ""
 try {
   docsRelative = run("git rev-parse --show-prefix", { cwd: currentDocsWorkspace }).replace(/\/?$/, "")
@@ -48,26 +47,25 @@ const allTags = () => run("git tag --list").split("\n").filter(Boolean)
 
 function resolveTagsFromSpec(spec: string) {
   const tags = allTags().filter((t) => semver.valid(t))
-  const tokens = spec
-    .split(",")
-    .map((t) => t.trim())
-    .filter(Boolean)
+  const tokens = spec.split(",").map((t) => t.trim()).filter(Boolean)
   const matched = tags.filter((tag) =>
     tokens.some((token) => semver.satisfies(tag, token, { includePrerelease: true })),
   )
   return matched.sort(semver.rcompare)
 }
 
+function hasDocsContentDir(dir: string) {
+  return existsSync(resolve(dir, contentDir))
+}
+
 function buildDocs(sourceDir: string, outDir: string) {
   if (!existsSync(sourceDir)) throw new Error(`Docs workspace not found: ${sourceDir}`)
-
   const docsContentDir = resolve(sourceDir, contentDir)
   if (!existsSync(docsContentDir)) {
     throw new Error(`Docs content directory "${contentDir}" not found at ${docsContentDir}`)
   }
 
   resetDir(outDir)
-
   run("pnpm run content-collections:build", { cwd: sourceDir, inherit: true })
 
   const ccSrc = resolve(sourceDir, ".content-collections")
@@ -76,8 +74,6 @@ function buildDocs(sourceDir: string, outDir: string) {
 
   resetDir(ccDest)
   cpSync(ccSrc, ccDest, { recursive: true })
-
-  // biome-ignore lint/suspicious/noConsole: keep for debugging
   console.log(chalk.green(`✔ Built docs → ${ccDest}`))
 }
 
@@ -94,6 +90,7 @@ function buildRef(ref: string, labelForOutDir: string) {
   try {
     const docsWorkspace = docsRelative ? resolve(worktreePath, docsRelative) : worktreePath
 
+    // Install at worktree ROOT first (monorepo lockfile lives here)
     const rootPkg = existsSync(resolve(worktreePath, "package.json"))
     const rootLock = existsSync(resolve(worktreePath, "pnpm-lock.yaml"))
     if (rootPkg) {
@@ -103,12 +100,12 @@ function buildRef(ref: string, labelForOutDir: string) {
       })
     }
 
+    // Only install inside docs/ if it has its own lockfile
     const docsPkg = existsSync(resolve(docsWorkspace, "package.json"))
     const docsLock = existsSync(resolve(docsWorkspace, "pnpm-lock.yaml"))
     if (docsPkg && docsLock) {
       run("pnpm install --frozen-lockfile", { cwd: docsWorkspace, inherit: true })
     }
-
 
     const outDir = resolve(outputDir, labelForOutDir)
     buildDocs(docsWorkspace, outDir)
@@ -131,15 +128,13 @@ function hasLocalRef(ref: string) {
 }
 
 function buildBranch(branch: string, labelForOutDir: string) {
-  // Ensure the remote ref exists locally (for origin/<branch>)
-  run(`git fetch --tags --prune origin ${branch}`, {
+run(`git fetch --tags --prune origin ${branch}`, {
+
     cwd: currentDocsWorkspace,
     inherit: true,
   })
-
   const localRef = `refs/heads/${branch}`
   const targetRef = hasLocalRef(localRef) ? localRef : `origin/${branch}`
-
   return buildRef(targetRef, labelForOutDir)
 }
 
@@ -154,16 +149,14 @@ function buildSpecifiedTags(spec: string, envLabel: "dev" | "prod"): string[] {
       `No tags matched spec "${spec}". Nothing to build in ${envLabel === "dev" ? "development" : "production"}.`,
     )
   }
-  // biome-ignore lint/suspicious/noConsole: keep for debugging
-		console.log(chalk.cyan(`(${envLabel}) Building docs for tags: ${tags.join(", ")}`))
+  console.log(chalk.cyan(`(${envLabel}) Building docs for tags: ${tags.join(", ")}`))
   for (const tag of tags) buildTag(tag)
   return tags
 }
 
 function detectDefaultBranch(): string {
   try {
-    // e.g. 'refs/remotes/origin/main'
-    const ref = run("git symbolic-ref --quiet refs/remotes/origin/HEAD")
+    const ref = run("git symbolic-ref --quiet refs/remotes/origin/HEAD") // e.g. 'refs/remotes/origin/main'
     const parts = ref.split("/")
     return parts[parts.length - 1] || "main"
   } catch {
@@ -171,9 +164,7 @@ function detectDefaultBranch(): string {
       const info = run("git remote show origin")
       const m = info.match(/HEAD branch:\s*(\S+)/)
       if (m?.[1]) return m[1].trim()
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
   return "main"
 }
@@ -183,11 +174,10 @@ function detectDefaultBranch(): string {
     args: process.argv.slice(2),
     options: {
       versions: { type: "string" }, // optional
-      branch: { type: "string" }, // optional (CLI override)
+      branch: { type: "string" },   // optional (CLI override)
     },
   })
 
-  // Resolve branch precedence: CLI > ENV > auto-detect
   const branch =
     (values.branch as string | undefined)?.trim() ||
     process.env.DOCS_BRANCH?.trim() ||
@@ -197,14 +187,29 @@ function detectDefaultBranch(): string {
   let builtVersions: string[] = []
 
   if (!hasVersions && APP_ENV === "development") {
-  // biome-ignore lint/suspicious/noConsole: keep for debugging
-				console.log(chalk.cyan(`(dev) Building docs from current workspace: ${currentDocsWorkspace} → current`))
+    console.log(chalk.cyan(`(dev) Building docs from current workspace: ${currentDocsWorkspace} → current`))
     buildDocs(currentDocsWorkspace, join(outputDir, "current"))
     builtVersions = ["current"]
   } else if (!hasVersions && APP_ENV === "production") {
-  // biome-ignore lint/suspicious/noConsole: keep for debugging
-				console.log(chalk.cyan(`(prod) Building docs from '${branch}' branch only → ${branch}`))
-    buildBranch(branch, branch)
+    console.log(chalk.cyan(`(prod) Building docs from '${branch}' branch only → ${branch}`))
+    try {
+      // Try to build from the target branch worktree
+      buildBranch(branch, branch)
+    } catch (e: any) {
+      // If the target branch doesn’t have /docs/content yet (common for PRs introducing it),
+      // fall back to building from the current workspace but emit under the same label.
+      const msg = String(e?.message ?? e)
+      if (msg.includes(`Docs content directory "${contentDir}" not found`)) {
+        console.warn(
+          chalk.yellow(
+            `(prod) '${branch}' is missing /docs/${contentDir}. Falling back to current workspace for this build.`,
+          ),
+        )
+        buildDocs(currentDocsWorkspace, join(outputDir, branch))
+      } else {
+        throw e
+      }
+    }
     builtVersions = [branch]
   } else {
     builtVersions = buildSpecifiedTags(values.versions as string, APP_ENV === "development" ? "dev" : "prod")
@@ -217,12 +222,10 @@ function detectDefaultBranch(): string {
 export const versions = ${JSON.stringify(builtVersions, null, 2)} as const
 `,
   )
-  // biome-ignore lint/suspicious/noConsole: keep for debugging
-		console.log(chalk.green(`✔ Wrote versions.ts → ${versionsFile}`))
-  // biome-ignore lint/suspicious/noConsole: keep for debugging
-		console.log(chalk.green("✅ Done"))
+
+  console.log(chalk.green(`✔ Wrote versions.ts → ${versionsFile}`))
+  console.log(chalk.green("✅ Done"))
 })().catch((e) => {
-  // biome-ignore lint/suspicious/noConsole: keep for debugging
-		console.error(chalk.red("❌ Build failed:"), e)
+  console.error(chalk.red("❌ Build failed:"), e)
   process.exit(1)
 })
