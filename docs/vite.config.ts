@@ -35,7 +35,6 @@ export default defineConfig({
 			outputDir: "./app/ui/icon/icons",
 			fileName: "icon.svg",
 			withTypes: true,
-			formatter: "biome",
 		}),
 		contentCollections(),
 	],
