@@ -1,51 +1,41 @@
-
 # syntax = docker/dockerfile:1.4
 
-# Base dependencies stage
 ARG NODE_VERSION=22.17.0
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
-
-# Node.js app lives here
 WORKDIR /app
+ENV NODE_ENV=production
 
-# Set production environment
-ENV NODE_ENV="production"
-
-# Install pnpm
 ARG PNPM_VERSION=10.18.0
 RUN npm install -g pnpm@$PNPM_VERSION
 
-
-# Throw-away build stage to reduce size of final image
+# --- Build stage ---
 FROM base AS build
 
-# Install packages needed to build node modules
+# System deps only if you have native modules; otherwise you can drop this
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3 git
+    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3 && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install node modules
+# Install deps
 COPY .npmrc package.json ./
 RUN pnpm install --prod=false
 
-# Copy application code
+# Copy the application (including the previously downloaded artifact under docs/)
 COPY . .
 
-# Build application
-RUN pnpm run generate:docs
+# IMPORTANT: we no longer generate docs here; they were provided by CI
+# Build the app (should read from docs/generated-docs/* and versions.ts that CI uploaded)
 RUN pnpm run build
 
-# Remove development dependencies
+# Prune dev deps
 RUN pnpm prune --prod
 
-
-# Final stage for app image
+# --- Runtime stage ---
 FROM base
 
-# Copy built application
 COPY --from=build /app /app
 
-# Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "pnpm", "run", "start" ]
+CMD ["pnpm","run","start"]

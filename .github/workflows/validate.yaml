@@ -44,16 +44,58 @@ jobs:
       - name: 🔎 Validate
         run: pnpm run test
 
+
+  build-docs:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - name: Install deps
+        run: pnpm install --prefer-offline --frozen-lockfile
+
+      - name: Generate docs
+        working-directory: docs
+        run: pnpm run generate:docs
+
+      - name: Upload generated docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-generated
+          path: |
+            docs/generated-docs/**
+            docs/app/utils/versions.ts
+          if-no-files-found: error
+
   deploy-docs-pr-preview:
     if: ${{ github.event_name == 'pull_request' }}
-    name: "🚀 Deploy Docs"
-    needs: [lint, validate]
+    name: 🚀 Deploy Docs
+    needs: [lint, validate, build-docs] 
     runs-on: ubuntu-latest
     environment:
       name: docs-release
-      url: ${{ steps.deploy.outputs.app_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Download generated docs
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-generated
+          path: docs
+
+      # check TODO remove this
+      - name: List generated payload
+        run: ls -laR docs/generated-docs | head -n 200
       - uses: forge-42/fly-deploy@v1.0.0-rc.2
         id: deploy
         env:

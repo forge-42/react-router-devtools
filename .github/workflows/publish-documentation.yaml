@@ -32,6 +32,15 @@ jobs:
         working-directory: docs
         run: pnpm run generate:docs
 
+      - name: Upload generated docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-generated
+          path: |
+            docs/generated-docs/**
+            docs/app/utils/versions.ts
+          if-no-files-found: error
+
   deploy:
     name: 🚀 Deploy Release
     needs: [build-docs]
@@ -40,6 +49,15 @@ jobs:
       name: docs-release
     steps:
       - uses: actions/checkout@v4
+      - name: Download generated docs
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-generated
+          path: docs
+
+      # check TODO remove this 
+      - name: List generated payload
+        run: ls -laR docs/generated-docs | head -n 200
       - uses: forge-42/fly-deploy@v1.0.0-rc.2
         id: deploy
         env:
