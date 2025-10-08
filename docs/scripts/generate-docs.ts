@@ -35,7 +35,14 @@ const contentDir = "content"
 const outputDir = "generated-docs"
 const APP_ENV = getServerEnv().APP_ENV as "development" | "production"
 const currentDocsWorkspace = process.cwd()
-const docsRelative = run("git rev-parse --show-prefix", { cwd: currentDocsWorkspace }).replace(/\/?$/, "")
+
+// Make docsRelative safe even if something odd happens with git in CI
+let docsRelative = ""
+try {
+	docsRelative = run("git rev-parse --show-prefix", { cwd: currentDocsWorkspace }).replace(/\/?$/, "")
+} catch {
+	docsRelative = ""
+}
 
 const allTags = () => run("git tag --list").split("\n").filter(Boolean)
 
@@ -105,6 +112,28 @@ function buildRef(ref: string, labelForOutDir: string) {
 	}
 }
 
+function hasLocalRef(ref: string) {
+	try {
+		run(`git show-ref --verify --quiet ${ref}`)
+		return true
+	} catch {
+		return false
+	}
+}
+
+function buildBranch(branch: string, labelForOutDir: string) {
+	// Ensure we have the remote branch locally available
+	run(`git fetch --tags --prune origin ${branch}`, {
+		cwd: currentDocsWorkspace,
+		inherit: true,
+	})
+
+	const localRef = `refs/heads/${branch}`
+	const targetRef = hasLocalRef(localRef) ? localRef : `origin/${branch}`
+
+	return buildRef(targetRef, labelForOutDir)
+}
+
 function buildTag(tag: string) {
 	return buildRef(`refs/tags/${tag}`, tag)
 }
@@ -121,6 +150,7 @@ function buildSpecifiedTags(spec: string, envLabel: "dev" | "prod"): string[] {
 	for (const tag of tags) buildTag(tag)
 	return tags
 }
+
 ;(async () => {
 	const { values } = parseArgs({
 		args: process.argv.slice(2),
@@ -151,7 +181,7 @@ function buildSpecifiedTags(spec: string, envLabel: "dev" | "prod"): string[] {
 		// PROD + no --versions => build content from default branch only
 		// biome-ignore lint/suspicious/noConsole: keep console log for debugging
 		console.log(chalk.cyan(`(prod) Building docs from '${branch}' branch only → ${branch}`))
-		buildRef(`refs/heads/${branch}`, branch)
+		buildBranch(branch, branch) // << use local refs/heads/<branch> if present, else origin/<branch>
 		builtVersions = [branch]
 	} else {
 		builtVersions = buildSpecifiedTags(values.versions as string, APP_ENV === "development" ? "dev" : "prod")
