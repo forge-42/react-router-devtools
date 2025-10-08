@@ -94,13 +94,21 @@ function buildRef(ref: string, labelForOutDir: string) {
   try {
     const docsWorkspace = docsRelative ? resolve(worktreePath, docsRelative) : worktreePath
 
-    if (existsSync(resolve(docsWorkspace, "package.json"))) {
+    const rootPkg = existsSync(resolve(worktreePath, "package.json"))
+    const rootLock = existsSync(resolve(worktreePath, "pnpm-lock.yaml"))
+    if (rootPkg) {
+      run(`pnpm install ${rootLock ? "--frozen-lockfile" : "--no-frozen-lockfile"}`, {
+        cwd: worktreePath,
+        inherit: true,
+      })
+    }
+
+    const docsPkg = existsSync(resolve(docsWorkspace, "package.json"))
+    const docsLock = existsSync(resolve(docsWorkspace, "pnpm-lock.yaml"))
+    if (docsPkg && docsLock) {
       run("pnpm install --frozen-lockfile", { cwd: docsWorkspace, inherit: true })
     }
 
-    if (existsSync(resolve(worktreePath, "package.json"))) {
-      run("pnpm install --frozen-lockfile", { cwd: worktreePath, inherit: true })
-    }
 
     const outDir = resolve(outputDir, labelForOutDir)
     buildDocs(docsWorkspace, outDir)
