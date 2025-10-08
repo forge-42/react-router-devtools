@@ -13,7 +13,6 @@ RUN npm install -g pnpm@$PNPM_VERSION
 # --- Build stage ---
 FROM base AS build
 
-# If you DON'T have native deps, you can remove this apt-get block.
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3 && \
     rm -rf /var/lib/apt/lists/*
@@ -25,7 +24,7 @@ RUN pnpm install --frozen-lockfile --prod=false
 # Copy the application (includes pre-generated docs & versions.ts from CI)
 COPY . .
 
-# Build the app (no docs generation here)
+# Build the app 
 RUN pnpm run build
 
 # Prune dev deps
