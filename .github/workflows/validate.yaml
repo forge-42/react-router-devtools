@@ -56,7 +56,8 @@ jobs:
         working-directory: docs
         env:
           APP_ENV: production
-        run: pnpm run generate:docs -- --branch ${{ github.event.repository.default_branch }}
+          DOCS_BRANCH: ${{ github.event.repository.default_branch }}
+        run: pnpm run generate:docs
 
       - name: Pack generated docs (tarball)
         run: tar -czf docs-generated.tgz -C docs generated-docs
