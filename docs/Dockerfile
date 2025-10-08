@@ -18,13 +18,13 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # Install deps (use lockfile for reproducible builds if present)
-COPY .npmrc package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod=false
+COPY .npmrc package.json  ./
+RUN pnpm install --prod=false
 
 # Copy the application (includes pre-generated docs & versions.ts from CI)
 COPY . .
 
-# Build the app 
+# Build the app
 RUN pnpm run build
 
 # Prune dev deps
