@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.4
 
-ARG NODE_VERSION=22.17.0
+ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
@@ -17,14 +17,14 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3 && \
     rm -rf /var/lib/apt/lists/*
 
-# Install deps (use lockfile for reproducible builds if present)
-COPY .npmrc package.json  ./
+COPY .npmrc package.json ./
 RUN pnpm install --prod=false
 
-# Copy the application (includes pre-generated docs & versions.ts from CI)
+# Copy the application (including the previously downloaded artifact under docs/)
 COPY . .
 
-# Build the app
+# IMPORTANT: we no longer generate docs here; they were provided by CI
+# Build the app (should read from docs/generated-docs/* and versions.ts that CI uploaded)
 RUN pnpm run build
 
 # Prune dev deps
@@ -32,6 +32,8 @@ RUN pnpm prune --prod
 
 # --- Runtime stage ---
 FROM base
+
 COPY --from=build /app /app
+
 EXPOSE 3000
 CMD ["pnpm","run","start"]
