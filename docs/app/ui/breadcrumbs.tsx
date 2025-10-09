@@ -17,7 +17,7 @@ interface BreadcrumbItemProps {
 
 export const BreadcrumbItem = ({ children, href, isActive = false, className }: BreadcrumbItemProps) => {
 	const classes = cn(
-		"text-ellipsis text-start font-medium text-[var(--color-text-normal)] text-sm sm:text-base md:text-lg",
+		"text-ellipsis text-start font-medium text-[var(--color-text-normal)]",
 		isActive && "pointer-events-none font-semibold text-[var(--color-text-active)]",
 		className
 	)
@@ -45,7 +45,7 @@ export const Breadcrumbs = ({ children, className }: BreadcrumbsProps) => {
 			<ol className="inline-flex items-center">
 				{items.map((child, index) => (
 					<li key={child.props.href || index} className="flex items-center">
-						{index > 0 && <Icon name="ChevronRight" className="size-4 shrink-0 px-1 text-[var(--color-text-muted)]" />}
+						{index > 0 && <Icon name="ChevronRight" className="size-5 shrink-0 px-1 text-[var(--color-text-muted)]" />}
 						{child}
 					</li>
 				))}

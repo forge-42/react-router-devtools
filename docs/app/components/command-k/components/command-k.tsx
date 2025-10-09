@@ -126,7 +126,7 @@ export const CommandK = ({ placeholder, version }: CommandPaletteProps) => {
 				}}
 				placeholder={searchPlaceholder}
 			/>
-			<div className="max-h-96 overflow-y-auto overscroll-contain" aria-label={searchPlaceholder}>
+			<div className="max-h-96 overflow-y-auto overscroll-contain scrollbar" aria-label={searchPlaceholder}>
 				{renderBody()}
 			</div>
 			<ResultsFooter resultsCount={results.length} query={query} />

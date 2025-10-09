@@ -22,7 +22,7 @@ const ResultIcon = ({
 	return (
 		<div
 			className={cn(
-				"mt-0.5 transition-colors duration-150",
+				"mt-0.5 transition-transform duration-150",
 				isSelected ? "text-[var(--color-result-icon-selected)]" : "text-[var(--color-result-icon)]"
 			)}
 		>
@@ -42,7 +42,7 @@ const ResultTitle = ({
 }) => (
 	<div
 		className={cn(
-			"font-medium leading-snug transition-colors duration-150",
+			"font-medium leading-snug transition-transform duration-150",
 			isSelected ? "text-[var(--color-result-selected-text)]" : "text-[var(--color-result-text)]"
 		)}
 	>
@@ -52,7 +52,7 @@ const ResultTitle = ({
 )
 
 const ResultMetadata = ({ item, matchType }: Pick<SearchResultProps, "item" | "matchType">) => (
-	<div className="mt-2 text-[var(--color-breadcrumb-text)] text-xs">
+	<div className="mt-2 text-[var(--color-breadcrumb-text)] text-sm">
 		{item.title}
 		{matchType === "paragraph" && item.subtitle ? <span> &gt; {item.subtitle}</span> : null}
 	</div>

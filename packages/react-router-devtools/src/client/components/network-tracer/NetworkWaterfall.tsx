@@ -196,7 +196,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 								<div
 									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 									key={i}
-									className="absolute top-0 h-full border-r-none border-t-none border-b-none !border-l border-white border-l-2 text-xs text-white "
+									className="absolute top-0 h-full border-r-none border-t-none border-b-none !border-l border-white border-l-2 text-sm text-white "
 									style={{
 										left: i * TIME_COLUMN_INTERVAL * pixelsPerMs,
 									}}

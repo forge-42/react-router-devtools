@@ -85,7 +85,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 	}, [theme])
 
 	return (
-		<html className="overflow-y-auto overflow-x-hidden " lang={i18n.language} dir={i18n.dir()} data-theme={theme}>
+		<html className="overflow-y-auto overflow-x-hidden scrollbar" lang={i18n.language} dir={i18n.dir()} data-theme={theme}>
 			<head>
 				<script
 					// biome-ignore lint/security/noDangerouslySetInnerHtml: Sets correct theme on initial load

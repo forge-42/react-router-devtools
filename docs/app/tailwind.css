@@ -200,7 +200,7 @@
 		--color-warning-text: #fbbf24;
 		--color-warning-icon: #f59e0b;
 
-		--color-modal-backdrop: rgb(15, 15, 15, 0.8);
+		--color-modal-backdrop:  rgba(10, 13, 17, 0.5);
 		--color-modal-bg: rgb(15, 15, 15);
 		--color-modal-border: #374151;
 		--color-modal-shadow: rgba(0, 0, 0, 0.5);
@@ -267,17 +267,17 @@
 		--color-scrollbar-thumb: #e6edf3;
 	}
 
-	::-webkit-scrollbar {
-		height: 8px;
-		width: 8px;
+	.scrollbar::-webkit-scrollbar {
+		height: 5px;
+		width: 4px;
 	}
 
-	::-webkit-scrollbar-thumb {
+	.scrollbar::-webkit-scrollbar-thumb {
 		background-color: var(--color-scrollbar-thumb);
-		border-radius: 9999px;
+		/* border-radius: 9999px; */
 	}
 
-	::-webkit-scrollbar-track {
+	.scrollbar::-webkit-scrollbar-track {
 		background-color: var(--color-scrollbar-track);
 	}
 
@@ -285,8 +285,7 @@
 		cursor: default;
 	}
 
-	.prose :not(pre) > code::before,
-.prose :not(pre) > code::after {
-  content: none !important;
-}
+	.prose :not(pre) > code::before, .prose :not(pre) > code::after {
+  		content: none !important;
+	}
 }

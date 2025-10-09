@@ -23,7 +23,7 @@ const calculatePadding = (depth: number) => BASE_PADDING + depth * DEPTH_MULTIPL
 
 const getItemClassName = (depth: number, isActive: boolean) => {
 	return [
-		"block py-1.5 text-xs sm:text-sm md:text-base hover:text-[var(--color-text-hover)]",
+		"block py-1.5 text-sm md:text-base hover:text-[var(--color-text-hover)]",
 		depth === 0 && "font-medium",
 		isActive ? "text-[var(--color-text-accent)]" : "text-[var(--color-text-active)]",
 	]

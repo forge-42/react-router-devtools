@@ -116,7 +116,7 @@ const RoutesTab = () => {
 									<div className="justify-center flex-wrap text-white flex px-3 lg:px-0 flex-col lg:flex-row w-full items-start lg:items-center gap-1 ">
 										<span className="text-gray-500" /> {route.url}{" "}
 										<div className="lg:ml-auto flex-wrap flex items-center gap-2">
-											<span className=" text-left text-xs text-gray-500">Url: "{pathToOpen}"</span>
+											<span className=" text-left textsm text-gray-500">Url: "{pathToOpen}"</span>
 											{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 											<div
 												title={pathToOpen}

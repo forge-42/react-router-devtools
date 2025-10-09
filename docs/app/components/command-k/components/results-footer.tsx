@@ -15,7 +15,7 @@ export const ResultsFooter = ({
 
 	return (
 		<div className={cn("border-[var(--color-footer-border)] border-t bg-[var(--color-footer-bg)] px-4 py-3")}>
-			<div className="flex items-center justify-between text-xs">
+			<div className="flex items-center justify-between text-sm">
 				<span className="font-medium text-[var(--color-footer-text)]">{t("text.result", { count: resultsCount })}</span>
 				<div className="flex items-center gap-4 text-[var(--color-footer-text)]">
 					<KeyboardHint keys={["↑", "↓"]} label={t("controls.navigate")} />

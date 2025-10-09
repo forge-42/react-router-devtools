@@ -17,7 +17,7 @@ export const OrderedList = (props: ComponentPropsWithoutRef<"ol">) => {
 		<ol
 			{...props}
 			className={cn(
-				"list-decimal space-y-1 pl-4 text-[var(--color-text-normal)] [&>li]:ml-2 [&>li]:marker:font-medium ",
+				"list-decimal space-y-1 pl-4 text-[var(--color-text-normal)] [&>li]:ml-2 [&>li]:marker:font-medium",
 				props.className
 			)}
 		/>

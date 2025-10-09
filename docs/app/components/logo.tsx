@@ -7,7 +7,7 @@ export const Logo = ({ children }: { children: ReactNode }) => {
 		// biome-ignore lint/a11y/useKeyWithClickEvents: we don't need keyboard access for this
 		<div
 			onClick={() => navigate(href("/:version?/home"))}
-			className="relative block font-semibold font-space text-[var(--color-text-active)] text-lg md:text-2xl xl:text-3xl"
+			className="relative block font-semibold font-space text-[var(--color-text-active)] text-lg md:text-2xl xl:text-3xl cursor-pointer"
 		>
 			{children}
 		</div>

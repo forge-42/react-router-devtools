@@ -64,7 +64,7 @@ export function PageNavigation({ previous, next }: PageNavigationProps) {
 
 	return (
 		<nav
-			className="mt-12 flex items-start justify-between border-[var(--color-border)] border-t pt-6 text-[var(--color-text-active)] text-xs sm:text-sm md:text-base"
+			className="mt-12 flex items-start justify-between border-[var(--color-border)] border-t pt-6 text-[var(--color-text-active)] text-sm md:text-base"
 			aria-label="Pagination navigation"
 		>
 			{previous ? <PageNavigationLink item={previous} direction="previous" label={t("links.previous")} /> : <div />}

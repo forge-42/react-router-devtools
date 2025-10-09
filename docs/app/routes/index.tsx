@@ -7,11 +7,25 @@ import { Meteors } from "~/components/ui/Meteors"
 import { InfiniteMovingCards } from "~/components/ui/infinite-cards"
 import { Navbar } from "~/components/ui/navbar-menu"
 import { TypewriterEffect } from "~/components/ui/typewritter"
+import { Route } from "./+types"
+import { buildDocPathFromSlug } from "~/utils/path-builders"
+import { generateMetaFields } from "~/utils/seo"
+import { getDomain } from "~/utils/get-domain"
 
-export const loader = () => {
-	// To add a landing page to your docs, remove this line.
-	// return redirect('/docs/main')
-	return null
+export const meta = ({ data }: Route.MetaArgs) => {
+	const { domain } = data
+	return generateMetaFields({
+		domain,
+		path: "/",
+		title: "React Router Devtools",
+		description:
+			"Get up and running with React Router Devtools in a React Router 7+ project using Vite and ESM.",
+	})
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+	const { domain } = getDomain(request)
+	return { domain }
 }
 
 export default function Index() {

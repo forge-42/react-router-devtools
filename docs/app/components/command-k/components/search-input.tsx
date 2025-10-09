@@ -35,7 +35,7 @@ export function SearchInput({ value, onChange, placeholder, ref }: SearchInputPr
 			<div className="flex items-center gap-2">
 				<kbd
 					className={cn(
-						"hidden rounded border border-[var(--color-kbd-border)] bg-[var(--color-kbd-bg)] px-2 py-1 font-mono text-xs sm:block",
+						"hidden rounded border-[var(--color-kbd-border)] bg-[var(--color-kbd-bg)] px-2 py-1 font-mono text-sm sm:block",
 						"text-[var(--color-kbd-text)]"
 					)}
 				>

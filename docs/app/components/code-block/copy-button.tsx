@@ -24,7 +24,7 @@ export const CopyButton = ({ lines }: { lines: string[] }) => {
 			onClick={handleCopy}
 			disabled={disabled}
 			className={cn(
-				"absolute top-3 right-3 flex items-center gap-1 rounded px-2 py-1 text-xs transition-all sm:text-sm md:text-base",
+				"absolute top-3 right-3 flex items-center gap-1 rounded px-2 py-1 transition-all text-sm md:text-base",
 				"bg-[var(--color-code-copy-bg)] text-[var(--color-code-copy-text)]",
 				"opacity-0 group-hover:opacity-100",
 				!disabled && "hover:bg-[var(--color-code-copy-hover-bg)]",

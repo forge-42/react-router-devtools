@@ -35,7 +35,7 @@ const ClearHistoryButton = ({ onClear }: Pick<SearchHistoryProps, "onClear">) =>
 			type="button"
 			onClick={onClear}
 			className={cn(
-				"flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors",
+				"flex items-center gap-1 rounded px-2 py-1 text-sm",
 				"text-[var(--color-result-meta)] hover:bg-[var(--color-history-clear-hover-bg)] hover:text-[var(--color-history-clear-hover-text)]"
 			)}
 			title="Clear history"

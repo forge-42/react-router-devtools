@@ -18,7 +18,7 @@ export const SidebarContent = ({
 	const version = useCurrentVersion()
 	return (
 		<nav
-			className="max-h-[calc(100vh-var(--header-height))] min-h-0 flex-1 overflow-y-auto pr-4"
+			className="scrollbar max-h-[calc(100vh-var(--header-height))] min-h-0 flex-1 overflow-y-auto pr-4"
 			aria-label="Documentation navigation"
 		>
 			{documentationPages.length > 0 && (

@@ -13,7 +13,7 @@ export const IconLink = ({ name, className, ...props }: IconLinkProps) => {
 	return (
 		<a
 			className={cn(
-				"group relative inline-flex cursor-pointer items-center justify-center rounded-full text-[var(--color-text-active)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border)] focus-visible:ring-offset-2",
+				"group relative inline-flex cursor-pointer items-center justify-center rounded-full text-[var(--color-text-active)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border)] focus-visible:ring-offset-2",
 				className
 			)}
 			target={isExternal ? "_blank" : undefined}

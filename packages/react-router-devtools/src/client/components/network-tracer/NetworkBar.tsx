@@ -103,7 +103,7 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 				/>
 			)}
 
-			<div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 px-2 py-1 rounded text-xs whitespace-nowrap pointer-events-none z-10">
+			<div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 px-2 py-1 rounded text-sm whitespace-nowrap pointer-events-none z-10">
 				{request.method} {request.url}
 				<br />
 				{request.endTime ? `Duration: ${duration.toFixed(0)}ms` : `Elapsed: ${duration.toFixed(0)}ms...`}

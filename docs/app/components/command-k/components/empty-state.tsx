@@ -18,7 +18,7 @@ export const EmptyState = ({ query }: { query?: string }) => {
 	return (
 		<div className="space-y-6 px-4 py-8 text-center">
 			<p className="mb-4 font-medium text-[var(--color-empty-text)]">{t("text.start_typing_to_search")}</p>
-			<div className="flex items-center justify-center gap-6 text-[var(--color-empty-text-muted)] text-xs">
+			<div className="flex items-center justify-center gap-6 text-[var(--color-empty-text-muted)] text-sm">
 				<KeyboardHint keys={["↑", "↓"]} label={t("controls.navigate")} />
 				<KeyboardHint keys="↵" label={t("controls.select")} />
 				<KeyboardHint keys="⇥" label={t("controls.cycle")} />

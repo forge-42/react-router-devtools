@@ -57,7 +57,7 @@ export const PreElement = ({ lines, className = "", ...props }: PreElementProps)
 	<pre
 		{...props}
 		className={cn(
-			"scrollbar scrollbar-thin relative overflow-x-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-code-block-bg)] py-4 font-mono text-[var(--color-code-block-text)] text-xs leading-relaxed sm:text-sm md:text-base [&::-webkit-scrollbar-thumb:hover]:cursor-pointer",
+			"scrollbar scrollbar-thin relative overflow-x-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-code-block-bg)] py-4 font-mono text-[var(--color-code-block-text)] leading-relaxed text-sm md:text-base [&::-webkit-scrollbar-thumb:hover]:cursor-pointer",
 			className
 		)}
 	>
