@@ -61,7 +61,7 @@ export const Alert = ({ children, title, variant, className = "" }: AlertProps) 
 
 			<div
 				className={cn(
-					"prose prose-xs sm:prose-sm md:prose-base max-w-none text-sm leading-6 sm:text-base md:text-lg",
+					"prose prose-xs sm:prose-sm md:prose-base max-w-none text-sm sm:text-base md:text-lg leading-6 md:leading-7 xl:leading-8",
 					styles.content
 				)}
 			>
