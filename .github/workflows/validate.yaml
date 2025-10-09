@@ -2,7 +2,6 @@ name: 🚀 Validation Pipeline
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 on:
   push:
     branches: [main]
@@ -12,55 +11,73 @@ on:
 permissions:
   actions: write
   contents: read
+  # Required to put a comment into the pull-request
   pull-requests: write
-
 jobs:
   lint:
     name: ⬣ Biome lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: biomejs/setup-biome@v2
-      - run: biome ci .
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+      - name: Run Biome
+        run: biome ci .
 
   validate:
     name: 🔎 Validate
     runs-on: ubuntu-latest
     steps:
-      - uses: styfle/cancel-workflow-action@0.12.1
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - uses: pnpm/action-setup@v4
-      - run: pnpm install
-      - run: pnpm run test
+          node-version-file: "package.json"
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Install dependencies
+        run: pnpm install
+      - name: 🔎 Validate
+        run: pnpm run test
+
 
   build-docs:
     if: ${{ github.event_name == 'pull_request' }}
     name: Build Docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}    # ← checkout the PR head branch
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version-file: "package.json"
           cache: pnpm
 
-      - run: pnpm install --prefer-offline --frozen-lockfile
+      - name: Install deps
+        run: pnpm install --prefer-offline --frozen-lockfile
 
       - name: Generate docs
         working-directory: docs
         env:
           APP_ENV: production
-          DOCS_BRANCH: ${{ github.event.repository.default_branch }}
         run: pnpm run generate:docs
 
       - name: Pack generated docs (tarball)
-        run: tar -czf docs-generated.tgz -C docs generated-docs
+        run: |
+          tar -czf docs-generated.tgz -C docs generated-docs
+          ls -lh docs-generated.tgz
 
       - name: Upload generated docs (tgz)
         uses: actions/upload-artifact@v4
@@ -76,13 +93,14 @@ jobs:
           path: docs/app/utils/versions.ts
           if-no-files-found: error
 
+
   deploy-docs-pr-preview:
     if: ${{ github.event_name == 'pull_request' }}
-    name: 🚀 Deploy Docs
     needs: [lint, validate, build-docs]
+    name: Deploy Docs PR Preview
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      -  uses: actions/checkout@v4
 
       - name: Download generated docs (tgz)
         uses: actions/download-artifact@v4
@@ -91,7 +109,10 @@ jobs:
           path: .
 
       - name: Unpack generated docs into docs/
-        run: tar -xzf docs-generated.tgz -C docs
+        run: |
+          set -euxo pipefail
+          tar -xzf docs-generated.tgz -C docs
+          ls -laR docs/generated-docs | sed -n '1,200p'
 
       - name: Download versions file
         uses: actions/download-artifact@v4
