@@ -15,6 +15,8 @@ const MASTER_REGEX = new RegExp(
     "\\/\\*[\\s\\S]*?\\*\\/",
     // hash comment at start of line
     "^\\s*#.*$",
+    // backtick inline code
+    "\\`(?:[^`\\\\]|\\\\.)*\\`",
     // strings
     "(['\"])(?:(?!\\1)[^\\\\]|\\\\.)*\\1",
     // numbers
@@ -23,13 +25,12 @@ const MASTER_REGEX = new RegExp(
     "[a-zA-Z_$][a-zA-Z0-9_$]*",
     // arrow function
     "=>",
-    // operators & punctuation:
-    // - multi-char first
-    // - single '/' only if NOT starting a comment
+    // operators & punctuation
     "===|!==|<=|>=|==|!=|&&|\\|\\||\\+\\+|--|[+\\-*%=<>!?:(){}\\[\\];,.]|\\/(?![/*])|[+\\-*/%]=",
   ].join("|"),
   "gm"
 )
+
 
 
 const KEYWORDS = [

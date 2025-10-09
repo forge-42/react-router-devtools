@@ -62,8 +62,8 @@
 		--color-background-active: #f3f4f6;
 		--color-text-accent: #646464;
 
-		--color-code-inline-bg: #f5f5f5;
-		--color-code-inline-text: #1f2937;
+		--color-code-inline-text: #04825b;
+		--color-code-inline-bg: #f3f4f6;
 
 		--color-code-block-bg: #fcfcfc;
 		--color-code-block-text: #334155;
@@ -172,8 +172,8 @@
 		--color-background-active: #1a1a1a;
 		--color-text-accent: #878787;
 
-		--color-code-inline-bg: #1a1a1a;
-		--color-code-inline-text: #f5f5f5;
+		--color-code-inline-text: #34d399;
+			--color-code-inline-bg: #1a1a1a;
 
 		--color-code-block-bg: #1a1a1a;
 		--color-code-block-text: #e2e8f0;
@@ -289,4 +289,9 @@
 	*::-webkit-scrollbar-thumb {
 		cursor: default;
 	}
+
+	.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none !important;
+}
 }
