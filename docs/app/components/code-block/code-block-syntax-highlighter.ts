@@ -6,28 +6,31 @@
 type TokenType = "keyword" | "string" | "number" | "comment" | "operator" | "punctuation" | "function" | "text"
 
 const MASTER_REGEX = new RegExp(
-	[
-		// whitespace
-		"\\s+",
-		// single-line comment
-		"//.*?(?=\\n|$)",
-		// multi-line comment
-		"/\\*[\\s\\S]*?\\*/",
-		// hash comment at start of line
-		"^\\s*#.*$",
-		// strings
-		"(['\"])(?:(?!\\1)[^\\\\]|\\\\.)*\\1",
-		// numbers
-		"\\d+\\.?\\d*",
-		// identifiers
-		"[a-zA-Z_$][a-zA-Z0-9_$]*",
-		// operators and punctuation
-		"===|!==|<=|>=|==|!=|&&|\\|\\||\\+\\+|--|[+\\-*/%=<>!?:(){}\\[\\];,.]|[+\\-*/%]=",
-		// arrow function
-		"=>",
-	].join("|"),
-	"g"
+  [
+    // whitespace
+    "\\s+",
+    // single-line comment
+    "\\/\\/[^\\n\\r]*",
+    // multi-line comment
+    "\\/\\*[\\s\\S]*?\\*\\/",
+    // hash comment at start of line
+    "^\\s*#.*$",
+    // strings
+    "(['\"])(?:(?!\\1)[^\\\\]|\\\\.)*\\1",
+    // numbers
+    "\\d+\\.?\\d*",
+    // identifiers
+    "[a-zA-Z_$][a-zA-Z0-9_$]*",
+    // arrow function
+    "=>",
+    // operators & punctuation:
+    // - multi-char first
+    // - single '/' only if NOT starting a comment
+    "===|!==|<=|>=|==|!=|&&|\\|\\||\\+\\+|--|[+\\-*%=<>!?:(){}\\[\\];,.]|\\/(?![/*])|[+\\-*/%]=",
+  ].join("|"),
+  "gm"
 )
+
 
 const KEYWORDS = [
 	"import",
