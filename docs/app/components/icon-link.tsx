@@ -22,7 +22,7 @@ export const IconLink = ({ name, className, ...props }: IconLinkProps) => {
 			href={href}
 			{...props}
 		>
-			<Icon name={name} className="size-4 transition-all duration-300 xl:size-5" />
+			<Icon name={name} className="size-4 transition-transform duration-300 xl:size-5" />
 		</a>
 	)
 }

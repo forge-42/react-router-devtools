@@ -14,11 +14,6 @@
 --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
 --animate-spotlight: spotlight 2s ease .75s 1 forwards;
 --animate-meteor-effect: meteor 5s linear infinite;
-
-/* Keyframes */
---keyframes-scroll: 0% { transform: translate(0); } 100% { transform: translate(calc(-50% - 0.5rem)); };
---keyframes-meteor: 0% { transform: rotate(215deg) translateX(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotate(215deg) translateX(-1900px); opacity: 0; };
---keyframes-spotlight: 0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); } 100% { opacity: 1; transform: translate(-50%,-40%) scale(1); };
 }
 
 @keyframes scroll {
@@ -74,7 +69,7 @@
 		--color-code-keyword: #0369a1;
 		--color-code-string: #04825b;
 		--color-code-number: #c84b0a;
-		--color-code-comment: #64748b;
+		--color-code-comment: #7f90a7;
 		--color-code-operator: #be185d;
 		--color-code-punctuation: #64748b;
 		--color-code-function: #7c3aed;
@@ -83,7 +78,7 @@
 		--color-diff-added-border: rgba(34, 197, 94, 0.3);
 		--color-diff-removed-bg: rgba(239, 68, 68, 0.1);
 		--color-diff-removed-border: rgba(239, 68, 68, 0.3);
-		--color-diff-indicator: #64748b;
+		--color-diff-indicator: #08162b;
 
 		--color-info-bg: #eff6ff;
 		--color-info-border: #bfdbfe;

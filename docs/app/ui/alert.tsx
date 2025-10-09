@@ -56,7 +56,7 @@ export const Alert = ({ children, title, variant, className = "" }: AlertProps) 
 		<div className={cn("my-6 flex flex-col gap-2 rounded-xl border p-4 md:p-6", styles.container, className)}>
 			<div className="inline-flex items-center gap-2">
 				<div className={cn("inline-flex", styles.icon)}>{getIcon()}</div>
-				<p className={cn("mt-0 mb-0 font-semibold text-sm md:text-base", styles.title)}>{title || defaultTitle}</p>
+				<p className={cn("mt-0 mb-0 font-semibold text-sm leading-6 sm:text-base md:text-lg", styles.title)}>{title || defaultTitle}</p>
 			</div>
 
 			<div

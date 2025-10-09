@@ -65,8 +65,9 @@ export const Modal = ({
 	if (!isOpen) return null
 
 	return (
+		<>
+		<Backdrop onClose={onClose} />
 		<div className="fixed inset-0 z-50 overflow-y-auto overscroll-contain">
-			<Backdrop onClose={onClose} />
 			<div className="flex min-h-full items-start justify-center p-4 pt-16 sm:pt-24">
 				<div
 					ref={modalRef}
@@ -83,5 +84,6 @@ export const Modal = ({
 				</div>
 			</div>
 		</div>
+		</>
 	)
 }
