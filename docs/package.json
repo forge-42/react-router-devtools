@@ -25,7 +25,7 @@
 		"check:unused": "knip --max-issues 1",
 		"check:unused:fix": "knip --fix",
 		"typegen": "react-router typegen",
-		"generate:docs": "npx tsx scripts/generate-docs.ts --branch",
+		"generate:docs": "npx tsx scripts/generate-docs.ts --branch main",
 		"verify:docs": "tsx scripts/verify-docs.ts",
 		"content-collections:build": "content-collections build"
 	},
