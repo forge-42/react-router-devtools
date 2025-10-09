@@ -23,8 +23,6 @@ RUN pnpm install --prod=false
 # Copy the application (including the previously downloaded artifact under docs/)
 COPY . .
 
-# IMPORTANT: we no longer generate docs here; they were provided by CI
-# Build the app (should read from docs/generated-docs/* and versions.ts that CI uploaded)
 RUN pnpm run build
 
 # Prune dev deps

@@ -44,7 +44,6 @@ jobs:
       - name: 🔎 Validate
         run: pnpm run test
 
-
   build-docs:
     if: ${{ github.event_name == 'pull_request' }}
     name: Build Docs
@@ -53,7 +52,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}    # ← checkout the PR head branch
+          # checkout the PR head branch
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Setup pnpm
@@ -93,14 +93,13 @@ jobs:
           path: docs/app/utils/versions.ts
           if-no-files-found: error
 
-
   deploy-docs-pr-preview:
     if: ${{ github.event_name == 'pull_request' }}
     needs: [lint, validate, build-docs]
     name: Deploy Docs PR Preview
     runs-on: ubuntu-latest
     steps:
-      -  uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Download generated docs (tgz)
         uses: actions/download-artifact@v4
