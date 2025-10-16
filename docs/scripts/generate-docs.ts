@@ -1,7 +1,7 @@
 import { type ExecSyncOptions, execSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
-import { join, resolve, posix as pathPosix } from "node:path";
+import path, { join, resolve, posix as pathPosix } from "node:path";
 import { parseArgs } from "node:util";
 import chalk from "chalk";
 import semver from "semver";
@@ -41,8 +41,7 @@ try {
 }
 
 const repoPath = (...segs: string[]) =>
-  pathPosix.join(...segs.filter(Boolean).map(s => s.replace(/^\/+|\/+$/g, "")));
-
+  path.normalize(path.join(...segs.filter(Boolean)));
 
 const allTags = () => run("git tag --list").split("\n").filter(Boolean);
 
@@ -70,13 +69,14 @@ function hasLocalRef(ref: string) {
   try { run(`git show-ref --verify --quiet ${ref}`); return true; } catch { return false; }
 }
 
+const REPO_ROOT = run("git rev-parse --show-toplevel", { cwd: currentDocsWorkspace });
+
 function refHasPath(ref: string, pathFromRepoRoot: string): boolean {
+  const p = pathFromRepoRoot.replace(/^\/+/, "").replace(/\/+$/, "");
   try {
-    const out = run(`git ls-tree -r --name-only ${ref} -- "${pathFromRepoRoot}"`);
-    return out.trim().length > 0;
-  } catch {
-    return false;
-  }
+    run(`git -C "${REPO_ROOT}" rev-parse --verify --quiet "${ref}:${p}"`);
+    return true;
+  } catch { return false; }
 }
 
 function buildDocs(sourceDir: string, outDir: string) {
@@ -211,11 +211,11 @@ function isPullRequestCI() {
       builtVersions = [...tags];
     } else {
       // Fallback: build default branch (useful if you want a "main" channel)
-      const checkPath = repoPath(docsRelative, contentDir); // e.g. "docs/content"
-      run(`git fetch --prune origin ${defaultBranch}`, { cwd: currentDocsWorkspace, inherit: true });
-      const hasOnDefault = refHasPath(`origin/${defaultBranch}`, checkPath);
+    const checkPath = repoPath(docsRelative, contentDir); // "docs/content"
+run(`git fetch --prune origin ${defaultBranch}`, { cwd: currentDocsWorkspace, inherit: true });
 
-      if (!hasOnDefault) {
+const hasOnDefault = refHasPath(`origin/${defaultBranch}`, checkPath);
+if (!hasOnDefault) {
         throw new Error(`Default branch 'origin/${defaultBranch}' has no '${checkPath}'. Pass --versions to build tags.`);
       }
       console.log(chalk.cyan(`(ci) Building docs from '${defaultBranch}' → ${defaultBranch}`));
