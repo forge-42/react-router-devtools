@@ -63,14 +63,14 @@ const editor = {
 
 ### GoLand
 
-To use WebStorm as your editor, you can use the following configuration:
+To use GoLand as your editor, you can use the following configuration:
 
 ```ts
 import { exec } from "node:child_process";
 import { cwd } from "node:process";
 
 const editor = {
-  name: "WebStorm",
+  name: "GoLand",
   open(path, lineNumber) {
     if (!path) return;
     exec(

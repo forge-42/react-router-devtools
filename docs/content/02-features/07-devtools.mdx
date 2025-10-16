@@ -76,14 +76,14 @@ export const clientAction = async ({ request, devTools }: ClientActionFunctionAr
  ```ts
  import type { ExtendedContext } from "react-router-devtools/context";
 
-	declare module "react-router" {
-		interface LoaderFunctionArgs {
-			devTools: ExtendedContext
-		}
-		interface ActionFunctionArgs {
-			devTools: ExtendedContext
-		}
-	}
+declare module "react-router" {
+  interface LoaderFunctionArgs {
+    devTools: ExtendedContext
+  }
+  interface ActionFunctionArgs {
+    devTools: ExtendedContext
+  }
+}
  ```
 </InfoAlert>
 
@@ -121,8 +121,7 @@ const loader = async ({ request, devTools }: LoaderFunctionArgs) => {
   const tracing = devTools?.tracing;
   // this will be traced in the network tab of react-router-devtools
   const user = tracing?.trace("my-event",() => getUser())
-
-	return { user }
+  return { user }
 }
 ```
 
@@ -147,7 +146,7 @@ export const loader = async ({ request, devTools }: LoaderFunctionArgs) => {
   const startTime = tracing?.start("my-event")
   // do something here, eg DB call
 
-	// End the trace
+  // End the trace
   tracing?.end("my-event", startTime!)
   return "data"
 }
@@ -177,8 +176,8 @@ export const loader = async ({ request, devTools }: LoaderFunctionArgs) => {
   // this will be traced in the network tab of react-router-devtools
   const startTime = tracing?.start("get user")
   // do something here, eg DB call
-	const user = await getUser();
-	// End the trace
+  const user = await getUser();
+  // End the trace
   tracing?.end("get user", startTime!, { user })
   return "data"
 
