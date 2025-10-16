@@ -1,0 +1,72 @@
+---
+title: React Router Devtools Server Configuration
+summary: "Configure React Router Devtools server logging, including options for silence, cookies, deferred data, actions, loaders, cache, site clears, and server timings."
+description: Configuration options for the React Router Devtools server
+---
+
+
+As with the client configuration, we will first see the full configuration type:
+
+```ts
+interface ReactRouterServerConfig {
+  silent?: boolean;
+  logs?: {
+    cookies?: boolean;
+    defer?: boolean;
+    actions?: boolean;
+    loaders?: boolean;
+    cache?: boolean;
+    siteClear?: boolean;
+    serverTimings?: boolean;
+  };
+}
+```
+
+## `silent`
+
+When `true`, the server will not log anything to the console. This is useful for production environments.
+
+## `logs`
+
+This object allows you to configure the server logs. Each key is a log type and the value is a boolean indicating whether to log that type.
+All are `true` by default so you don't have to provide anything, if you want to be granular you can, otherwise you can use the `silent` option to turn off
+all logs.
+
+### `cookies`
+
+When `true`, the server will log all cookies sent by the server in the "Set-Cookie" header.
+
+### `defer`
+
+When `true`, the server will log all deferred actions.
+The following gets logged:
+- The defer location
+- The keys that were deferred
+- The time it took for each key to resolve
+
+### `actions`
+
+When `true`, the server will log all actions that are hit with a request.
+
+### `loaders`
+
+When `true`, the server will log all loaders that are hit with a request.
+
+### `cache`
+
+When `true`, the server will log all loaders/actions that return a `Cache Control` header.
+
+### `siteClear`
+
+When `true`, the server will log when the site cache is cleared, or anything else with the `Clear-Site-Data` header.
+
+### `serverTimings`
+
+When `true`, the server will log all server timings that are returned with a request
+
+## `serverTimingThreshold`
+
+This option is used to set the threshold for server timings to be logged in the console.
+If the server timing is greater than this threshold, it will be logged in red, otherwise it will be logged in green.
+
+By default it is set to `Number.POSITIVE_INFINITY` which means that all server timings will be logged in green.

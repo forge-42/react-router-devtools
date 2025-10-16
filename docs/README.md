@@ -1,40 +1,112 @@
-# Journal Stack
+# Welcome to Forge 42 Documentation Template
 
-Welcome to Journal Stack! A documentation stack for scaffolding your doc writing experience with multi-version support!
+This template is designed to support a flexible content structure using `.md` and `.mdx` files organized into folders. It enables deeply nested sections and subsections, making it easy to manage complex documentation with a clear and scalable hierarchy.
 
-![Journal Stack](https://ucarecdn.com/9a7c0b39-42f7-49f8-bcdf-d308871cdf58/WhatsAppImage20240125at110815PM.jpeg)
+The project is built using the [@forge-42/base-stack](https://github.com/forge-42/base-stack) and leverages the [content-collections](https://github.com/sdorra/content-collections).
 
-## Getting Started
+> **Note**:
+> We added a few `FIXME` comments in the codebase as notes to you. These simply mark small places where we expect you to make changes. Nothing major — it should only take you 2 minutes to go through them.
 
-Journal Stack is built around a theme concept: the same documentation but implemented with various themes and repositories. This allows you to choose the theme that best suits your needs as well
-as repository (SQL database, CMS, S3 Bucket, etc.) and get started writing documentation right away!
 
-Currently, there is only one theme available:
+## Documentation Template Structure Overview
 
-- **[Remix PWA Theme]()**: This theme is build to replicate [Remix PWA Documentation](https://remix-pwa.run), it also includes the tools used by the docs to store its content. To get started, head over to the [`remix-pwa`]() branch to get started with this theme.
+`app/`
 
-## Documentation
+This folder contains React Router v7 web application folders and files, including components and UI primitives for the documentation site’s interface, internal hooks and utilities, and the tailwind.css file for styling.
 
-Each theme branch features its own documentation under the `docs` folder. Use this to explore a particular theme and how to expand upon it, I am still in the process of improving the theme and docs overall so feel free to open an issue if you have any questions or suggestions.
+`resources/`
 
-## Contributing
+This folder contains all the resources used by the documentation site, such as SVG icons, fonts, and other assets.
 
-Journal Stack is an open source project and contributions are welcome! Check out the [Contributing Guide](./CONTRIBUTING.md) to get started.
+`content/`
 
-A few things I might need help with:
+This folder contains .md and .mdx files that hold your documentation content. Below is the recommended structure to follow.
 
-- **Testing**: More test use-cases. Currently, they cover the barest minimum and not enough to test anything realistically. Contributions in this regard would very much be appreciated.
-- **Critical Feedback**: Most important one 😄, critical feedback. Could range from code colocation, to my apprach to fetching and caching, to the documentation itself. I'm open to all feedback. Thank you!
 
-### Contributing Opportunities
+An example of a valid content/ folder structure for organizing your package documentation:
 
-If you are unsure of where to start, here are a few stuffs that would be nice to have:
+```
+content/
+├── _index.mdx
+├── 01-changelog.mdx
+├── 02-introduction.mdx
+├── 03-overview.mdx
+├── 04-getting-started/
+│   ├── index.md
+│   ├── 01-installation.mdx
+│   ├── 02-quick-start.mdx
+│   └── 03-project-setup.mdx
+└── 05-core-features/
+    ├── index.md
+    ├── 01-authentication.mdx
+    ├── 02-authorization.mdx
+    ├── 03-data-management/
+    │   ├── index.md
+    │   ├── 01-fetching-data.mdx
+    │   └── 02-caching-strategies.mdx
+    └── 04-ui-components/
+        ├── index.md
+        ├── 01-buttons.mdx
+        └── 02-modals.mdx
+```
+- Top-level .mdx files (like 01-changelog.mdx) are allowed, but we recommend placing them in order before the sections, as shown in the example.
 
-- **Improved Typing**: The typing for the app is quite good, however there are a few `any` types sprinkled here and there that could be improved upon.
-- **More mock docs**: More docs can't hurt, right? 😄
-- **Improved Documentation**: I don't mean the code itself, I mean this docs you are reading right now. It could be more explanatory, more detailed, more concise, etc. Any improvement would be appreciated. Even typos!
-- **Github Actions**: Currently, only github actions regarding syncing the docs to their respective repositories are available. It would be nice to have more actions, such as testing, linting, and especially deployments. 
+- Sections (like 04-getting-started, 05-core-features) are subfolders inside the `content` folder.
 
-## License
+- Subsections (like 03-data-management, 04-ui-components) are nested folders within sections. Filenames inside them should start with `01-*.mdx`.
 
-Journal Stack is licensed under the [MIT License](./LICENSE.md).
+- Each section or subsection should include an `index.md` file, which defines its sidebar title.
+
+### Example of the valid `**/*.mdx` file:
+```
+---
+title: "Introduction to Forge42 Base Stack"
+summary: "Overview of the Stack"
+description: "Get started with the Forge42 Base Stack — a modern web app starter template designed for speed, scalability, and developer experience."
+---
+
+## What is Forge42 Base Stack?
+
+The Forge42 Base Stack is a full-featured web application starter template. It combines modern tools and technologies like **Remix**, **Tailwind CSS**, **TypeScript**, **Vitest**, and **React Aria Components** to help you build accessible and scalable web apps quickly.
+
+This documentation will guide you through setting up the project, understanding its structure, and customizing it for your needs.
+
+## Installation
+
+To get started with the base stack, simply clone the repository and install dependencies:
+
+```bash
+npx degit forge42/base-stack my-app
+cd my-app
+npm install
+```
+
+### Example of the valid `**/*.md` file:
+```
+---
+title: Getting Started
+---
+
+```
+
+
+## Getting started
+
+1. Fork the repository
+
+2. Install the dependencies:
+```bash
+pnpm install
+```
+3. Read through the README.md files in the project to understand our decisions.
+
+4. Run `pnpm run generate:docs` script
+
+5. Start the development server:
+```bash
+pnpm run dev
+```
+
+6. After you see that everything works with the current content inside the `content` folder, remove those files and add your own
+
+7. Happy coding!

@@ -1,0 +1,66 @@
+{
+	"hi": "React Router is awesome!",
+	"navigation": {
+		"back": "Go back",
+		"home": "Back to home"
+	},
+	"error": {
+		"500": {
+			"title": "Something went wrong!",
+			"description": "Looks like something unexpected happened on the server."
+		},
+		"404": {
+			"title": "Page Not found!",
+			"description": "Oops! The page you're looking for seems to have vanished into thin air."
+		},
+		"403": {
+			"title": "Unauthorized!",
+			"description": "Looks like you can't access this page."
+		},
+		"200": {
+			"title": "Something went wrong!",
+			"description": "Looks like something unexpected happened on the server."
+		}
+	},
+	"links": {
+		"previous": "Previous",
+		"next": "Next",
+		"report_an_issue_on_this_page": "Report an issue on this page",
+		"edit_this_page": "Edit this page"
+	},
+	"p": {
+		"last_update": "Last updated: ",
+		"version": "Version",
+		"all_rights_reserved": "All rights reserved.",
+		"search_by": "Search by"
+	},
+	"buttons": {
+		"copy": "Copy",
+		"copied": "Copied",
+		"home": "Back to home",
+		"back": "Go back",
+		"clear": "Clear"
+	},
+	"titles": {
+		"good_to_know": "Good to know",
+		"warning": "Warning"
+	},
+	"text": {
+		"result_one": "{{count}} result",
+		"result_other": "{{count}} results",
+		"adjust_search": "Try adjusting your search terms or check for typos",
+		"no_results_for": "No results found for",
+		"start_typing_to_search": "Start typing to search...",
+		"recent_searches": "Recent searches"
+	},
+	"controls": {
+		"navigate": "Navigate",
+		"open": "Open",
+		"tab": "Tab",
+		"select": "Select",
+		"cycle": "Cycle"
+	},
+	"placeholders": {
+		"search_documentation": "Search documentation..."
+	}
+}

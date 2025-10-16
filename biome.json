@@ -7,31 +7,25 @@
 		"useIgnoreFile": true
 	},
 	"formatter": {
+		"ignore": ["test-apps", "docs", "plugins", "external", ".nx"],
 		"enabled": true,
 		"formatWithErrors": false,
 		"indentStyle": "tab",
 		"lineEnding": "lf",
 		"lineWidth": 120
 	},
-	"files": {
-		"ignore": ["test-apps/**", "docs/**", "./src/external/**", "./plugins/**", "./src/input.css", "./src/gradients.css"]
-	},
 	"organizeImports": {
+		"ignore": ["test-apps", "docs", "plugins", "external", ".nx"],
 		"enabled": true
 	},
 	"linter": {
+		"ignore": ["test-apps", "docs", "plugins", "external", ".nx"],
 		"enabled": true,
 		"rules": {
 			"recommended": true,
 			"suspicious": {
 				"recommended": true,
-				"noExplicitAny": "off",
-				"noConsole": {
-					"level": "error",
-					"options": {
-						"allow": ["assert", "error", "info", "warn"]
-					}
-				}
+				"noConsole": "error"
 			},
 			"style": {
 				"recommended": true
@@ -46,7 +40,11 @@
 				"recommended": true
 			},
 			"correctness": {
-				"recommended": true
+				"recommended": true,
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error",
+				"noUnusedLabels": "error",
+				"noUnusedFunctionParameters": "error"
 			},
 			"a11y": {
 				"recommended": true

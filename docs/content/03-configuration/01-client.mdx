@@ -1,0 +1,201 @@
+---
+title: React Router Devtools Client Configuration
+summary: "The client configuration lets you customize React Router Devtools behavior, including panel position, size, URL flags, live URLs, breakpoints, and route boundary settings."
+description: Configuration options for the React Router Devtools client
+---
+
+
+<InfoAlert>
+All of the following options can be set in the dev tools panel **"Settings page"** and they override the default ones. Your preferences are
+stored in localStorage and if they do not exist there the default ones are used.
+</InfoAlert>
+
+Before we explain all the possible options here is the client configuration Typescript type:
+
+```ts
+type RdtClientConfig = {
+    position: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "middle-left" | "middle-right";
+    liveUrls: { name: string, url: string }[];
+    liveUrlsPosition: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+    defaultOpen: boolean;
+    expansionLevel: number;
+    height: number;
+    minHeight: number;
+    maxHeight: number;
+    hideUntilHover: boolean;
+    panelLocation: "top" | "bottom";
+    requireUrlFlag: boolean;
+    urlFlag: string;
+    breakpoints: {name: string, min: number, max: number }[],
+    routeBoundaryGradient: "sea" | "hyper" | "gotham" | "gray" | "watermelon" | "ice" | "silver";
+    showBreakpointIndicator: boolean;
+    showRouteBoundariesOn: "hover" | "click";
+}
+```
+
+Let's go through each option and see what it does.
+
+## Live URLs
+
+This option is used to set the live urls that will be displayed in the bottom left corner of the screen. The default value is an empty array.
+It allows you to specify multiple live urls that you can use to open the current page in a new tab.
+
+## Live URLs position
+
+This option is used to set the position of the live urls that will be displayed in the bottom left corner of the screen. The possible values are:
+- `top-left` - the live urls will be positioned at the top left corner of the screen
+- `top-right` - the live urls will be positioned at the top right corner of the screen
+- `bottom-left` - the live urls will be positioned at the bottom left corner of the screen
+- `bottom-right` - the live urls will be positioned at the bottom right corner of the screen
+
+## Position
+
+This option is used to set the position of the React Router Devtools trigger (the button that opens the panel). The possible values are:
+- `top-left` - the trigger will be positioned at the top left corner of the screen
+- `top-right` - the trigger will be positioned at the top right corner of the screen
+- `bottom-left` - the trigger will be positioned at the bottom left corner of the screen
+- `bottom-right` - the trigger will be positioned at the bottom right corner of the screen
+- `middle-left` - the trigger will be positioned at the middle left of the screen
+- `middle-right` - the trigger will be positioned at the middle right of the screen
+
+## Default Open
+
+This option is used to set the initial state of the panel. If set to `true` the panel will be open by default, if set to `false`
+the panel will be closed by default.
+
+## Expansion Level
+
+This option is used to set the initial expansion level of the returned JSON data in the **Active Page** tab. By default it is set to
+1 and if you open up the **Active Page** and look at the returned loader data it will look like this:
+
+```ts
+"data": { ... } +
+```
+
+If you set the expansion level to 1 the returned loader data will look like this:
+
+```ts
+"data": {
+    "property": "value"
+}
+```
+
+## Height
+
+This option is used to set the initial height of the panel. The default value is 400px.
+
+## Min Height
+
+This option is used to set the minimum height of the panel. The default value is 200px.
+
+## Max Height
+
+This option is used to set the maximum height of the panel. The default value is 800px.
+
+## Hide Until Hover
+
+This option is used to set whether the trigger should be hidden until you hover over it. The default value is `false`.
+
+## Panel Location
+
+This option is used to set the location of the panel. The possible values are:
+- `top` - the panel will be positioned at the top of the screen
+- `bottom` - the panel will be positioned at the bottom of the screen
+
+## Require URL Flag
+
+This option is used to set whether the panel should be opened only if the URL contains a specific flag. The default value is `false`.
+
+<WarningAlert title="Be careful!">
+If you set this option to `true` and you forget to set the URL flag, the panel will hide and you will not be able to see it
+until you enter the url flag.
+
+The default one is `rdt=true` and if you set this option to `true` you will have to add `?rdt=true` to the URL in order to see the panel.
+</WarningAlert>
+
+## URL Flag
+
+This option is used to set the URL flag that is required to open the panel. The default value is `rdt`.
+
+You can set it to whatever you wish and if you set the **Require URL Flag** option to `true` you will have to add `?yourFlag=true` to the URL in order to see the panel.
+
+## Route Boundary Gradient
+
+This option is used to set the color of the route boundary gradient. The possible values are:
+- `sea`
+- `hyper`
+- `gotham`
+- `gray`
+- `watermelon`
+- `ice`
+- `silver`
+
+<InfoAlert>
+This changes the color of the route boundary gradient in the **Active Page** tab. When you hover over any route in the panel it will show you it's boundaries.
+</InfoAlert>
+
+The default value is `ice`.
+
+## Breakpoints
+
+This option allows you to define custom breakpoints that show in the bottom left corner of the panel to help you determine the current screen breakpoint you have defined.
+By default the breakpoints are set to tailwind breakpoints but you can change them to whatever you want.
+
+Eg:
+```ts
+breakpoints: [{name: "lg", min: 0, max: 768}, {name: "xl", min: 768, max: 1024}, {name: "2xl", min: 1024, max: Infinity}],
+```
+
+## Show breakpoint indicator
+
+This option allows you to show/hide the current breakpoint in the bottom left corner of the panel.
+
+## Show route boundaries on
+
+This option allows you to either show route boundaries when you hover a route segment on the pages tab or
+it shows a dedicated button called "Show Route Boundary" that shows the route boundary for that route on click.
+
+Default value is `click`;
+
+## Creating a custom configuration
+
+To create a custom configuration you can use the following code snippet:
+
+  ```ts
+  import { defineRdtConfig } from "react-router-devtools";
+
+  const customConfig = defineRdtConfig({
+    client: {
+      position: "top-right",
+      defaultOpen: true,
+      expansionLevel: 1,
+      height: 500,
+      minHeight: 300,
+      maxHeight: 1000,
+      hideUntilHover: true,
+      panelLocation: "bottom",
+      requireUrlFlag: true,
+      urlFlag: "customFlag",
+      routeBoundaryGradient: "gotham",
+      breakpoints: [{name: "lg", min: 0, max: 768}, {name: "xl", min: 768, max: 1024}, {name: "2xl", min: 1024, max: Infinity}],
+      showBreakpointIndicator: false
+    }
+  });
+
+  export default customConfig;
+  ```
+
+Then you can use this configuration in your `vite.config.js` file like this:
+
+```ts
+import customConfig from "./rdt.config";
+import { reactRouterDevTools } from "react-router-devtools";
+
+export default defineConfig({
+  plugins: [reactRouterDevTools(customConfig)],
+});
+```
+
+<InfoAlert title="Try it out!">
+  Try opening up the dev tools panel deployed on this site and playing around with the settings in the settings tab!
+</InfoAlert>

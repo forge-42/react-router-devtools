@@ -1,0 +1,95 @@
+---
+title: "Settings Tab"
+summary: "The Settings tab lets you customize panel position, size, expansion level, triggers, URL flags, and route boundary gradient for React Router Devtools."
+description: "Detailed overview of all features on the Settings Tab."
+---
+The settings tab is where you can override the default settings for your project.
+
+
+## Position
+
+This option is used to set the position of the React Router Devtools trigger (the button that opens the panel). The possible values are:
+- `top-left` - the trigger will be positioned at the top left corner of the screen
+- `top-right` - the trigger will be positioned at the top right corner of the screen
+- `bottom-left` - the trigger will be positioned at the bottom left corner of the screen
+- `bottom-right` - the trigger will be positioned at the bottom right corner of the screen
+- `middle-left` - the trigger will be positioned at the middle left of the screen
+- `middle-right` - the trigger will be positioned at the middle right of the screen
+
+## Default Open
+
+This option is used to set the initial state of the panel. If set to `true` the panel will be open by default, if set to `false`
+the panel will be closed by default.
+
+## Expansion Level
+
+This option is used to set the initial expansion level of the returned JSON data in the **Active Page** tab. By default it is set to
+0 and if you open up the **Active Page** and look at the returned loader data it will look like this:
+
+```ts
+"data": { ... } +
+```
+
+If you set the expansion level to 1 the returned loader data will look like this:
+
+```ts
+"data": {
+    "property": "value"
+}
+```
+
+## Height
+
+This option is used to set the initial height of the panel. The default value is 400px.
+
+## Min Height
+
+This option is used to set the minimum height of the panel. The default value is 200px.
+
+## Max Height
+
+This option is used to set the maximum height of the panel. The default value is 800px.
+
+## Hide Until Hover
+
+This option is used to set whether the trigger should be hidden until you hover over it. The default value is `false`.
+
+## Panel Location
+
+This option is used to set the location of the panel. The possible values are:
+- `top` - the panel will be positioned at the top of the screen
+- `bottom` - the panel will be positioned at the bottom of the screen
+
+## Require URL Flag
+
+This option is used to set whether the panel should be opened only if the URL contains a specific flag. The default value is `false`.
+
+<WarningAlert title="Be careful!">
+If you set this option to `true` and you forget to set the URL flag, the panel will hide and you will not be able to see it
+until you enter the url flag.
+
+The default one is `rdt=true` and if you set this option to `true` you will have to add `?rdt=true` to the URL in order to see the panel.
+</WarningAlert>
+
+## URL Flag
+
+This option is used to set the URL flag that is required to open the panel. The default value is `rdt`.
+
+You can set it to whatever you wish and if you set the **Require URL Flag** option to `true` you will have to add `?yourFlag=true` to the URL in order to see the panel.
+
+## Route Boundary Gradient
+
+This option is used to set the color of the route boundary gradient. The possible values are:
+- `sea`
+- `hyper`
+- `gotham`
+- `gray`
+- `watermelon`
+- `ice`
+- `silver`
+
+<InfoAlert>
+This changes the color of the route boundary gradient in the **Active Page** tab. When you hover over any route in the panel it will show you it's boundaries.
+</InfoAlert>
+
+The default value is `ice`.

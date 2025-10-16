@@ -1,23 +1,20 @@
-# fly.toml app configuration file generated for react-router-devtools on 2024-03-09T20:07:33+01:00
+# fly.toml app configuration file generated for react-router-devtools-docs on 2025-10-09T12:48:17+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app            = 'react-router-devtools'
-primary_region = 'lhr'
+app = 'react-router-devtools-docs'
+primary_region = 'fra'
 
 [build]
-  dockerfile = "./Dockerfile"
 
 [http_service]
-  internal_port        = 3000
-  force_https          = true
-  auto_stop_machines   = "suspend"
-  auto_start_machines  = true
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
   min_machines_running = 0
-  processes            = ['app']
+  processes = ['app']
 
 [[vm]]
-  memory   = '512mb'
-  cpu_kind = 'shared'
-  cpus     = 1
+  size = 'shared-cpu-1x'
