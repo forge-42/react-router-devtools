@@ -1,5 +1,4 @@
 ---
-"docs": patch
 "react-router-devtools": patch
 ---
 
