@@ -67,5 +67,8 @@
 	"overrides": {
 		"react-router-devtools": "workspace:*"
 	},
+	"pnpm": {
+		"onlyBuiltDependencies": ["esbuild", "msw"]
+	},
 	"private": true
 }

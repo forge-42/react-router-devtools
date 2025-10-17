@@ -45,3 +45,4 @@ jobs:
           commit: "chore: release"
           version: pnpm run version
           publish: pnpm run release
+          createGithubReleases: true
