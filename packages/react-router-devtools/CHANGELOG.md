@@ -1,5 +1,11 @@
 # react-router-devtools
 
+## 5.1.6
+
+### Patch Changes
+
+- 1e6279f: update docs
+
 ## 5.1.5
 
 ### Patch Changes
