@@ -61,6 +61,7 @@ jobs:
     name: Deploy Docs
     environment:
       name: docs-release
+      url: ${{ steps.deploy.outputs.app_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -91,7 +92,7 @@ jobs:
           FLY_REGION: ${{ vars.FLY_REGION }}
         with:
           workspace_name: docs
-          app_name: ${{github.event.repository.name}}-${{ github.ref_name }}
+          app_name: react-router-devtools-docs-release
           use_isolated_workspace: true
           env_vars: |
             APP_ENV=production
