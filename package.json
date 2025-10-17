@@ -43,7 +43,7 @@
 		"local-release": "changeset version && changeset publish",
 		"version": "changeset version",
 		"test:unused": "knip",
-		"test:deps": "sherif -i tailwindcss",
+		"test:deps": "sherif -i react-router-devtools -i tailwindcss",
 		"watch": "pnpm run build:all && nx watch --all -- pnpm run build:all"
 	},
 	"license": "MIT",
