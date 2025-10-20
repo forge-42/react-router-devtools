@@ -1,0 +1,149 @@
+name: 🚀 Validation Pipeline
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  actions: write
+  contents: read
+  # Required to put a comment into the pull-request
+  pull-requests: write
+jobs:
+  lint:
+    name: ⬣ Biome lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+      - name: Run Biome
+        run: biome ci .
+
+  validate:
+    name: 🔎 Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright browsers
+        # downloads browser binaries required by Playwright (Chromium/Firefox/WebKit)
+        run: pnpm exec playwright install --with-deps
+      - name: 🔎 Validate
+        run: pnpm run test
+
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: pnpm
+
+      # One install at the workspace root is enough
+      - name: Install deps (root)
+        run: pnpm install --prefer-offline --frozen-lockfile
+
+      # Decide where the docs app lives: ./docs or .
+      - name: Resolve DOCS_DIR
+        id: paths
+        shell: bash
+        run: |
+          if [ -d docs ] && [ -f docs/package.json ]; then
+            DOCS_DIR="docs"
+          else
+            DOCS_DIR="."
+          fi
+
+          # expose for later steps
+          echo "DOCS_DIR=$DOCS_DIR" >> "$GITHUB_OUTPUT"
+
+          # ok to print within this step using the shell variable
+          echo "Using DOCS_DIR=$DOCS_DIR"
+
+      - name: Generate docs
+        env:
+          APP_ENV: production
+        run: pnpm -C "${{ steps.paths.outputs.DOCS_DIR }}" run generate:docs
+
+      - name: Pack generated docs (tarball)
+        run: |
+          OUT_BASE="${{ steps.paths.outputs.DOCS_DIR }}"
+          tar -czf docs-generated.tgz -C "$OUT_BASE" generated-docs
+          ls -lh docs-generated.tgz
+
+      - name: Upload generated docs (tgz)
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-generated-tgz
+          path: docs-generated.tgz
+          if-no-files-found: error
+
+      - name: Upload versions file
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-versions
+          path: ${{ steps.paths.outputs.DOCS_DIR }}/app/utils/versions.ts
+          if-no-files-found: error
+
+  deploy-docs-pr-preview:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: [lint, validate, build-docs]
+    name: Deploy Docs PR Preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download generated docs (tgz)
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-generated-tgz
+          path: .
+
+      - name: Unpack generated docs into docs/
+        run: |
+          set -euxo pipefail
+          tar -xzf docs-generated.tgz -C docs
+          ls -laR docs/generated-docs | sed -n '1,200p'
+      - name: Download versions file
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-versions
+          path: docs/app/utils
+
+      - uses: forge-42/fly-deploy@v1.0.0-rc.2
+        id: deploy
+        env:
+          FLY_ORG: ${{ vars.FLY_ORG }}
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_REGION: ${{ vars.FLY_REGION }}
+        with:
+          workspace_name: docs
+          app_name: react-router-devtools-docs-pr-${{ github.event.number }}
+          use_isolated_workspace: true
+          env_vars: |
+            APP_ENV=production
+            GITHUB_OWNER=${{ github.repository_owner }}
+            GITHUB_REPO=${{ github.event.repository.name }}
+            GITHUB_REPO_URL=https://github.com/${{ github.repository }}
