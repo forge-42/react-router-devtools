@@ -1,0 +1,68 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"files": {
+		"ignore": ["app/library/icon/**/*"]
+	},
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"defaultBranch": "main",
+		"useIgnoreFile": true
+	},
+	"formatter": {
+		"enabled": true,
+		"lineWidth": 120
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"recommended": true,
+				"noConsole": "error"
+			},
+			"style": {
+				"recommended": true
+			},
+			"complexity": {
+				"recommended": true
+			},
+			"security": {
+				"recommended": true
+			},
+			"performance": {
+				"recommended": true
+			},
+			"correctness": {
+				"recommended": true,
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error",
+				"noUnusedLabels": "error",
+				"noUnusedFunctionParameters": "error"
+			},
+			"a11y": {
+				"recommended": true
+			},
+			"nursery": {
+				"recommended": true,
+				"noProcessEnv": "error",
+				"useSortedClasses": {
+					"level": "error",
+					"fix": "safe",
+					"options": {
+						"functions": ["cn", "cva", "tw", "clsx", "twMerge"]
+					}
+				}
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded",
+			"trailingCommas": "es5"
+		}
+	}
+}

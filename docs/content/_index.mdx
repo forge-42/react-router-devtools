@@ -1,33 +1,113 @@
 ---
-title: "Quick Start"
-summary: "Get up and running with React Router Devtools in a React Router 7+ project using Vite and ESM."
-description: "Learn the prerequisites and benefits of using React Router Devtools, including loader data display, route visualization, error and hydration tracking, server logs, and route boundaries."
+title: "Forge42 Docs Template"
+summary: "High-level map and complete guide to configuring, customizing, and deploying the Forge42 Documentation Template."
+description: "Orientation guide for configuring docs, routing, SEO, versioning, deployment, customization, and contributions."
+---
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+Welcome to the official documentation for the **Forge42 Documentation Template**!
+This template provides a modern, scalable solution for building beautiful documentation websites with **React Router v7**, **Content Collections**, and **Tailwind CSS**.
+
+It is **production‑ready** out of the box, with versioning, search, SEO, collaboration links, and deployment automation.
+
 ---
 
-This documentation covers everything you need to know to get started with `react-router-devtools`.
+## At a Glance
 
-## Prerequisites
+- Per‑page meta tags & SEO defaults
+- Versioned documentation system
+- Dynamic sidebar with previous/next navigation
+- Table of contents with active heading tracking
+- Command‑K search palette
+- Theme support with light/dark mode
+- Easy UI customization (layout & components)
+- Automatic docs build & deployment on GitHub release
+- Collaboration links (“Edit page”, “Report an issue”)
+- Fly.io deployment configuration & CI/CD automation
 
-- React Router version **7.0** or higher.
-- Your project needs to run on **ESM**. If you are using CommonJS, you will need to convert your project to ESM.
+---
 
-## Why ESM?
+## Quick Start
 
-In order to use the full feature-set of **Vite** the project has to run on ESM. This is because Vite exposes a websocket
-that **react-router-devtools** uses to communicate with the server. This websocket is **only** available in ESM projects
-because it's exposed by `import.meta` which is only available in ESM.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/forge42/docs-template my-docs
+   cd my-docs
+   ```
 
-To avoid creating user confusion and giving you a subpar experience, we have decided to only support ESM projects running on Vite.
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
+3. **Generate documentation**
+   ```bash
+   pnpm run generate:docs --versions ">=v1.1.0 <=v2.1.0, v3.2.0"
+   ```
 
-## Why use `react-router-devtools`?
+	 or if you don't have releases yet:
 
-`react-router-devtools` is a set of tools that help you to develop your React Router application.
+	 ```bash
+	 pnpm run generate:docs --branch main"
+	 ```
 
-They help you, but are not limited to, to do the following things:
-- **Loader data display** - You can see the data that is being loaded by your loaders.
-- **Route display** - You can see the routes that are being used by your application in list/tree format.
-- **Error tracking** - You can see invalid HTML rendered on your page and where it's coming from.
-- **Hydration mismatch tracking** - You can see if there are any hydration mismatches in your application, what was rendered on the client and what was rendered on the server.
-- **Server logs** - You can see the logs of your server in the browser.
-- **Route boundaries** - You can see the route boundaries by hovering over elements.
+4. **Start development server**
+   ```bash
+   pnpm run dev
+   ```
+
+Visit **[http://localhost:4280](http://localhost:4280)** to preview your site.
+
+---
+
+## Project Structure
+
+```
+my-docs/
+├── app/              # React Router application
+├── content/          # Documentation content (Markdown/MDX)
+├── public/           # Static assets
+├── scripts/          # Build & utility scripts
+├── generated-docs/   # Auto-generated docs
+└── resources/        # Icons, photos, fonts...
+```
+
+---
+
+## Core Features
+
+### Content Management
+- Write in Markdown/MDX with frontmatter
+- Automatic sidebar and navigation generation
+- Built-in rich content components
+
+### Search & Navigation
+- Full‑text search with **Cmd+K / Ctrl+K**
+- Automatic table of contents
+- Previous/next page navigation
+
+### SEO & Discovery
+- **llms.txt** route for AI crawlers
+- **robots.txt** with sitemap hints
+- **sitemap-index.xml** + per‑language `sitemap.xml`
+- Social meta tags (Open Graph / Twitter)
+
+### Collaboration & Contribution
+- One‑click links: **Edit page** / **Report issue**
+- Contribution guide included
+
+### Deployment & Automation
+- Example **Fly.io** config
+- Scripted docs generation
+- CI workflow ready for build + deploy
+
+### Customization
+- Update branding, theme, layout shell
+- Extend sidebar, meta builder, and contribution links
+- Tailwind tokens for typography & colors
+
+---
+
+Built with ❤️ by the Forge42 team — [forge42.dev](https://forge42.dev)

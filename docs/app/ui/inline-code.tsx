@@ -14,7 +14,7 @@ export const InlineCode = (props: ComponentPropsWithoutRef<"code">) => {
 	return (
 		<code
 			{...props}
-			className="rounded bg-[var(--color-code-inline-bg)] py-1 px-2 mx-0 xl:mx-0.5 text-[var(--color-code-inline-text)] text-sm md:text-base "
+			className="mx-0 rounded bg-[var(--color-code-inline-bg)] px-2 py-1 text-[var(--color-code-inline-text)] text-sm md:text-base xl:mx-0.5 "
 		/>
 	)
 }

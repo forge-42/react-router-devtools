@@ -1,0 +1,193 @@
+---
+title: Built-in Components
+description: Reference guide for all available components in the template
+summary: Component Reference
+---
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+## Text Components
+
+### Headings
+
+All heading levels are automatically styled and generate anchor links:
+
+```markdown
+# H1 Heading
+## H2 Heading
+### H3 Heading
+#### H4 Heading
+```
+
+**Features:**
+- Automatic anchor link generation
+- Table of contents integration
+- Consistent spacing and typography
+
+### Inline Code
+
+For referencing code, commands, or technical terms:
+
+```mdx
+Install the package using `npm install`.
+```
+
+Install the package using `npm install`.
+
+### Strong Text
+
+For emphasis and important terms:
+
+```mdx
+This is **very important** information.
+```
+
+This is **very important** information.
+
+## Code Components
+
+### Code Blocks
+
+Syntax-highlighted code blocks with copy functionality:
+
+```typescript
+interface User {
+  id: string
+  name: string
+  email: string
+}
+
+function createUser(data: Partial<User>): User {
+  return {
+    id: generateId(),
+    ...data
+  } as User
+}
+```
+
+**Features:**
+- Automatic syntax highlighting
+- Copy to clipboard button
+- Line number support
+- Diff highlighting
+
+### Diff Code Blocks
+
+Show code changes with diff highlighting:
+
+```diff
+function oldFunction() {
+- return "old implementation"
++ return "new implementation"
+}
+
++ function newFunction() {
++   return "brand new feature"
++ }
+```
+
+## List Components
+
+### Ordered Lists
+
+Numbered lists with custom styling:
+
+```markdown
+1. First step
+2. Second step
+3. Third step
+```
+
+1. First step
+2. Second step
+3. Third step
+
+### Unordered Lists
+
+Bullet lists with custom styling:
+
+```markdown
+- Feature one
+- Feature two
+- Feature three
+```
+
+- Feature one
+- Feature two
+- Feature three
+
+## Link Components
+
+### Anchor Links
+
+Enhanced links with proper styling:
+
+```mdx
+Visit our [homepage](/) for more information.
+Check out the [React Router docs](https://reactrouter.com).
+```
+
+Visit our [homepage](/) for more information.
+Check out the [React Router docs](https://reactrouter.com).
+
+**Features:**
+- External link detection
+- Proper styling for internal/external links
+- Accessibility improvements
+
+## Component Implementation
+
+All components are defined in `app/components/mdx-wrapper.tsx`:
+
+```typescript
+export const MDXWrapper = ({ content }: { content: string }) => (
+  <MDXContent
+    code={content}
+    components={{
+      code: InlineCode,
+      pre: CodeBlock,
+      ol: OrderedList,
+      li: ListItem,
+      strong: Strong,
+      a: Anchor,
+    }}
+  />
+)
+```
+
+## Creating Custom Components
+
+You can add your own components by:
+
+1. **Creating the component** in `app/ui/` or `app/components/`
+2. **Adding it to MDXWrapper** in `app/components/mdx-wrapper.tsx`
+3. **Using it in your content** files
+
+Example custom component:
+
+```typescript
+// app/ui/custom-callout.tsx
+export const CustomCallout = ({ children, type = "info" }) => (
+  <div className={`callout callout-${type}`}>
+    {children}
+  </div>
+)
+```
+
+```typescript
+// Add to mdx-wrapper.tsx
+components={{
+  // ... existing components
+  CustomCallout,
+}}
+```
+
+```mdx
+<!-- Use in content -->
+<CustomCallout type="success">
+This is a custom callout component!
+</CustomCallout>
+```
+
+Custom components should follow the existing design system for consistency.

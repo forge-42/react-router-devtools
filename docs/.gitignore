@@ -85,5 +85,5 @@ blob-report
 # Content collections output files
 .content-collections
 
-$test
-
+# Output base directory of the documentation
+generated-docs/

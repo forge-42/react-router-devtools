@@ -1,25 +1,20 @@
-import { Link, href } from "react-router"
-import { FeaturesSection } from "~/components/FeaturesSection"
-import { Button } from "~/components/ui/Button"
-import { LampContainer } from "~/components/ui/Lamp"
-import { MaskContainer } from "~/components/ui/MaskContainer"
-import { Meteors } from "~/components/ui/Meteors"
-import { InfiniteMovingCards } from "~/components/ui/infinite-cards"
-import { Navbar } from "~/components/ui/navbar-menu"
-import { TypewriterEffect } from "~/components/ui/typewritter"
-import { Route } from "./+types"
-import { buildDocPathFromSlug } from "~/utils/path-builders"
-import { generateMetaFields } from "~/utils/seo"
+import { href, useNavigate } from "react-router"
+import { Header } from "~/components/header"
+import { Logo } from "~/components/logo"
+import { Icon } from "~/ui/icon/icon"
 import { getDomain } from "~/utils/get-domain"
+import { generateMetaFields } from "~/utils/seo"
+import { getLatestVersion } from "~/utils/version-resolvers"
+import type { Route } from "./+types"
 
 export const meta = ({ data }: Route.MetaArgs) => {
 	const { domain } = data
 	return generateMetaFields({
 		domain,
 		path: "/",
-		title: "React Router Devtools",
+		title: "Docs Template",
 		description:
-			"Get up and running with React Router Devtools in a React Router 7+ project using Vite and ESM.",
+			"Modern, versioned documentation with instant search, first-class SEO, and LLM-friendly endpoints out of the box.",
 	})
 }
 
@@ -28,78 +23,139 @@ export async function loader({ request }: Route.LoaderArgs) {
 	return { domain }
 }
 
-export default function Index() {
-	return (
-		<div className="placeholder-index relative h-full min-h-screen w-screen overflow-x-hidden bg-slate-950">
-			<Navbar />
-			<div className="fixed top-0 z-30">
-				<Meteors />
-			</div>
+type CardDef = {
+	icon: React.ComponentProps<typeof Icon>["name"]
+	title: string
+	body: string
+	href?: string
+}
 
-			<LampContainer className="h-[100vh]">
-				<h1 className="text-center text-4xl font-bold !leading-normal text-white md:text-5xl xl:text-7xl">
-					Own <br /> your <span className="mr-4 text-green-500"> React Router</span>
-					application
-				</h1>
-			</LampContainer>
-			<FeaturesSection />
-			<OpenSourceReveal />
-			<div className="mb-40 flex w-full items-center justify-center">
-				<InfiniteMovingCards
-					speed="normal"
-					className="w-full"
-					items={[
-						{
-							title: "Raphaël Moreau",
-							name: "Software Engineer",
-							quote:
-								"React Router Devtools are really helpful when I struggle with something that doesn’t work as I expect. You have everything you need to debug right in your browser (really helpful when I can’t use a second monitor). The features I can’t work without are the active page data with the loader/action data and the server responses (no need to search for a console.log in the terminal or the browser console) and the error tab with the hydration mismatch view 🔥. (I love everything but it would be suspicious if I listed it all)",
-						},
-						{
-							title: "Alem Tuzlak",
-							name: "The guy who created this",
-							quote:
-								"React Router Devtools is the best tool I have created so far. You should definitely try it out in your React Router project and this is not a paid testimonial 😂",
-						},
-						{
-							title: "xHomu",
-							name: "Software Engineer",
-							quote:
-								"From hydration error to hunting down nested routes, with RDT, the solution to the worst React Router pain points is always just a click away. Don't build a React Router app without it! ",
-						},
-					]}
-				/>
+const CARDS: CardDef[] = [
+	{
+		icon: "FileText",
+		title: "Content Collections",
+		body: "Write docs in Markdown or MDX. Navigation, versioning, and structure are generated automatically.",
+	},
+	{
+		icon: "Search",
+		title: "Instant Search",
+		body: "Fast full-text search with keyboard shortcuts and fuzzy matching for quick discovery.",
+	},
+	{
+		icon: "Palette",
+		title: "Themeable",
+		body: "Light and dark themes included. Customize colors and styles with a few CSS variables.",
+	},
+	{
+		icon: "Code",
+		title: "Code Blocks",
+		body: "Readable code examples with syntax highlighting, copy button, and diff support.",
+	},
+	{
+		icon: "Bot",
+		title: "LLM-Ready (llms.txt)",
+		body: "Serve a clear llms.txt so AI tools know where to find the right docs and what to ignore.",
+		href: "/llms.txt",
+	},
+	{
+		icon: "ShieldCheck",
+		title: "SEO Essentials",
+		body: "Automatic per-page meta tags, OpenGraph/Twitter cards, robots.txt, and XML sitemaps.",
+		href: "/sitemap-index.xml",
+	},
+]
+
+function Card({ icon, title, body, href }: CardDef) {
+	return (
+		<a
+			href={href}
+			className="group block rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-6 transition-all hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#2c8794]"
+		>
+			<div className="mb-4 inline-flex size-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#2c8794] to-[#329baa]">
+				<Icon name={icon} className="size-6 text-white" />
 			</div>
-			<div className="flex min-h-[20vh] w-full flex-col items-center gap-12 overflow-x-hidden pb-20">
-				<TypewriterEffect
-					words={"Want to get started? Click the button below!"
-						.split(" ")
-						.map((word) => ({ text: word, className: "!text-white" }))}
-				/>
-				<Button as={Link} to={href("/:version?/home")} className="text-white" viewTransition>
-					Get Started
-				</Button>
-			</div>
-		</div>
+			<h3 className="mb-2 font-semibold text-[var(--color-text-active)] text-lg">{title}</h3>
+			<p className="text-[var(--color-text-muted)] text-sm leading-relaxed">{body}</p>
+			{href ? (
+				<span className="mt-3 inline-flex items-center gap-1 font-medium text-[var(--color-text-active)] text-sm">
+					Learn more <Icon name="ChevronRight" className="size-4" />
+				</span>
+			) : null}
+		</a>
 	)
 }
 
-export function OpenSourceReveal() {
-	return (
-		<div className="flex h-[40rem] w-full items-center justify-center overflow-hidden bg-slate-950">
-			<MaskContainer
-				revealText={
-					<p className="mx-auto flex max-w-4xl flex-col gap-2 text-center text-3xl font-bold text-slate-500">
-						<span>Want to open up an element directly in your editor? 🚀</span>
+//  FIXME Customize this page
+export default function Index() {
+	const navigate = useNavigate()
 
-						<span>You're one hover away from learning how!</span>
+	return (
+		<div className="flex min-h-screen flex-col bg-[var(--color-background)] 2xl:container 2xl:mx-auto">
+			<Header>
+				<Logo>
+					<span className="p-0">DOCS TEMPLATE</span>
+				</Logo>
+			</Header>
+
+			<main className="flex flex-1 items-center justify-center">
+				<div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-6 text-center">
+					<div className="inline-flex items-center gap-2 rounded-full border border-[var(--color-info-border)] bg-[var(--color-info-bg)] px-3 py-1 text-[var(--color-info-text)] text-sm">
+						<Icon name="Zap" className="size-4" />
+						Version {getLatestVersion()} now available
+					</div>
+
+					<h1 className="font-bold text-2xl text-[var(--color-text-active)] leading-snug md:text-3xl xl:text-4xl">
+						Modern Documentation{" "}
+						<span className="bg-gradient-to-r from-[#48ddf3] to-[#fb4bb5] bg-clip-text text-transparent">
+							Made Simple
+						</span>
+					</h1>
+
+					<p className="max-w-2xl text-[var(--color-text-muted)] text-lg leading-relaxed">
+						Build fast, accessible docs with React Router v7, Content Collections, and Tailwind—plus first-class SEO and
+						LLM signals.
 					</p>
-				}
-				className="h-[40rem]"
-			>
-				Click <span className="text-red-500">Shift + Right Click</span> to directly go to element source in
-				<span className="ml-2 text-blue-500">VS Code</span> 🔥
-			</MaskContainer>
+
+					<div className="mb-2 grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3">
+						{CARDS.map((c) => (
+							<Card key={c.title} {...c} />
+						))}
+					</div>
+
+					<div className="mt-6 flex items-center justify-center gap-4">
+						<button
+							type="button"
+							onClick={() => navigate(href("/:version?/home"))}
+							className="flex items-center gap-2 rounded-lg bg-[#2c8794] px-6 py-3 font-medium text-white transition-colors hover:bg-[#329baa]"
+						>
+							<Icon name="Rocket" className="size-5" />
+							Get started
+						</button>
+
+						<a
+							href="https://github.com/forge42/docs-template"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 rounded-lg bg-[var(--color-background-active)] px-6 py-3 font-medium text-[var(--color-text-active)] transition-colors hover:bg-[var(--color-border)]"
+						>
+							<Icon name="Github" className="size-5" />
+							View on GitHub
+						</a>
+					</div>
+
+					<p className="mt-8 text-[var(--color-text-muted)] text-sm">
+						Built with ❤️ by the{" "}
+						<a
+							href="https://forge42.dev"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="underline hover:text-[var(--color-text)]"
+						>
+							Forge 42 team
+						</a>
+					</p>
+				</div>
+			</main>
 		</div>
 	)
 }

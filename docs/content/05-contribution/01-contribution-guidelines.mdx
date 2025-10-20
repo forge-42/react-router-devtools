@@ -1,0 +1,99 @@
+---
+title: Contributing Guidelines
+summary: Contribution Guide
+description: Compact guide for improving docs or code.
+---
+
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+## 1. Quick Actions
+- Edit this page → forks (if needed), opens file, PR.
+- Report an issue → prefilled page context.
+
+## 2. Fast Workflow
+```bash
+# one‑time
+git fork + clone
+pnpm install
+
+# generate + dev
+pnpm run generate:docs -- --branch main
+pnpm dev
+```
+Create a branch:
+```bash
+git checkout -b docs/update-installation
+```
+After changes:
+```bash
+pnpm run lint && pnpm run typecheck
+pnpm test
+git commit -m "docs: clarify installation"
+git push -u origin docs/update-installation
+```
+Open PR.
+
+## 3. What To Change
+Content (preferred first contribution):
+- Edit /content/**/*.mdx
+- Keep frontmatter: title, summary, description
+- Use number prefixes only for ordering.
+
+Code:
+- UI: app/components/*
+- Utilities: app/utils/*
+- Keep TypeScript strict and small focused changes.
+
+## 4. Frontmatter Pattern
+```md
+---
+title: Clear Title
+summary: One concise line
+description: Short descriptive sentence
+---
+```
+
+## 5. Testing (When Code Changes)
+```bash
+pnpm run lint
+pnpm run typecheck
+pnpm test
+```
+Add tests for new utils / non-trivial logic.
+
+## 7. Commit & PR
+Commits (Conventional):
+- docs: update quickstart
+- fix: sidebar active state
+- feat: add dark theme toggle
+
+PR description:
+- What / Why
+- Screenshots (if UI)
+- Follow-up considerations (if any)
+
+## 8. Content Quality Checklist
+- Clear title & summary
+- Description
+- Logical heading order
+- No TODO / FIXME left
+
+## 9. Issues
+Bug report include:
+- Steps
+- Expected vs actual
+- Environment (browser / OS)
+Feature request include:
+- Problem
+- Proposed solution (short)
+- Prior art (optional)
+
+
+## 10. Need Help?
+- Check existing pages
+- Skim recent merged PRs for patterns
+- Open an issue if unsure
+
+Thanks for improving the docs—small focused PRs are easiest to review.

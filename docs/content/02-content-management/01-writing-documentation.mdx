@@ -1,0 +1,156 @@
+---
+title: Writing Documentation
+description: Learn how to create and organize documentation content using Markdown and MDX
+summary: Content Creation Guide
+---
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+## Content File Types
+
+The template supports two types of content files:
+
+### Markdown Files (`.md`)
+
+Used for simple content and section indexes:
+
+```markdown
+---
+title: Getting Started
+---
+
+This section covers the basics of using our product.
+```
+
+### MDX Files (`.mdx`)
+
+Used for rich content with React components:
+
+```mdx
+---
+title: Advanced Features
+description: Learn about advanced functionality
+summary: Advanced Guide
+---
+
+## Interactive Examples
+
+You can embed React components directly in your content.
+```
+
+## Content Structure
+
+### File Organization
+
+Content is organized in a hierarchical structure:
+
+```
+content/
+├── _index.mdx           # Homepage (required)
+├── 01-getting-started/  # Main section
+│   ├── index.md         # Section metadata (required)
+│   ├── 01-installation.mdx
+│   └── 02-setup.mdx
+├── 02-features/         # Another section
+│   ├── index.md
+│   ├── 01-basic-features.mdx
+│   └── 02-advanced/     # Subsection
+│       ├── index.md     # Subsection metadata
+│       └── 01-configuration.mdx
+└── 03-api-reference.mdx # Standalone page
+```
+
+### Frontmatter
+
+All content files require frontmatter with metadata:
+
+```yaml
+---
+title: "Page Title"                    # Required: Page title
+description: "SEO description"         # Optional: Meta description
+summary: "Short description"           # Optional: Used in navigation
+---
+```
+
+## Code Blocks
+
+Standard markdown code blocks with syntax highlighting:
+
+```typescript
+// This will be syntax highlighted
+function example() {
+  return "Hello World"
+}
+```
+
+Diff highlighting for showing changes:
+
+```diff
+- const old = "removed code"
++ const new = "added code"
+  const unchanged = "stays the same"
+```
+
+### Inline Code
+
+Use backticks for `inline code` references.
+
+### Links and Navigation
+
+Standard markdown links work automatically:
+
+```markdown
+[Link to another page](../other-section/page-name)
+[External link](https://example.com)
+```
+
+The template automatically generates:
+- Table of contents from headings
+- Previous/next page navigation
+- Breadcrumb navigation
+
+## Content Processing
+
+### URL Generation
+
+File paths are automatically converted to clean URLs:
+
+- `content/01-getting-started/02-installation.mdx` → `/getting-started/installation`
+- Number prefixes (`01-`, `02-`) are removed from URLs
+- File extensions are stripped
+
+### Search Integration
+
+All content is automatically indexed for search:
+
+- Page titles and descriptions
+- Heading text
+- Paragraph content
+- Code block content (optional)
+
+Content is processed by `app/components/command-k/create-search-index.ts`.
+
+## Best Practices
+
+### Writing Guidelines
+
+1. **Use Descriptive Titles**: Make headings clear and specific
+2. **Add Descriptions**: Include frontmatter descriptions for SEO
+3. **Structure with Headings**: Use proper heading hierarchy (H2 → H3 → H4)
+4. **Link Between Pages**: Create connections between related content
+
+### File Naming
+
+1. **Use Number Prefixes**: `01-`, `02-` for ordering
+2. **Descriptive Names**: `installation.mdx` not `setup.mdx`
+3. **Consistent Casing**: Use kebab-case for file names
+
+### Content Organization
+
+1. **Logical Grouping**: Group related content in sections
+2. **Appropriate Nesting**: Don't go too deep (max 2 levels recommended)
+3. **Index Files**: Always include `index.md` for sections
+
+
+The development server shows content errors in the console to help you fix issues quickly.

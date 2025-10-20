@@ -1,0 +1,21 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"entry": ["scripts/*.{ts,js}", "app/routes.ts", "app/server/*.ts", "app/ui/icon/Icon.tsx"],
+	"remix": true,
+	"lefthook": true,
+	"project": ["**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}"],
+	"ignore": [
+		"app/ui/icon/icons/types.ts",
+		"react-router.config.ts",
+		"content-collections.ts",
+		"docs-config/docs.schema.ts",
+		"docs.config.ts"
+	],
+	"ignoreDependencies": [
+		"@babel/preset-typescript",
+		"babel-plugin-react-compiler",
+		"tailwindcss",
+		"@tailwindcss/typography",
+		"rehype-slug"
+	]
+}
