@@ -7,36 +7,44 @@
 	--font-space: "Space", sans-serif;
 
 	/* Animation Variables */
---animation-duration: 40s;
---animation-direction: forwards;
+	--animation-duration: 40s;
+	--animation-direction: forwards;
 
-/* Animation Definitions */
---animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
---animate-spotlight: spotlight 2s ease .75s 1 forwards;
---animate-meteor-effect: meteor 5s linear infinite;
+	/* Animation Definitions */
+	--animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+	--animate-spotlight: spotlight 2s ease .75s 1 forwards;
+	--animate-meteor-effect: meteor 5s linear infinite;
 }
 
 @keyframes scroll {
-    to {
-        transform: translate(calc(-50% - 0.5rem));
-    }
+	to {
+		transform: translate(calc(-50% - 0.5rem));
+	}
 }
 
 @keyframes meteor {
-    0% { transform: rotate(215deg) translateX(0); opacity: 1; }
-    70% { opacity: 1; }
-    100% { transform: rotate(215deg) translateX(-1900px); opacity: 0; }
+	0% {
+		transform: rotate(215deg) translateX(0);
+		opacity: 1;
+	}
+	70% {
+		opacity: 1;
+	}
+	100% {
+		transform: rotate(215deg) translateX(-1900px);
+		opacity: 0;
+	}
 }
 
 @keyframes spotlight {
-    0% {
-        opacity: 0;
-        transform: translate(-72%, -62%) scale(0.5);
-    }
-    100% {
-        opacity: 1;
-        transform: translate(-50%,-40%) scale(1);
-    }
+	0% {
+		opacity: 0;
+		transform: translate(-72%, -62%) scale(0.5);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(-50%, -40%) scale(1);
+	}
 }
 
 @layer base {
@@ -168,7 +176,7 @@
 		--color-text-accent: #878787;
 
 		--color-code-inline-text: #34d399;
-			--color-code-inline-bg: #1a1a1a;
+		--color-code-inline-bg: #1a1a1a;
 
 		--color-code-block-bg: #1a1a1a;
 		--color-code-block-text: #e2e8f0;
@@ -200,7 +208,7 @@
 		--color-warning-text: #fbbf24;
 		--color-warning-icon: #f59e0b;
 
-		--color-modal-backdrop:  rgba(10, 13, 17, 0.5);
+		--color-modal-backdrop: rgba(10, 13, 17, 0.5);
 		--color-modal-bg: rgb(15, 15, 15);
 		--color-modal-border: #374151;
 		--color-modal-shadow: rgba(0, 0, 0, 0.5);
@@ -285,7 +293,8 @@
 		cursor: default;
 	}
 
-	.prose :not(pre) > code::before, .prose :not(pre) > code::after {
-  		content: none !important;
+	.prose :not(pre) > code::before,
+	.prose :not(pre) > code::after {
+		content: none !important;
 	}
 }

@@ -64,7 +64,6 @@ const section = defineCollection({
 	directory: "content",
 	include: "**/index.md",
 	schema: sectionSchema,
-
 	transform: (document) => {
 		const slug = stripTrailingIndex(cleanSlug(document._meta.path))
 		return { ...document, slug }

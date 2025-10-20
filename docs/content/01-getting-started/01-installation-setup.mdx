@@ -1,0 +1,95 @@
+---
+title: Installation & Setup
+description: Step-by-step guide to install and configure the Forge42 Documentation Template
+summary: Installation Guide
+---
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+## Prerequisites
+
+Make sure you have the following installed:
+- **Node.js** (>= 22.17.0)
+- **pnpm** (>= 10.13.0)
+- **Git** (for version control)
+
+---
+
+## Installation Steps
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/forge42/docs-template my-documentation
+cd my-documentation
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Set Up Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Then update the `.env` file with your project-specific configuration.
+
+### 4. Generate Documentation
+
+Build the initial docs from the `content/` folder:
+
+```bash
+pnpm run generate:docs
+```
+
+This processes your content and outputs optimized documentation files.
+
+### 5. Start the Development Server
+
+```bash
+pnpm run dev
+```
+
+Your site will now be running at **http://localhost:4280**
+
+---
+
+## Project Structure
+
+After installation, your project will look like this:
+
+```
+my-documentation/
+├── app/              # React Router application
+├── content/          # Your documentation content
+├── public/           # Static assets
+├── resources/        # Fonts, icons, etc.
+├── generated-docs/   # Generated documentation files
+├── scripts/          # Build and utility scripts
+├── package.json
+└── README.md
+```
+
+---
+
+## Next Steps
+
+1. **Customize Branding**
+   Update logo, colors, and header components in `app/components/`
+
+2. **Add Your Content**
+   Replace the example files in `content/` with your own documentation
+
+3. **Prepare for Deployment**
+   Configure your hosting provider (e.g. Vercel, Netlify, or GitHub Pages)
+
+---
+
+> 💡 The template ships with sample content so you can quickly understand the structure. You can safely delete or replace these examples once your docs are ready.

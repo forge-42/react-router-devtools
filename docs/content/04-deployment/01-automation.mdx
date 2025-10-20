@@ -1,0 +1,67 @@
+---
+title: CI/CD & Automation
+summary: Automation Guide
+description: Fast reference for validation, build and deploy pipeline.
+---
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+## Why
+Automate validation + build + deploy so every PR and release ships safely.
+
+## Triggers
+- Pull request → validate + preview deploy
+- Push to main → production deploy
+- Release tag → versioned docs + production deploy
+## Pipeline Stages
+1. Quality: biome lint, typecheck, unused code scan
+2. Tests: unit (Vitest)
+3. Build: generate docs, build app
+4. Deploy: preview (PR) or production (main/release)
+
+## Secrets / Vars
+Secrets:
+- FLY_API_TOKEN
+
+Variables:
+- FLY_ORG
+- FLY_REGION
+
+## Release Flow
+```bash
+# create and push the tag if you haven’t already
+git tag v1.0.0
+git push origin v1.0.0
+
+# create the release from the tag
+gh release create v1.0.0 --title "v1.0.0" --notes "Initial release of docs-template"
+
+```
+Action:
+- Generates docs for tag
+- Updates versions
+- Deploys
+
+
+## Local Pre‑Push Checklist
+```bash
+pnpm run lint
+pnpm run typecheck
+pnpm run check:unused
+pnpm run test
+pnpm run generate:docs -- --branch main
+pnpm run build
+```
+
+## Monitor
+- GitHub Actions tab (logs)
+- PR checks (gates)
+- Fly dashboard (deployment status)
+
+## Customizing
+Add steps in `.github/workflows/ci.yml` (extra lint, security scan, alt deployment). Replace Fly deploy step if using another platform.
+
+## Keep In Mind
+- Failing tests block deploy
+- Never edit generated-docs/ manually

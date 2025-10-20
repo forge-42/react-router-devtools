@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for react-router-devtools-docs on 2025-10-09T12:48:17+02:00
+# fly.toml app configuration file generated for docs-template-main on 2025-10-03T11:40:42+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'react-router-devtools-docs'
+app = 'docs-template-main'
 primary_region = 'fra'
 
 [build]

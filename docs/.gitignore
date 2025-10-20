@@ -1,0 +1,89 @@
+node_modules
+public/build
+build
+dist
+out
+coverage
+.history
+.react-router
+
+# Other Coverage tools
+*.lcov
+
+# macOS
+.DS_*
+
+# Cache Directories and files
+.cache
+.yarn*
+.env*
+!.env.example
+.swp*
+.turbo
+.npm
+.stylelintcache
+*.tsbuildinfo
+.node_repl_history
+
+# Lock files from other package managers
+package-lock.json
+yarn.lock
+
+# General tempory files and directories
+t?mp
+.t?mp
+*.t?mp
+
+# Docusaurus cache and generated files
+.docusaurus
+
+# Output of 'npm pack'
+*.tgz
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tbz
+*.zip
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+vite.config.ts.*
+
+# Playwright various test reports
+test-results
+playwright-report
+blob-report
+
+
+# Editors
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/shelf
+
+# Dont commit sqlite database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+
+# Content collections output files
+.content-collections
+
+# Output base directory of the documentation
+generated-docs/

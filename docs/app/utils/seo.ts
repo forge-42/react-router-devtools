@@ -1,6 +1,6 @@
 import { generateMeta } from "@forge42/seo-tools/remix/metadata"
 import type { MetaDescriptor } from "react-router"
-import PackageLogo from "/rrd-mascott.png"
+import PackageLogo from "/static/images/package-logo-1200x630.png"
 
 interface MetaFields {
 	domain: string
@@ -18,7 +18,9 @@ export function generateMetaFields({ domain, title, description, path, additiona
 			title,
 			description,
 			url: fullUrl,
-			siteName: "React Router Devtools",
+			// FIXME Change to your package name
+			siteName: "Docs Template",
+			// FIXME Change to your image
 			image: PackageLogo,
 		},
 		[

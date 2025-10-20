@@ -1,0 +1,102 @@
+---
+title: Project Structure
+summary: Architecture Guide
+description: Minimal map of what matters and where to change it.
+---
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+## 1. High‑Level Layout
+```
+app/              React Router app (UI + logic)
+content/          Source MDX (edit these)
+generated-docs/   Built output (do NOT edit)
+scripts/          Generation / validation scripts
+```
+
+## 2. Application Essentials (app/)
+Directories:
+- components/ (UI pieces: sidebar, command-k, code-block, etc.)
+- hooks/ (shared React hooks)
+- routes/ (page modules + meta)
+- utils/ (seo, versions, paths, sidebar, contribution links)
+- ui/ (primitive UI elements)
+- tailwind.css (global styles + theme vars)
+- root.tsx (app root)
+
+## 3. Content Rules (content/)
+- Number prefixes (01-, 02-) only control ordering; stripped from URLs.
+- Use index.md files to introduce a section.
+- Nest as needed; keep names short.
+
+Minimal example:
+```
+content/
+├── 01-getting-started/
+│   ├── index.md
+│   ├── 01-overview.mdx
+│   └── 02-project-structure.mdx
+└── 02-routing/
+		├── index.md
+		├── 01-basic-routing.mdx
+		└── 02-nested-routes.mdx
+```
+
+## 4. Frontmatter Pattern
+```
+---
+title: Clear Title
+summary: Clear Summary
+description: Clear Short Description
+---
+```
+
+## 5. Generation Pipeline
+Script: scripts/generate-docs.ts
+Steps:
+1. Scan content/
+2. Emit processed artifacts → generated-docs/version/.content-collections/generated
+3. Update versions list
+4. Optionally build search index
+Never edit generated-docs/ manually.
+
+## 6. Config Touchpoints
+- content-collections.ts (parsing + schema)
+- app/routes.ts (logical route map)
+- react-router.config.ts (router build)
+- vite.config.ts (build + plugins)
+- fly.toml (deployment example)
+- .github/workflows/ (CI: build + deploy)
+
+## 7. Styling & Theme
+- Tailwind utility-first
+- CSS vars for light/dark in tailwind.css
+- Theme logic: utils/theme.ts
+- Persistence keys: utils/local-storage.ts
+
+## 8. Typical Edit Flow
+1. Resolve FIXMEs (branding, siteName, social image)
+2. Add / edit MDX pages
+3. Run: `pnpm run generate:docs -- --branch main`
+4. Dev server: `pnpm dev`
+5. Review sidebar, search, meta
+6. Commit
+
+## 9. Quick Commands
+```
+pnpm run generate:docs -- --branch main
+pnpm dev
+grep -R "FIXME" -n app/
+```
+
+## 10. Safe vs Caution
+Safe to change:
+- content/**
+- components, routes, utils (non-generated)
+- layout branding + theming
+
+Don't change:
+- generated-docs/** (automatically created files on generate:docs command)
+- version.ts (automatically created file on generate:docs command)
+- path/slug helpers (affects links & search)

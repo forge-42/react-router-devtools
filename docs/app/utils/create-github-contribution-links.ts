@@ -6,7 +6,7 @@ interface GitHubContributionLinkOptions {
 
 export function createGitHubContributionLinks({ pagePath, owner, repo }: GitHubContributionLinkOptions) {
 	const githubBase = `https://github.com/${owner}/${repo}`
-	const editUrl = `${githubBase}/edit/main/docs/content/${pagePath}`
+	const editUrl = `${githubBase}/edit/main/content/${pagePath}`
 
 	const issueTitle = `Issue with the "${pagePath}" doc`
 	const issueBody = `I found an issue with this document.

@@ -6,32 +6,30 @@
 type TokenType = "keyword" | "string" | "number" | "comment" | "operator" | "punctuation" | "function" | "text"
 
 const MASTER_REGEX = new RegExp(
-  [
-    // whitespace
-    "\\s+",
-    // single-line comment
-    "\\/\\/[^\\n\\r]*",
-    // multi-line comment
-    "\\/\\*[\\s\\S]*?\\*\\/",
-    // hash comment at start of line
-    "^\\s*#.*$",
-    // backtick inline code
-    "\\`(?:[^`\\\\]|\\\\.)*\\`",
-    // strings
-    "(['\"])(?:(?!\\1)[^\\\\]|\\\\.)*\\1",
-    // numbers
-    "\\d+\\.?\\d*",
-    // identifiers
-    "[a-zA-Z_$][a-zA-Z0-9_$]*",
-    // arrow function
-    "=>",
-    // operators & punctuation
-    "===|!==|<=|>=|==|!=|&&|\\|\\||\\+\\+|--|[+\\-*%=<>!?:(){}\\[\\];,.]|\\/(?![/*])|[+\\-*/%]=",
-  ].join("|"),
-  "gm"
+	[
+		// whitespace
+		"\\s+",
+		// single-line comment
+		"\\/\\/[^\\n\\r]*",
+		// multi-line comment
+		"\\/\\*[\\s\\S]*?\\*\\/",
+		// hash comment at start of line
+		"^\\s*#.*$",
+		// backtick inline code
+		"\\`(?:[^`\\\\]|\\\\.)*\\`",
+		// strings
+		"(['\"])(?:(?!\\1)[^\\\\]|\\\\.)*\\1",
+		// numbers
+		"\\d+\\.?\\d*",
+		// identifiers
+		"[a-zA-Z_$][a-zA-Z0-9_$]*",
+		// arrow function
+		"=>",
+		// operators & punctuation
+		"===|!==|<=|>=|==|!=|&&|\\|\\||\\+\\+|--|[+\\-*%=<>!?:(){}\\[\\];,.]|\\/(?![/*])|[+\\-*/%]=",
+	].join("|"),
+	"gm"
 )
-
-
 
 const KEYWORDS = [
 	"import",

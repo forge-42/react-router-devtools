@@ -1,0 +1,224 @@
+---
+title: Branding & Design
+description: Customize the look and feel of your documentation site
+summary: Design Customization
+---
+<WarningAlert>
+ Documentation for `docs-template` is still under construction. Some sections may be incomplete or change frequently.
+</WarningAlert>
+
+## Logo Customization
+
+### Updating the Logo
+
+The main logo is defined in `app/components/logo.tsx`:
+
+```typescript
+export const Logo = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Link to="/" className="flex items-center gap-2">
+      <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-r from-[#2c8794] to-[#329baa] font-bold text-white text-sm">
+        F42
+      </div>
+      {children && (
+        <span className="font-bold text-[var(--color-text-active)] text-lg">
+          {children}
+        </span>
+      )}
+    </Link>
+  )
+}
+```
+
+### Logo Usage
+
+The logo appears in two places:
+
+1. **Homepage** (`app/routes/index.tsx`):
+```typescript
+<Logo>
+  <span className="p-0">YOUR PROJECT NAME</span>
+</Logo>
+```
+
+2. **Documentation Layout** (`app/routes/documentation-layout.tsx`):
+```typescript
+<Logo>
+  <span className="p-0">YOUR PROJECT NAME</span>
+</Logo>
+```
+
+### Adding a Custom Logo Image
+
+To use an image instead of the text logo:
+
+```typescript
+// app/components/logo.tsx
+export const Logo = ({ children }: { children?: React.ReactNode }) => {
+  return (
+    <Link to="/" className="flex items-center gap-2">
+      <img
+        src="/logo.svg"
+        alt="Your Logo"
+        className="h-8 w-auto"
+      />
+      {children}
+    </Link>
+  )
+}
+```
+
+Place your logo file in the `public/` directory.
+
+## Color Theming
+
+### CSS Variables
+
+The template uses CSS variables for theming, defined in `app/tailwind.css`:
+
+```css
+:root {
+  --color-background: #fafafa;
+  --color-border: #e5e7eb;
+  --color-text-normal: #2d3748;
+  --color-text-muted: #718096;
+  --color-text-active: #000000;
+  /* ... more variables */
+}
+
+[data-theme="dark"] {
+  --color-background: #0f172a;
+  --color-border: #334155;
+  --color-text-normal: #cbd5e1;
+  --color-text-muted: #64748b;
+  --color-text-active: #f1f5f9;
+  /* ... dark theme variables */
+}
+```
+
+### Customizing Colors
+
+1. **Update CSS Variables**: Modify colors in `app/tailwind.css`
+2. **Brand Colors**: Update accent colors used throughout the site
+3. **Component Colors**: Some components use specific color classes
+
+Example brand color customization:
+
+```css
+:root {
+  /* Update these for your brand */
+  --color-primary: #your-brand-color;
+  --color-accent: #your-accent-color;
+}
+```
+
+### Gradient Customization
+
+Update gradients used in the logo and buttons:
+
+```typescript
+// From this:
+bg-gradient-to-r from-[#2c8794] to-[#329baa]
+
+// To your colors:
+bg-gradient-to-r from-[#your-color-1] to-[#your-color-2]
+```
+
+## Typography
+
+### Font Configuration
+
+Fonts are configured in `app/tailwind.css`:
+
+```css
+@theme {
+  --font-dyna-puff: "Dyna Puff", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-space: "Space", sans-serif;
+}
+```
+
+### Custom Fonts
+
+To add custom fonts:
+
+1. **Add font files** to `resources/fonts/`
+2. **Update font loading** in `app/root.tsx`
+3. **Configure in Tailwind** in `app/tailwind.css`
+
+## Page Metadata
+
+### Site Title
+
+Update the site title in route meta functions:
+
+```typescript
+// app/routes/index.tsx
+export const meta = ({ data }: Route.MetaArgs) => {
+  return generateMetaFields({
+    domain,
+    path: "/",
+    title: "Your Project Name", // Update this
+    description: "Your project description",
+  })
+}
+```
+
+### Favicon
+
+Replace the favicon files in `public/`:
+- `favicon.ico`
+- `apple-touch-icon.png`
+- `icon-192.png`
+- `icon-512.png`
+
+## Navigation Customization
+
+### Header Links
+
+Add custom header links in `app/routes/documentation-layout.tsx`:
+
+```typescript
+<div className="inline-flex items-center gap-2 xl:gap-3">
+  <VersionDropdown />
+  <CommandK version={version} />
+  <ThemeToggle />
+
+  {/* Add custom links here */}
+  <IconLink name="ExternalLink" href="https://your-site.com" />
+
+  {GITHUB_REPO_URL && <IconLink name="Github" href={GITHUB_REPO_URL} />}
+</div>
+```
+
+## Homepage Customization
+
+### Hero Section
+
+Update the homepage hero in `app/routes/index.tsx`:
+
+```typescript
+<h1 className="font-bold text-[var(--color-text-active)] text-xl leading-snug md:text-2xl xl:text-3xl">
+  Your Project Name
+  <br />
+  <span className="bg-gradient-to-r from-[#48ddf3] to-[#fb4bb5] bg-clip-text text-transparent">
+    Your Tagline
+  </span>
+</h1>
+```
+
+### Feature Cards
+
+Update feature cards to match your project:
+
+```typescript
+<div className="mb-6 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+  <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] p-6 transition-colors hover:shadow-lg">
+    <h3 className="mb-2 font-semibold text-[var(--color-text-active)] text-lg">Your Feature</h3>
+    <p className="text-[var(--color-text-muted)]">Description of your feature</p>
+  </div>
+  {/* Add more feature cards */}
+</div>
+```
+
+Remember to update all text content and links to match your project throughout the codebase.
