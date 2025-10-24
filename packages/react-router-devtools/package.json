@@ -59,7 +59,9 @@
 			"require": "./dist/client.css"
 		}
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/forge-42/react-router-devtools.git"
@@ -106,9 +108,9 @@
 		"vite": ">=5.0.0 || >=6.0.0"
 	},
 	"devDependencies": {
-		"@react-router/dev": "7.5.3",
-		"@react-router/node": "7.5.3",
-		"@react-router/serve": "7.5.3",
+		"@react-router/dev": "7.9.3",
+		"@react-router/node": "7.9.3",
+		"@react-router/serve": "7.9.3",
 		"@testing-library/dom": "^10.4.0",
 		"@testing-library/react": "16.2.0",
 		"@types/babel__core": "^7.20.5",
@@ -122,9 +124,6 @@
 		"happy-dom": "16.8.1",
 		"jest-preview": "^0.3.1",
 		"npm-run-all": "4.1.5",
-		"postcss": "^8.5.1",
-		"tailwindcss": "^3.4.0",
-		"tailwindcss-animate": "^1.0.7",
 		"tsup": "^8.3.6",
 		"tsx": "4.19.2",
 		"typescript": "^5.8.3",
@@ -140,6 +139,7 @@
 		"@babel/types": "^7.26.10",
 		"@radix-ui/react-accordion": "^1.2.2",
 		"@radix-ui/react-select": "^2.1.5",
+		"@tanstack/devtools-event-client": "^0.3.3",
 		"@tanstack/devtools-vite": "^0.3.8",
 		"@tanstack/react-devtools": "^0.7.7",
 		"beautify": "^0.0.8",
