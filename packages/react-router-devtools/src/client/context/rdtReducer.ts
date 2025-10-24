@@ -14,15 +14,15 @@ export const defaultServerRouteState: ServerRouteInfo = {
 	loaders: [],
 	actions: [],
 }
-// classes created in input.css
+// Gradient keys for use with Goober styles
 export const ROUTE_BOUNDARY_GRADIENTS = {
-	sea: "sea-gradient",
-	hyper: "hyper-gradient",
-	gotham: "gotham-gradient",
-	gray: "gray-gradient",
-	watermelon: "watermelon-gradient",
-	ice: "ice-gradient",
-	silver: "silver-gradient",
+	sea: "sea",
+	hyper: "hyper",
+	gotham: "gotham",
+	gray: "gray",
+	watermelon: "watermelon",
+	ice: "ice",
+	silver: "silver",
 } as const
 
 export const RouteBoundaryOptions = Object.keys(ROUTE_BOUNDARY_GRADIENTS) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[]

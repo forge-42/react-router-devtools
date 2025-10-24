@@ -1,12 +1,12 @@
-import clsx from "clsx"
 import type { ReactNode } from "react"
+import { cx, useStyles } from "../styles/use-styles.js"
 
 export const TAG_COLORS = {
-	GREEN: "border-green-500 border border-solid text-white",
-	BLUE: "border-blue-500 border border-solid text-white",
-	TEAL: "border-teal-400 border border-solid text-white",
-	RED: "border-red-500 border border-solid text-white",
-	PURPLE: "border-purple-500 border border-solid text-white",
+	GREEN: "GREEN",
+	BLUE: "BLUE",
+	TEAL: "TEAL",
+	RED: "RED",
+	PURPLE: "PURPLE",
 } as const
 
 interface TagProps {
@@ -16,8 +16,11 @@ interface TagProps {
 }
 
 const Tag = ({ color, children, className }: TagProps) => {
+	const { styles } = useStyles()
 	return (
-		<span className={clsx("flex items-center rounded px-2.5 py-0.5 text-sm font-medium", className, TAG_COLORS[color])}>
+		<span
+			className={cx(styles.tag.base, styles.tag[color.toLowerCase() as Lowercase<keyof typeof TAG_COLORS>], className)}
+		>
 			{children}
 		</span>
 	)

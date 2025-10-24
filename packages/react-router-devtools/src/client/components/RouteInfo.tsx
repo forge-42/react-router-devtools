@@ -1,7 +1,7 @@
-import clsx from "clsx"
 import type { MouseEvent } from "react"
 import { Link } from "react-router"
 import { useSettingsContext } from "../context/useRDTContext.js"
+import { cx, useStyles } from "../styles/use-styles.js"
 import { type ExtendedRoute, constructRoutePath } from "../utils/routing.js"
 import { findParentErrorBoundary } from "../utils/sanitize.js"
 import { Input } from "./Input.js"
@@ -16,6 +16,7 @@ interface RouteInfoProps {
 }
 
 export const RouteInfo = ({ route: routeToUse, className, openNewRoute, onClose }: RouteInfoProps) => {
+	const { styles } = useStyles()
 	const route = window.__reactRouterManifest?.routes[routeToUse.id] || routeToUse
 	const { settings, setSettings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
@@ -25,65 +26,74 @@ export const RouteInfo = ({ route: routeToUse, className, openNewRoute, onClose 
 	const hasParentErrorBoundary = errorBoundaryId && errorBoundaryId !== route.id
 
 	return (
-		<div className={clsx(className, "relative")}>
+		<div className={cx(className, styles.routeInfoComponent.container)}>
 			{isTreeView && (
 				<>
-					<Icon onClick={onClose} className="absolute right-2 top-2 cursor-pointer text-red-600" name="X" />
+					<Icon onClick={onClose} className={styles.routeInfoComponent.closeIcon} name="X" />
 
-					<h1 className="text-xl text-white font-semibold">{routeToUse.url}</h1>
-					<hr className="mb-4 mt-1" />
+					<h1 className={styles.routeInfoComponent.title}>{routeToUse.url}</h1>
+					<hr className={styles.routeInfoComponent.divider} />
 					<h3>
-						<span className="text-gray-500">Path:</span>
-						<span className="text-white"> {path}</span>
+						<span className={styles.routeInfoComponent.label}>Path:</span>
+						<span className={styles.routeInfoComponent.value}> {path}</span>
 					</h3>
 					<h3>
-						<span className="text-gray-500">Url:</span> <span className="text-white">{pathToOpen}</span>
+						<span className={styles.routeInfoComponent.label}>Url:</span>{" "}
+						<span className={styles.routeInfoComponent.value}>{pathToOpen}</span>
 					</h3>
 				</>
 			)}
-			<div className="flex gap-2">
-				<span className="whitespace-nowrap text-gray-500">Route file:</span>
+			<div className={styles.routeInfoComponent.routeFile}>
+				<span className={styles.routeInfoComponent.routeFileLabel}>Route file:</span>
 				{route.module ?? routeToUse.file}
 			</div>
 
-			<div className="mb-4 mt-4 flex flex-col gap-2">
-				<span className="text-gray-500">Components contained in the route:</span>
-				<div className="flex flex-wrap gap-2">
-					<Tag className="h-max" color={route.hasLoader ? "GREEN" : "RED"}>
+			<div className={styles.routeInfoComponent.componentsSection}>
+				<span className={styles.routeInfoComponent.label}>Components contained in the route:</span>
+				<div className={styles.routeInfoComponent.tagsContainer}>
+					<Tag className={styles.routeInfoComponent.tagHeight} color={route.hasLoader ? "GREEN" : "RED"}>
 						Loader
 					</Tag>
-					<Tag className="h-max" color={route.hasClientLoader ? "GREEN" : "RED"}>
+					<Tag className={styles.routeInfoComponent.tagHeight} color={route.hasClientLoader ? "GREEN" : "RED"}>
 						Client Loader
 					</Tag>
-					<Tag className="h-max" color={route.hasClientAction ? "GREEN" : "RED"}>
+					<Tag className={styles.routeInfoComponent.tagHeight} color={route.hasClientAction ? "GREEN" : "RED"}>
 						Client Action
 					</Tag>
-					<Tag className="h-max" color={route.hasAction ? "GREEN" : "RED"}>
+					<Tag className={styles.routeInfoComponent.tagHeight} color={route.hasAction ? "GREEN" : "RED"}>
 						Action
 					</Tag>
 
 					<Tag
-						className={clsx(hasErrorBoundary && "rounded-br-none rounded-tr-none")}
+						className={cx(
+							styles.routeInfoComponent.tagHeight,
+							hasErrorBoundary && styles.routeInfoComponent.tagNoRightRadius
+						)}
 						color={hasErrorBoundary ? "GREEN" : "RED"}
 					>
 						ErrorBoundary
 					</Tag>
 				</div>
 				{hasErrorBoundary ? (
-					<div className="mr-2">
+					<div className={styles.routeInfoComponent.errorBoundaryMessage}>
 						{hasParentErrorBoundary ? `Covered by parent ErrorBoundary located in: ${errorBoundaryId}` : ""}
 					</div>
 				) : null}
 			</div>
 			{hasWildcard && (
 				<>
-					<p className="mb-2 text-gray-500">Wildcard parameters:</p>
-					<div className={clsx("mb-4 grid w-full grid-cols-2 gap-2", isTreeView && "grid-cols-1")}>
+					<p className={styles.routeInfoComponent.wildcardLabel}>Wildcard parameters:</p>
+					<div
+						className={cx(
+							styles.routeInfoComponent.wildcardGrid,
+							isTreeView && styles.routeInfoComponent.wildcardGridSingleColumn
+						)}
+					>
 						{routeToUse.url
 							.split("/")
 							.filter((p) => p.startsWith(":"))
 							.map((param) => (
-								<div key={param} className="flex w-full gap-2">
+								<div key={param} className={styles.routeInfoComponent.wildcardInputWrapper}>
 									<Tag key={param} color="BLUE">
 										{param}
 									</Tag>
@@ -108,12 +118,8 @@ export const RouteInfo = ({ route: routeToUse, className, openNewRoute, onClose 
 				</>
 			)}
 			{isTreeView && (
-				<button
-					type="button"
-					className="mr-2 whitespace-nowrap !text-white rounded border border-gray-400 px-2 py-1 text-sm"
-					onClick={openNewRoute(path)}
-				>
-					<Link className="text-white" to={path}>
+				<button type="button" className={styles.routeInfoComponent.openBrowserButton} onClick={openNewRoute(path)}>
+					<Link className={styles.routeInfoComponent.openBrowserLink} to={path}>
 						Open in browser
 					</Link>
 				</button>

@@ -1,6 +1,7 @@
-import clsx from "clsx"
 import { Fragment } from "react"
 import { useTabs } from "../hooks/useTabs.js"
+import { cx } from "../styles/use-styles.js"
+import { useStyles } from "../styles/use-styles.js"
 import { TimelineTab } from "../tabs/TimelineTab.js"
 import type { Tab } from "../tabs/index.js"
 
@@ -10,15 +11,15 @@ interface ContentPanelProps {
 
 const ContentPanel = ({ plugins }: ContentPanelProps) => {
 	const { Component, hideTimeline, isPluginTab, activeTab } = useTabs(plugins)
+	const { styles } = useStyles()
 
 	return (
-		<div className="flex h-full w-full overflow-y-hidden">
+		<div className={styles.layout.contentPanel.container}>
 			<div
-				className={clsx(
-					"z-20 h-full w-full overflow-y-auto overflow-x-hidden bg-main px-1 lg:px-4 pt-3 pb-4 ",
-
-					isPluginTab && "unset",
-					activeTab === "page" && "!pt-0"
+				className={cx(
+					styles.layout.contentPanel.mainContent,
+					isPluginTab && styles.layout.contentPanel.mainContentUnset,
+					activeTab === "page" && styles.layout.contentPanel.mainContentPageTab
 				)}
 			>
 				{Component}
@@ -26,8 +27,8 @@ const ContentPanel = ({ plugins }: ContentPanelProps) => {
 
 			{!hideTimeline && (
 				<Fragment>
-					<div className="w-1 bg-gray-500/20" />
-					<div className={clsx("z-10 hidden lg:block h-full w-1/3 p-2 overflow-y-auto")}>
+					<div className={styles.layout.contentPanel.divider} />
+					<div className={styles.layout.contentPanel.timelineContainer}>
 						<TimelineTab />
 					</div>
 				</Fragment>

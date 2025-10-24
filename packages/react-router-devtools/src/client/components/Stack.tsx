@@ -1,18 +1,13 @@
-import clsx from "clsx"
+import { cx, useStyles } from "../styles/use-styles.js"
 
 interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
 	gap?: "sm" | "md" | "lg"
 }
 
-const GAPS = {
-	sm: "gap-1",
-	md: "gap-2",
-	lg: "gap-4",
-}
-
 const Stack = ({ gap = "md", className, children, ...props }: StackProps) => {
+	const { styles } = useStyles()
 	return (
-		<div className={clsx("flex flex-col", GAPS[gap], className)} {...props}>
+		<div className={cx(styles.stack.base, styles.stack[gap], className)} {...props}>
 			{children}
 		</div>
 	)

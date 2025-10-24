@@ -1,5 +1,5 @@
-import clsx from "clsx"
 import { useState } from "react"
+import { cx, useStyles } from "../styles/use-styles.js"
 import { Checkbox } from "./Checkbox.js"
 import { Input } from "./Input.js"
 
@@ -32,6 +32,7 @@ const DEFAULT_VALUES = {
 }
 
 const NewRouteForm = () => {
+	const { styles } = useStyles()
 	const [newRouteInfo, setNewRouteInfo] = useState<NewRouteOptions>(DEFAULT_VALUES)
 
 	const handleSubmit = () => {
@@ -43,8 +44,8 @@ const NewRouteForm = () => {
 		setNewRouteInfo({ ...newRouteInfo, ...info })
 	}
 	return (
-		<div className="mb-2 rounded-lg border border-gray-500/20 p-2">
-			<div className="mb-2 block ">Route path:</div>
+		<div className={styles.newRouteForm.container}>
+			<div className={styles.newRouteForm.label}>Route path:</div>
 			<Input
 				onBlur={() =>
 					setNewInfo({
@@ -52,13 +53,13 @@ const NewRouteForm = () => {
 					})
 				}
 				onChange={(e) => setNewInfo({ path: e.target.value })}
-				className="mb-1"
+				className={styles.newRouteForm.inputMargin}
 			/>
-			<span className="mb-4 block text-gray-500">
+			<span className={styles.newRouteForm.hint}>
 				This will be added to your routes folder under your entered name, only supports .tsx and .ts extensions, you can
 				also emit the extension
 			</span>
-			<div className="mb-2 block">Additional options:</div>
+			<div className={styles.newRouteForm.label}>Additional options:</div>
 			<Checkbox
 				value={newRouteInfo.loader}
 				onChange={() =>
@@ -157,10 +158,7 @@ const NewRouteForm = () => {
 				onClick={handleSubmit}
 				disabled={!newRouteInfo.path}
 				type="button"
-				className={clsx(
-					"mr-2 mt-2 self-end text-white rounded border border-gray-400 px-2 py-1 text-sm",
-					!newRouteInfo.path && "opacity-50"
-				)}
+				className={cx(styles.newRouteForm.submitButton, !newRouteInfo.path && styles.newRouteForm.submitButtonDisabled)}
 			>
 				Add route
 			</button>

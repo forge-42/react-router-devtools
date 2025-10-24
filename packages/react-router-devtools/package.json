@@ -148,6 +148,7 @@
 		"clsx": "2.1.1",
 		"date-fns": "^4.1.0",
 		"framer-motion": "^11.0.8",
+		"goober": "^2.1.18",
 		"react-d3-tree": "^3.6.4",
 		"react-diff-viewer-continued": "^4.0.5",
 		"react-hotkeys-hook": "^4.6.1",

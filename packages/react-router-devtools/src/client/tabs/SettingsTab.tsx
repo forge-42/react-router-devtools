@@ -4,20 +4,22 @@ import { SelectWithOptions } from "../components/Select.js"
 import { Stack } from "../components/Stack.js"
 import { RouteBoundaryOptions } from "../context/rdtReducer.js"
 import { useSettingsContext } from "../context/useRDTContext.js"
+import { useStyles } from "../styles/use-styles.js"
 import { uppercaseFirstLetter } from "../utils/string.js"
 
 export const SettingsTab = () => {
+	const { styles } = useStyles()
 	const { settings, setSettings } = useSettingsContext()
 	const [expansionLevel, setExpansionLevel] = useState(settings.expansionLevel.toString())
 
 	return (
-		<Stack className="mb-4">
+		<Stack className={styles.settingsTab.container}>
 			<h1>
-				<span className="text-lg font-semibold">Settings</span>
-				<hr className="mt-2 border-gray-400" />
+				<span className={styles.settingsTab.header}>Settings</span>
+				<hr className={styles.settingsTab.divider} />
 			</h1>
 
-			<hr className="mt-2 border-gray-700" />
+			<hr className={styles.settingsTab.dividerDark} />
 			<Stack gap="lg">
 				<Input
 					name="expansionLevel"
@@ -34,7 +36,7 @@ export const SettingsTab = () => {
 					}}
 				/>
 
-				<div className="flex flex-col gap-2 lg:flex-row">
+				<div className={styles.settingsTab.selectRow}>
 					<SelectWithOptions
 						label="Route boundary gradient"
 						onSelect={(value) => setSettings({ routeBoundaryGradient: value })}
@@ -43,7 +45,7 @@ export const SettingsTab = () => {
 							label: uppercaseFirstLetter(option),
 							value: option,
 						}))}
-						className="w-full"
+						className={styles.utils.wFull}
 						hint="This will determine the look of the gradient shown for route boundaries."
 					/>
 					<SelectWithOptions
@@ -54,7 +56,7 @@ export const SettingsTab = () => {
 							{ value: "hover", label: "Hover" },
 							{ value: "click", label: "Click" },
 						]}
-						className="w-full"
+						className={styles.utils.wFull}
 						hint="This will determine if the route boundaries show on hover of a route segment or clicking a button."
 					/>
 				</div>

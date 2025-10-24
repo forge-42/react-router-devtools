@@ -1,10 +1,10 @@
-import clsx from "clsx"
 import type { UIMatch } from "react-router"
 import { parseCacheControlHeader } from "../../server/parser.js"
 import type { OpenSourceData } from "../../vite/editor.js"
 import { type ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js"
 import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js"
 import { useDevServerConnection } from "../hooks/useDevServerConnection.js"
+import { cx, useStyles } from "../styles/use-styles.js"
 import { isLayoutRoute } from "../utils/routing.js"
 import { CacheInfo } from "./CacheInfo.js"
 import { EditorButton } from "./EditorButton.js"
@@ -62,14 +62,15 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
 }
 
 const ROUTE_COLORS = {
-	GREEN: "bg-green-500 ring-green-500 text-white",
-	BLUE: "bg-blue-500 ring-blue-500 text-white",
-	TEAL: "bg-teal-400 ring-teal-400 text-white",
-	RED: "bg-red-500 ring-red-500 text-white",
-	PURPLE: "bg-purple-500 ring-purple-500 text-white",
+	GREEN: "green",
+	BLUE: "blue",
+	TEAL: "teal",
+	RED: "red",
+	PURPLE: "purple",
 } as const
 
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
+	const { styles } = useStyles()
 	const { server, setServerInfo } = useServerInfo()
 	const { isConnected, sendJsonMessage } = useDevServerConnection()
 	// biome-ignore lint/suspicious/noExplicitAny: we don't know or care about loader data type
@@ -99,25 +100,29 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 		setServerInfo({ routes: newServerInfo })
 	}
 
+	const routeColor = isRoot ? ROUTE_COLORS.PURPLE : isLayout ? ROUTE_COLORS.BLUE : ROUTE_COLORS.GREEN
+
 	return (
 		<li
 			data-testid={route.id}
 			onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
 			onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
-			className="mb-8 ml-6 lg:ml-8"
+			className={styles.routeSegmentInfo.listItem}
 		>
 			<div
-				className={clsx(
-					"absolute -left-4 flex h-8 w-8 items-center justify-center rounded-full",
-					ROUTE_COLORS[isRoot ? "PURPLE" : isLayout ? "BLUE" : "GREEN"]
+				className={cx(
+					styles.routeSegmentInfo.iconWrapper,
+					styles.routeSegmentInfo[
+						`iconWrapper${routeColor.charAt(0).toUpperCase() + routeColor.slice(1)}` as keyof typeof styles.routeSegmentInfo
+					]
 				)}
 			>
 				<Icon name={isRoot ? "Root" : isLayout ? "Layout" : "CornerDownRight"} size="sm" />
 			</div>
-			<h2 className="text-md -mt-3 mb-1  flex items-center justify-between gap-2 font-semibold text-white">
+			<h2 className={styles.routeSegmentInfo.header}>
 				{route.pathname}
 
-				<div className="flex gap-2">
+				<div className={styles.routeSegmentInfo.headerActions}>
 					{Boolean(cacheControl && serverInfo?.lastLoader.timestamp) && (
 						<CacheInfo
 							key={JSON.stringify(serverInfo?.lastLoader ?? "")}
@@ -126,7 +131,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 							cacheDate={new Date(serverInfo?.lastLoader.timestamp ?? "")}
 						/>
 					)}
-					<div className="flex items-center gap-2">
+					<div className={styles.routeSegmentInfo.actionButtons}>
 						{isConnected && import.meta.env.DEV && (
 							<EditorButton
 								name={editorName}
@@ -143,7 +148,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 							<button
 								type="button"
 								data-testid={`${route.id}-show-route-boundaries`}
-								className="border-green-600 rounded border px-2.5 py-0.5 text-sm font-medium text-green-600"
+								className={styles.routeSegmentInfo.showBoundaryButton}
 								onClick={() => {
 									const routeId = route.id === "root" ? "root" : i.toString()
 									if (routeId !== settings.hoveredRoute) {
@@ -172,10 +177,10 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 					</div>
 				</div>
 			</h2>
-			<div className="mb-4">
-				<p className="mb-2 block text-sm font-normal leading-none text-gray-500  ">Route segment file: {route.id}</p>
+			<div className={styles.routeSegmentInfo.content}>
+				<p className={styles.routeSegmentInfo.routeFileLabel}>Route segment file: {route.id}</p>
 
-				<div className="flex flex-wrap gap-6">
+				<div className={styles.routeSegmentInfo.cardsContainer}>
 					{loaderData && <InfoCard title="Returned loader data">{<JsonRenderer data={loaderData} />}</InfoCard>}
 					{serverInfo && import.meta.env.DEV && (
 						<InfoCard onClear={clearServerInfoForRoute} title="Server information">

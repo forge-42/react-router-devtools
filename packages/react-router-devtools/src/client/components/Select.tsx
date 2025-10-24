@@ -1,9 +1,9 @@
 import * as SelectPrimitive from "@radix-ui/react-select"
 
+import { cx, useStyles } from "../styles/use-styles.js"
 import { Hint, Label } from "./Input.js"
 import { Stack } from "./Stack.js"
 import { Icon } from "./icon/Icon.js"
-import { cn } from "./util.js"
 
 const Select = SelectPrimitive.Root
 
@@ -12,21 +12,17 @@ const SelectGroup = SelectPrimitive.Group
 const SelectValue = SelectPrimitive.Value
 
 // biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-const SelectTrigger = ({ className, children, ref, ...props }: SelectPrimitive.SelectTriggerProps & { ref?: any }) => (
-	<SelectPrimitive.Trigger
-		ref={ref}
-		className={cn(
-			"hover:border-gray-400/50 transition-all ring-offset-background placeholder:text-muted-foreground focus:ring-ring flex h-8 w-full items-center justify-between rounded-md border border-gray-400 bg-[#121212] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-			className
-		)}
-		{...props}
-	>
-		{children}
-		<SelectPrimitive.Icon asChild>
-			<Icon name="ChevronDown" className="h-4 w-4 opacity-50" />
-		</SelectPrimitive.Icon>
-	</SelectPrimitive.Trigger>
-)
+const SelectTrigger = ({ className, children, ref, ...props }: SelectPrimitive.SelectTriggerProps & { ref?: any }) => {
+	const { styles } = useStyles()
+	return (
+		<SelectPrimitive.Trigger ref={ref} className={cx(styles.select.trigger, className)} {...props}>
+			{children}
+			<SelectPrimitive.Icon asChild>
+				<Icon name="ChevronDown" className={styles.select.icon} />
+			</SelectPrimitive.Icon>
+		</SelectPrimitive.Trigger>
+	)
+}
 
 const SelectContent = ({
 	className,
@@ -36,26 +32,18 @@ const SelectContent = ({
 	...props
 	// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
 }: SelectPrimitive.SelectContentProps & { ref?: any }) => {
+	const { styles } = useStyles()
 	return (
 		// @ts-ignore
 		<SelectPrimitive.Portal className="react-router-dev-tools">
 			<SelectPrimitive.Content
 				ref={ref}
-				className={cn(
-					"relative z-[9999] min-w-[8rem] overflow-hidden rounded-md border border-solid border-[#121212] bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-					position === "popper" &&
-						"data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-					className
-				)}
+				className={cx(styles.select.content, position === "popper" && styles.select.contentPopper, className)}
 				position={position}
 				{...props}
 			>
 				<SelectPrimitive.Viewport
-					className={cn(
-						"border border-gray-500 p-1",
-						position === "popper" &&
-							"h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
-					)}
+					className={cx(styles.select.viewport, position === "popper" && styles.select.viewportPopper)}
 				>
 					{children}
 				</SelectPrimitive.Viewport>
@@ -65,29 +53,26 @@ const SelectContent = ({
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-const SelectLabel = ({ className, ref, ...props }: SelectPrimitive.SelectLabelProps & { ref?: any }) => (
-	<SelectPrimitive.Label ref={ref} className={cn("py-1.5 pl-8 pr-2 font-sans text-sm", className)} {...props} />
-)
+const SelectLabel = ({ className, ref, ...props }: SelectPrimitive.SelectLabelProps & { ref?: any }) => {
+	const { styles } = useStyles()
+	return <SelectPrimitive.Label ref={ref} className={cx(styles.select.label, className)} {...props} />
+}
 
 // biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-const SelectItem = ({ className, children, ref, ...props }: SelectPrimitive.SelectItemProps & { ref?: any }) => (
-	<SelectPrimitive.Item
-		ref={ref}
-		className={cn(
-			"focus:text-accent-foreground relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 font-sans text-sm outline-none hover:cursor-pointer hover:bg-[#121212] focus:bg-[#121212] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-			className
-		)}
-		{...props}
-	>
-		<span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-			<SelectPrimitive.ItemIndicator>
-				<Icon name="Check" className="h-4 w-4" />
-			</SelectPrimitive.ItemIndicator>
-		</span>
+const SelectItem = ({ className, children, ref, ...props }: SelectPrimitive.SelectItemProps & { ref?: any }) => {
+	const { styles } = useStyles()
+	return (
+		<SelectPrimitive.Item ref={ref} className={cx(styles.select.item, className)} {...props}>
+			<span className={styles.select.itemIndicatorWrapper}>
+				<SelectPrimitive.ItemIndicator>
+					<Icon name="Check" className={styles.select.itemIndicatorIcon} />
+				</SelectPrimitive.ItemIndicator>
+			</span>
 
-		<SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-	</SelectPrimitive.Item>
-)
+			<SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+		</SelectPrimitive.Item>
+	)
+}
 
 const SelectWithOptions = <T extends string>({
 	placeholder,
@@ -106,6 +91,7 @@ const SelectWithOptions = <T extends string>({
 	onSelect: (value: T) => void
 	className?: string
 }) => {
+	const { styles } = useStyles()
 	return (
 		<Stack className={className} gap="sm">
 			{label && <Label>{label}</Label>}
@@ -117,7 +103,7 @@ const SelectWithOptions = <T extends string>({
 				value={value}
 				onValueChange={onSelect}
 			>
-				<SelectTrigger className="w-full text-white">
+				<SelectTrigger className={styles.select.triggerWithText}>
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent>

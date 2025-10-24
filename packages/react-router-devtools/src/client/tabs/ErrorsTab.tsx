@@ -4,6 +4,7 @@ import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued"
 import { Icon } from "../components/icon/Icon.js"
 import { useHtmlErrors } from "../context/useRDTContext.js"
 import { useDevServerConnection } from "../hooks/useDevServerConnection.js"
+import { useStyles } from "../styles/use-styles.js"
 // @ts-expect-error
 const DiffViewer: typeof ReactDiffViewer.default = ReactDiffViewer.default
 	? // @ts-expect-error
@@ -13,6 +14,7 @@ const DiffViewer: typeof ReactDiffViewer.default = ReactDiffViewer.default
 		(ReactDiffViewer as any)
 
 const ErrorsTab = () => {
+	const { styles } = useStyles()
 	const { htmlErrors } = useHtmlErrors()
 	const { sendJsonMessage } = useDevServerConnection()
 	const [SSRHtml, setSSRHtml] = useState("")
@@ -37,30 +39,27 @@ const ErrorsTab = () => {
 	}, [])
 
 	return (
-		<div className="flex flex-col gap-1">
+		<div className={styles.errorsTab.container}>
 			{htmlErrors.length > 0 ? (
 				<>
-					<div className="mb-1">
-						<span className="text-lg font-semibold">HTML Nesting Errors</span>
-						<hr className="mt-2 border-gray-400" />
+					<div className={styles.errorsTab.headerContainer}>
+						<span className={styles.errorsTab.headerTitle}>HTML Nesting Errors</span>
+						<hr className={styles.errorsTab.divider} />
 					</div>
 				</>
 			) : (
-				<div className="text-2xl">No errors detected!</div>
+				<div className={styles.errorsTab.noErrors}>No errors detected!</div>
 			)}
 			{htmlErrors.map((error) => {
 				return (
-					<div
-						key={JSON.stringify(error)}
-						className="flex justify-start gap-2 rounded-lg border border-solid border-red-600/20 p-2"
-					>
-						<Icon size="md" className="text-red-600" name="Shield" />
-						<div className="flex flex-col gap-2 lg:gap-0">
+					<div key={JSON.stringify(error)} className={styles.errorsTab.errorCard}>
+						<Icon size="md" className={styles.errorsTab.errorIcon} name="Shield" />
+						<div className={styles.errorsTab.errorContent}>
 							<div>
-								<span className="font-bold text-red-600">{error.child.tag}</span> element can't be nested inside of{" "}
-								<span className="font-bold text-red-600">{error.parent.tag}</span> element
+								<span className={styles.errorsTab.errorMessage}>{error.child.tag}</span> element can't be nested inside
+								of <span className={styles.errorsTab.errorMessage}>{error.parent.tag}</span> element
 							</div>
-							<div className="flex lg:flex-row flex-col items-start gap-1 text-sm text-gray-500">
+							<div className={styles.errorsTab.errorFileInfo}>
 								The parent element is located inside of the
 								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 								<div
@@ -70,13 +69,13 @@ const ErrorsTab = () => {
 											data: { source: error.parent.file },
 										})
 									}
-									className="cursor-pointer text-white"
+									className={styles.errorsTab.errorFile}
 								>
 									{error.parent.file}
 								</div>
 								file
 							</div>
-							<div className="flex lg:flex-row flex-col items-start gap-1 text-sm text-gray-500">
+							<div className={styles.errorsTab.errorFileInfo}>
 								The child element is located inside of the
 								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 								<div
@@ -86,7 +85,7 @@ const ErrorsTab = () => {
 											data: { source: error.child.file },
 										})
 									}
-									className="cursor-pointer text-white"
+									className={styles.errorsTab.errorFile}
 								>
 									{error.child.file}
 								</div>
@@ -97,9 +96,9 @@ const ErrorsTab = () => {
 				)
 			})}
 			{hasHydrationMismatch && (
-				<div className="relative mt-4 w-full border-2 overflow-y-auto rounded border-gray-800">
-					<h1 className="text-xl p-2 text-center">Hydration mismatch comparison</h1>
-					<hr className="mb-1 border-gray-600/30" />
+				<div className={styles.errorsTab.hydrationContainer}>
+					<h1 className={styles.errorsTab.hydrationTitle}>Hydration mismatch comparison</h1>
+					<hr className={styles.errorsTab.hydrationDivider} />
 					<DiffViewer
 						oldValue={SSRHtml}
 						newValue={CSRHtml}

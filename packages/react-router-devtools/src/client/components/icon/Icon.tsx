@@ -1,5 +1,6 @@
 import type { SVGProps } from "react"
-import { cn } from "../util.js"
+import { cx } from "../../styles/use-styles.js"
+import { useStyles } from "../../styles/use-styles.js"
 import type { IconName } from "./icons/types.js"
 
 enum IconSize {
@@ -29,10 +30,11 @@ const strokeIcon: Partial<IconName>[] = []
  * @returns SVG icon as a react component
  */
 export const Icon = ({ name, testId, className, size = "sm", ...props }: IconProps) => {
+	const { styles } = useStyles()
 	const iconSize = IconSize[size]
 	const isEmptyFill = emptyFill.includes(name)
 	const isStrokeIcon = strokeIcon.includes(name)
-	const iconClasses = cn("inline-block flex-shrink-0", className, isEmptyFill && "fill-transparent")
+	const iconClasses = cx(styles.icon.base, className, isEmptyFill && styles.icon.fillTransparent)
 	return (
 		<svg
 			className={iconClasses}

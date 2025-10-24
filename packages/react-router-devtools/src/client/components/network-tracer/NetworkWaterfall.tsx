@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { Tooltip } from "react-tooltip"
 import type { RequestEvent } from "../../../shared/request-event"
+import { cx } from "../../styles/use-styles"
+import { useStyles } from "../../styles/use-styles"
 import { METHOD_COLORS } from "../../tabs/TimelineTab"
 import { Tag } from "../Tag"
 import { NetworkBar } from "./NetworkBar"
-import { REQUEST_BORDER_COLORS, RequestDetails } from "./RequestDetails"
+import { RequestDetails } from "./RequestDetails"
 
 interface Props {
 	requests: RequestEvent[]
@@ -22,13 +24,6 @@ const _MAX_SCALE = 10
 const FUTURE_BUFFER = 1000 // 2 seconds ahead
 const INACTIVE_THRESHOLD = 100 // 1 seconds
 
-const TYPE_COLORS = {
-	loader: "bg-green-500",
-	"client-loader": "bg-blue-500",
-	action: "bg-yellow-500",
-	"client-action": "bg-purple-500",
-	"custom-event": "bg-white",
-}
 const TYPE_TEXT_COLORS = {
 	loader: "text-green-500",
 	"client-loader": "text-blue-500",
@@ -39,6 +34,7 @@ const TYPE_TEXT_COLORS = {
 
 const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	const containerRef = useRef<HTMLDivElement>(null)
+	const { styles } = useStyles()
 	const [scale, _setScale] = useState(0.1)
 	const [isDragging, setIsDragging] = useState(false)
 	const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 })
@@ -139,72 +135,101 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 		}
 	})
 	return (
-		<div className="relative">
-			<div className="flex">
+		<div className={styles.network.waterfall.container}>
+			<div className={styles.network.waterfall.flexContainer}>
 				<div>
-					<div className="h-5 flex items-center border-b border-gray-700 mb-1   pb-2">Requests</div>
-					<div style={{ gap: BAR_PADDING }} className=" pr-4 flex flex-col z-50 ">
-						{requests.map((request, index) => (
-							<div
-								style={{ height: BAR_HEIGHT }}
-								key={request.id + request.startTime}
-								className="flex gap-2 items-center"
-							>
-								<button
-									type="button"
-									className={`flex w-full items-center focus-visible:outline-none gap-2 px-2 py-0.5 text-md text-white border rounded ${index === selectedRequestIndex ? `${REQUEST_BORDER_COLORS[request.type]}` : "border-transparent"}`}
-									onClick={(e) => handleBarClick(e, request, index)}
-								>
-									<div
-										data-tooltip-id={`${request.id}${request.startTime}`}
-										data-tooltip-html={`<div>This was triggered by ${request.type.startsWith("a") ? "an" : "a"} <span class="font-bold ${TYPE_TEXT_COLORS[request.type]}">${request.type}</span> request</div>`}
-										data-tooltip-place="top"
-										className={`size-2 p-1 ${TYPE_COLORS[request.type]}`}
-									/>
+					<div className={styles.network.waterfall.requestsHeader}>Requests</div>
+					<div style={{ gap: BAR_PADDING }} className={styles.network.waterfall.requestsList}>
+						{requests.map((request, index) => {
+							const borderColorClass =
+								request.type === "loader"
+									? styles.network.waterfall.requestButtonGreen
+									: request.type === "client-loader"
+										? styles.network.waterfall.requestButtonBlue
+										: request.type === "action"
+											? styles.network.waterfall.requestButtonYellow
+											: request.type === "client-action"
+												? styles.network.waterfall.requestButtonPurple
+												: styles.network.waterfall.requestButtonWhite
 
-									<Tooltip place="top" id={`${request.id}${request.startTime}`} />
-									<div className="pr-4">
-										<div className="whitespace-nowrap">{request.id}</div>
+							const indicatorColorClass =
+								request.type === "loader"
+									? styles.network.waterfall.requestIndicatorGreen
+									: request.type === "client-loader"
+										? styles.network.waterfall.requestIndicatorBlue
+										: request.type === "action"
+											? styles.network.waterfall.requestIndicatorYellow
+											: request.type === "client-action"
+												? styles.network.waterfall.requestIndicatorPurple
+												: styles.network.waterfall.requestIndicatorWhite
+
+							return (
+								<div
+									style={{ height: BAR_HEIGHT }}
+									key={request.id + request.startTime}
+									className={styles.network.waterfall.requestRow}
+								>
+									<button
+										type="button"
+										className={cx(
+											styles.network.waterfall.requestButton,
+											index === selectedRequestIndex && borderColorClass
+										)}
+										onClick={(e) => handleBarClick(e, request, index)}
+									>
+										<div
+											data-tooltip-id={`${request.id}${request.startTime}`}
+											data-tooltip-html={`<div>This was triggered by ${request.type.startsWith("a") ? "an" : "a"} <span class="font-bold ${TYPE_TEXT_COLORS[request.type]}">${request.type}</span> request</div>`}
+											data-tooltip-place="top"
+											className={cx(styles.network.waterfall.requestIndicator, indicatorColorClass)}
+										/>
+
+										<Tooltip place="top" id={`${request.id}${request.startTime}`} />
+										<div className={styles.network.waterfall.requestId}>
+											<div className={styles.network.waterfall.requestIdText}>{request.id}</div>
+										</div>
+									</button>
+									<div className={styles.network.waterfall.methodTag}>
+										{request?.method && (
+											<Tag className="!px-1 !py-0 text-[0.7rem]" color={METHOD_COLORS[request.method]}>
+												{request.method}
+											</Tag>
+										)}
 									</div>
-								</button>
-								<div className="flex items-center ml-auto">
-									{request?.method && (
-										<Tag className="!px-1 !py-0 text-[0.7rem]" color={METHOD_COLORS[request.method]}>
-											{request.method}
-										</Tag>
-									)}
 								</div>
-							</div>
-						))}
+							)
+						})}
 					</div>
 				</div>
 				<div
 					ref={containerRef}
-					className="relative overflow-x-auto scrollbar-hide flex"
+					className={cx(
+						styles.network.waterfall.scrollContainer,
+						isDragging ? styles.network.waterfall.scrollContainerGrabbing : styles.network.waterfall.scrollContainerGrab
+					)}
 					style={{
 						height: Math.min(requests.length * (BAR_HEIGHT + BAR_PADDING) + 24, window.innerHeight - 200),
-						cursor: isDragging ? "grabbing" : "grab",
 					}}
 					onMouseDown={handleMouseDown}
 					onMouseMove={handleMouseMove}
 					onMouseUp={handleMouseUp}
 					onMouseLeave={handleMouseUp}
 				>
-					<div className="relative" style={{ width: scaledWidth }}>
-						<div className="absolute top-0 left-0 right-0 h-5 border-b border-gray-700">
+					<div className={styles.network.waterfall.chartContainer} style={{ width: scaledWidth }}>
+						<div className={styles.network.waterfall.timelineHeader}>
 							{Array.from({ length: timeColumns }).map((_, i) => (
 								<div
 									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 									key={i}
-									className="absolute top-0 h-full border-r-none border-t-none border-b-none !border-l border-white border-l-2 text-sm text-white "
+									className={styles.network.waterfall.timeColumn}
 									style={{
 										left: i * TIME_COLUMN_INTERVAL * pixelsPerMs,
 									}}
 								>
-									<span className="ml-1">{i}s</span>
+									<span className={styles.network.waterfall.timeLabel}>{i}s</span>
 									<div
-										className="absolute -left-[1px] border-l  stroke-5 border-dashed border-gray-700 "
-										style={{ height: BAR_HEIGHT * requests.length + 1 + (BAR_PADDING * requests.length + 1), width: 1 }}
+										className={styles.network.waterfall.timeDivider}
+										style={{ height: BAR_HEIGHT * requests.length + 1 + (BAR_PADDING * requests.length + 1) }}
 									/>
 								</div>
 							))}
@@ -229,7 +254,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 					</div>
 				</div>
 			</div>
-			<div className="w-full">
+			<div className={styles.network.waterfall.detailsContainer}>
 				{selectedRequest && (
 					<AnimatePresence>
 						<RequestDetails

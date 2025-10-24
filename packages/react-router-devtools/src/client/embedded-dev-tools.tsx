@@ -8,6 +8,8 @@ import { ContentPanel } from "./layout/ContentPanel.js"
 import { MainPanel } from "./layout/MainPanel.js"
 import { Tabs } from "./layout/Tabs.js"
 import type { ReactRouterDevtoolsProps } from "./react-router-dev-tools.js"
+// Import to ensure global reset styles are injected
+import "./styles/use-styles.js"
 import { REACT_ROUTER_DEV_TOOLS } from "./utils/storage.js"
 
 export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
@@ -27,7 +29,7 @@ const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: Embed
 			style={{
 				height: "100%",
 			}}
-			className={clsx("react-router-dev-tools react-router-dev-tools-reset h-full flex-row w-full", className)}
+			className={clsx("react-router-dev-tools", "h-full flex-row w-full", className)}
 		>
 			<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
 				<Tabs plugins={plugins} />

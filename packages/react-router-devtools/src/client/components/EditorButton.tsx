@@ -1,4 +1,4 @@
-import clsx from "clsx"
+import { useStyles } from "../styles/use-styles.js"
 
 interface EditorButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 	onClick: () => void
@@ -6,15 +6,9 @@ interface EditorButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 }
 
 const EditorButton = ({ name, onClick, ...props }: EditorButtonProps) => {
+	const { styles } = useStyles()
 	return (
-		<button
-			onClick={onClick}
-			type="button"
-			className={clsx(
-				"flex cursor-pointer items-center gap-1 rounded border border-[#1F9CF0] px-2.5 py-0.5 text-sm font-medium text-[#1F9CF0]"
-			)}
-			{...props}
-		>
+		<button onClick={onClick} type="button" className={styles.editorButton} {...props}>
 			Open in {name}
 		</button>
 	)

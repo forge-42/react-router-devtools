@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import { useRequestContext } from "../../context/requests/request-context"
+import { cx } from "../../styles/use-styles"
+import { useStyles } from "../../styles/use-styles"
 
 import NetworkWaterfall from "./NetworkWaterfall"
 
 function NetworkPanel() {
 	const { requests } = useRequestContext()
-
+	const { styles } = useStyles()
 	const [containerWidth, setContainerWidth] = useState(800)
 
 	// Simulate network requests for demo
@@ -26,10 +28,10 @@ function NetworkPanel() {
 	}, [])
 
 	return (
-		<div className=" text-gray-100">
-			<div className="mx-auto p-1">
-				<div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-					<div className="border-t border-gray-700 p-4 network-container">
+		<div className={styles.network.panel.container}>
+			<div className={styles.network.panel.innerContainer}>
+				<div className={styles.network.panel.cardContainer}>
+					<div className={cx(styles.network.panel.networkContainer, "network-container")}>
 						<NetworkWaterfall requests={requests} width={containerWidth - 32} />
 					</div>
 				</div>

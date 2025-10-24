@@ -2,6 +2,8 @@ import { animate, motion, useMotionValue } from "framer-motion"
 import type React from "react"
 import { useEffect } from "react"
 import type { RequestEvent } from "../../../shared/request-event"
+import { cx } from "../../styles/use-styles"
+import { useStyles } from "../../styles/use-styles"
 
 interface NetworkBarProps {
 	request: RequestEvent
@@ -36,6 +38,7 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 	onClick,
 	isActive,
 }) => {
+	const { styles } = useStyles()
 	const startX = (request.startTime - minTime) * pixelsPerMs
 	const currentEndTime = request.endTime || now
 	const duration = currentEndTime - request.startTime
@@ -88,12 +91,12 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 			transition={{
 				x: { duration: 0.3, ease: "easeOut" },
 			}}
-			className="relative overflow-hidden group cursor-pointer hover:brightness-110"
+			className={styles.network.bar.container}
 			onClick={(e) => onClick(e, request, index)}
 		>
 			{isActive && (
 				<motion.div
-					className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
+					className={styles.network.bar.shimmer}
 					animate={{ x: ["-100%", "100%"] }}
 					transition={{
 						repeat: Number.POSITIVE_INFINITY,
@@ -103,7 +106,7 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 				/>
 			)}
 
-			<div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 px-2 py-1 rounded text-sm whitespace-nowrap pointer-events-none z-10">
+			<div className={cx(styles.network.bar.tooltip, "network-bar-tooltip")}>
 				{request.method} {request.url}
 				<br />
 				{request.endTime ? `Duration: ${duration.toFixed(0)}ms` : `Elapsed: ${duration.toFixed(0)}ms...`}

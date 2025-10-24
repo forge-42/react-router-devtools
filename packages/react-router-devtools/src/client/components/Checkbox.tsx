@@ -1,3 +1,5 @@
+import { useStyles } from "../styles/use-styles.js"
+
 interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "value"> {
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 	id: string
@@ -7,11 +9,13 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
 }
 
 const Checkbox = ({ onChange, id, children, value, hint, ...props }: CheckboxProps) => {
+	const { styles } = useStyles()
 	return (
-		<div>
-			<label className="text-md cursor-pointer" htmlFor={id}>
-				<div className="flex items-center gap-2 py-1">
+		<div className={styles.checkbox.container}>
+			<label className={styles.checkbox.label} htmlFor={id}>
+				<div className={styles.checkbox.wrapper}>
 					<input
+						className={styles.checkbox.input}
 						value={value ? "checked" : undefined}
 						checked={value}
 						onChange={onChange}
@@ -23,7 +27,7 @@ const Checkbox = ({ onChange, id, children, value, hint, ...props }: CheckboxPro
 					{children}
 				</div>
 			</label>
-			{hint && <p className="text-sm text-gray-500">{hint}</p>}
+			{hint && <p className={styles.checkbox.hint}>{hint}</p>}
 		</div>
 	)
 }

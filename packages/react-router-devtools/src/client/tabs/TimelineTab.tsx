@@ -3,6 +3,7 @@ import { Icon } from "../components/icon/Icon.js"
 import { JsonRenderer } from "../components/jsonRenderer.js"
 import type { FormEvent, RedirectEvent, TimelineEvent } from "../context/timeline/types.js"
 import { useTimelineContext } from "../context/useRDTContext.js"
+import { useStyles } from "../styles/use-styles.js"
 
 const Translations: Record<TimelineEvent["type"], string> = {
 	REDIRECT: "Normal Page navigation",
@@ -15,14 +16,13 @@ const Translations: Record<TimelineEvent["type"], string> = {
 }
 
 const RedirectEventComponent = (event: RedirectEvent) => {
+	const { styles } = useStyles()
 	return (
-		<div className="mb-4">
-			<time className="mb-2 block text-sm font-normal leading-none text-gray-500">
-				Navigated to url: "{event.to + event.search}"
-			</time>
-			<p className="mb-4 text-base font-normal text-gray-400">{event.hash}</p>
+		<div className={styles.timelineTab.eventContainer}>
+			<time className={styles.timelineTab.eventTime}>Navigated to url: "{event.to + event.search}"</time>
+			<p className={styles.timelineTab.eventText}>{event.hash}</p>
 			{event.responseData && (
-				<p className="mb-4 text-base font-normal text-gray-400">
+				<p className={styles.timelineTab.eventText}>
 					Data received:
 					<JsonRenderer data={event.responseData} />
 				</p>
@@ -32,26 +32,27 @@ const RedirectEventComponent = (event: RedirectEvent) => {
 }
 
 const FormEventComponent = (event: FormEvent) => {
+	const { styles } = useStyles()
 	const firstPart =
 		event.type === "ACTION_REDIRECT"
 			? `Redirect from "${event.to}" to "${event.from}"`
 			: `Submission to url: "${event.to}"`
 	const responseData = event.responseData
 	return (
-		<div className="mb-4">
-			<time className="mb-2 block text-sm font-normal leading-none text-gray-500">
+		<div className={styles.timelineTab.eventContainer}>
+			<time className={styles.timelineTab.eventTime}>
 				{firstPart} | encType: {event.encType}{" "}
 				{"fetcherKey" in event && typeof event.fetcherKey !== "undefined" ? `| Fetcher Key: ${event.fetcherKey}` : ""}
 			</time>
-			<div className="flex gap-8">
+			<div className={styles.timelineTab.eventDataContainer}>
 				{event.data && event.type !== "ACTION_RESPONSE" && (
-					<div className="mb-4 truncate text-base font-normal text-gray-400">
+					<div className={styles.timelineTab.eventData}>
 						Data sent:
 						<JsonRenderer data={event.data} />
 					</div>
 				)}
 				{responseData && (
-					<div className="mb-4 truncate text-base font-normal text-gray-400">
+					<div className={styles.timelineTab.eventData}>
 						Server Response Data:
 						<JsonRenderer data={responseData} />
 					</div>
@@ -70,26 +71,23 @@ export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
 }
 
 const TimelineTab = () => {
+	const { styles } = useStyles()
 	const { timeline, clearTimeline } = useTimelineContext()
 	return (
-		<div className="relative flex h-full flex-col overflow-y-auto p-6 px-6">
+		<div className={styles.timelineTab.container}>
 			{timeline.length > 0 && (
-				<button
-					type="button"
-					onClick={() => clearTimeline()}
-					className="absolute right-3 top-0 z-20 cursor-pointer rounded-lg border border-red-500 px-3 py-1 text-sm font-semibold text-white"
-				>
+				<button type="button" onClick={() => clearTimeline()} className={styles.timelineTab.clearButton}>
 					Clear
 				</button>
 			)}
-			<ol className="relative">
+			<ol className={styles.timelineTab.list}>
 				{timeline.map((event) => {
 					return (
-						<li key={event.id} className="mb-2 ml-8 animate-fade-in-left">
-							<span className="absolute -left-3 mt-2 flex h-6 w-6 animate-fade-in items-center justify-center rounded-full bg-blue-900 ring-4 ring-blue-900">
+						<li key={event.id} className={styles.timelineTab.item}>
+							<span className={styles.timelineTab.icon}>
 								<Icon name="Activity" />
 							</span>
-							<h3 className="-mt-3 mb-1 flex items-center gap-2 text-lg font-semibold text-white">
+							<h3 className={styles.timelineTab.title}>
 								{Translations[event.type]}
 								{event?.method && <Tag color={METHOD_COLORS[event.method]}>{event.method}</Tag>}
 							</h3>
