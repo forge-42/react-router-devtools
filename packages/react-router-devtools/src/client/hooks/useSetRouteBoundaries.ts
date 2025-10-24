@@ -1,14 +1,13 @@
 import { useCallback, useEffect } from "react"
 import { useMatches } from "react-router"
 import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer.js"
-import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext.js"
+import { useSettingsContext } from "../context/useRDTContext.js"
 import { useAttachListener } from "./useAttachListener.js"
 import { ROUTE_CLASS } from "./useReactTreeListeners.js"
 
 export const useSetRouteBoundaries = () => {
 	const matches = useMatches()
 	const { settings, setSettings } = useSettingsContext()
-	const { detachedWindow } = useDetachedWindowControls()
 	const applyOrRemoveClasses = useCallback(
 		(isHovering?: boolean) => {
 			// Overrides the hovering so the classes are force removed if needed
@@ -40,9 +39,7 @@ export const useSetRouteBoundaries = () => {
 			return
 		}
 		applyOrRemoveClasses()
-		if (!detachedWindow) {
-			return
-		}
+
 		setSettings({
 			isHoveringRoute: false,
 		})
@@ -53,9 +50,7 @@ export const useSetRouteBoundaries = () => {
 			return
 		}
 		applyOrRemoveClasses(false)
-		if (!detachedWindow) {
-			return
-		}
+
 		setSettings({
 			isHoveringRoute: false,
 		})
@@ -65,7 +60,7 @@ export const useSetRouteBoundaries = () => {
 	useEffect(() => {
 		if (!settings.isHoveringRoute && !settings.hoveredRoute) return
 		applyOrRemoveClasses()
-		if (!settings.isHoveringRoute && !detachedWindow) {
+		if (!settings.isHoveringRoute) {
 			setSettings({
 				hoveredRoute: "",
 				isHoveringRoute: false,
@@ -76,7 +71,6 @@ export const useSetRouteBoundaries = () => {
 		settings.isHoveringRoute,
 		settings.routeBoundaryGradient,
 		applyOrRemoveClasses,
-		detachedWindow,
 		setSettings,
 	])
 }

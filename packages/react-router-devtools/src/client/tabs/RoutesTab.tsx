@@ -2,8 +2,7 @@ import { type MouseEvent, useEffect, useState } from "react"
 import { useMatches, useNavigate } from "react-router"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
 import { NewRouteForm } from "../components/NewRouteForm.js"
-import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext.js"
-import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange.js"
+import { useSettingsContext } from "../context/useRDTContext.js"
 import { type ExtendedRoute, constructRoutePath, createExtendedRoutes } from "../utils/routing.js"
 import { createRouteTree } from "../utils/sanitize.js"
 
@@ -19,7 +18,6 @@ const RoutesTab = () => {
 	const activeRoutes = matches.map((match) => match.id)
 	const { settings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
-	const { detachedWindow } = useDetachedWindowControls()
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
 	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
 	const [treeRoutes, setTreeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
@@ -27,9 +25,6 @@ const RoutesTab = () => {
 	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
 		e?.preventDefault()
 		navigate(path)
-		if (detachedWindow) {
-			setRouteInLocalStorage(path)
-		}
 	}
 
 	useEffect(function fetchAllRoutesOnMount() {

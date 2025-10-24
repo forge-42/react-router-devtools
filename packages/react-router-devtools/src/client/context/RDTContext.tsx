@@ -2,7 +2,6 @@ import type { Dispatch } from "react"
 import type React from "react"
 import { createContext, useEffect, useMemo, useReducer } from "react"
 import { bigIntReplacer } from "../../shared/bigint-util.js"
-import { useRemoveBody } from "../hooks/detached/useRemoveBody.js"
 import { checkIsDetached, checkIsDetachedOwner, checkIsDetachedWindow } from "../utils/detached.js"
 import { tryParseJson } from "../utils/sanitize.js"
 import {
@@ -85,8 +84,6 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 			...config,
 			...settings,
 			editorName: config?.editorName ?? initialState.settings.editorName,
-			liveUrls: config?.liveUrls ?? initialState.settings.liveUrls,
-			breakpoints: config?.breakpoints ?? initialState.settings.breakpoints,
 		},
 		detachedWindow,
 		detachedWindowOwner,
@@ -96,23 +93,7 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 
 export type RdtClientConfig = Pick<
 	ReactRouterDevtoolsState["settings"],
-	| "defaultOpen"
-	| "breakpoints"
-	| "showBreakpointIndicator"
-	| "showRouteBoundariesOn"
-	| "expansionLevel"
-	| "liveUrls"
-	| "position"
-	| "height"
-	| "minHeight"
-	| "maxHeight"
-	| "hideUntilHover"
-	| "panelLocation"
-	| "requireUrlFlag"
-	| "openHotkey"
-	| "urlFlag"
-	| "enableInspector"
-	| "routeBoundaryGradient"
+	"showRouteBoundariesOn" | "expansionLevel" | "routeBoundaryGradient"
 >
 
 export const RDTContextProvider = ({ children, config }: ContextProps) => {
@@ -120,10 +101,8 @@ export const RDTContextProvider = ({ children, config }: ContextProps) => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: investigate
 	const value = useMemo(() => ({ state, dispatch }), [state, dispatch])
 
-	useRemoveBody(state)
-
 	useEffect(() => {
-		const { settings, detachedWindow, detachedWindowOwner, ...rest } = state
+		const { settings, ...rest } = state
 		// Store user settings for dev tools into local storage
 		setStorageItem(REACT_ROUTER_DEV_TOOLS_SETTINGS, JSON.stringify(settings))
 		// Store general state into local storage

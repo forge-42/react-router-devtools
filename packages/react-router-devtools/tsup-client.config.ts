@@ -8,4 +8,7 @@ export default defineConfig({
 	dts: true,
 	format: ["esm"],
 	external: ["react"],
+	loader: {
+		".svg": "dataurl",
+	},
 })

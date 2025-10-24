@@ -4,8 +4,8 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				popover: "#212121",
-				main: "#212121",
+				popover: "#191c24",
+				main: "#191c24",
 				"popover-foreground": "#fff",
 			},
 			keyframes: {

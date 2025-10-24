@@ -1,4 +1,4 @@
-import chalk from "chalk"
+import { devtools } from "@tanstack/devtools-vite"
 import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import { cutArrayToLastN } from "../client/utils/common.js"
@@ -12,7 +12,6 @@ import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
 import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
 import { injectRdtClient } from "./utils/inject-client.js"
 import { injectContext } from "./utils/inject-context.js"
-import { addSourceToJsx } from "./utils/inject-source.js"
 // this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
@@ -61,7 +60,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		...args?.client,
 		editorName: args?.editor?.name,
 	}
-	const enhancedLogs = args?.enhancedLogs ?? true
+
 	const includeClient = args?.includeInProd?.client ?? false
 	const includeServer = args?.includeInProd?.server ?? false
 	const includeDevtools = args?.includeInProd?.devTools ?? false
@@ -99,19 +98,8 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		process.rdt_config = serverConfig
 	}
 	return [
-		{
-			enforce: "pre",
-			name: "react-router-devtools:inject-source",
-			apply(config) {
-				return config.mode === "development"
-			},
-			transform(code, id) {
-				if (id.includes("node_modules") || id.includes("?raw") || id.includes("dist") || id.includes("build"))
-					return code
+		...devtools(),
 
-				return addSourceToJsx(code, id)
-			},
-		},
 		{
 			name: "react-router-devtools",
 			apply(config) {
@@ -375,52 +363,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 						})
 					)
 					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor, appDir }))
-				}
-			},
-		},
-		{
-			name: "react-router-devtools:better-console-logs",
-			enforce: "pre",
-			apply(config) {
-				return config.mode === "development" && enhancedLogs
-			},
-			async transform(code, id) {
-				// Ignore anything external
-				if (
-					id.includes("node_modules") ||
-					id.includes("?raw") ||
-					id.includes("dist") ||
-					id.includes("build") ||
-					!id.includes(appDirName)
-				)
-					return
-
-				if (code.includes("console.")) {
-					const lines = code.split("\n")
-					return lines
-						.map((line, lineNumber) => {
-							if (line.trim().startsWith("//") || line.trim().startsWith("/**") || line.trim().startsWith("*")) {
-								return line
-							}
-							// Do not add for arrow functions or return statements
-							if (line.replaceAll(" ", "").includes("=>console.") || line.includes("return console.")) {
-								return line
-							}
-
-							const column = line.indexOf("console.")
-							const location = `${id.replace(normalizePath(process.cwd()), "")}:${lineNumber + 1}:${column + 1}`
-							const logMessage = `'${chalk.magenta("LOG")} ${chalk.blueBright(`${location} - http://localhost:${port}/_rrdt/open-source?source=${encodeURIComponent(id.replace(normalizePath(process.cwd()), ""))}&line=${lineNumber + 1}&column=${column + 1}`)}\\n → '`
-							if (line.includes("console.log(")) {
-								const newLine = `console.log(${logMessage},`
-								return line.replace("console.log(", newLine)
-							}
-							if (line.includes("console.error(")) {
-								const newLine = `console.error(${logMessage},`
-								return line.replace("console.error(", newLine)
-							}
-							return line
-						})
-						.join("\n")
 				}
 			},
 		},

@@ -1,20 +1,8 @@
 import clsx from "clsx"
-import { Icon } from "../components/icon/Icon.js"
-import {
-	useDetachedWindowControls,
-	useHtmlErrors,
-	usePersistOpen,
-	useSettingsContext,
-} from "../context/useRDTContext.js"
+import { useHtmlErrors, useSettingsContext } from "../context/useRDTContext.js"
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll.js"
 import { useTabs } from "../hooks/useTabs.js"
 import type { Tab as TabType, Tabs as TabsType } from "../tabs/index.js"
-import {
-	REACT_ROUTER_DEV_TOOLS_DETACHED_OWNER,
-	REACT_ROUTER_DEV_TOOLS_IS_DETACHED,
-	setSessionItem,
-	setStorageItem,
-} from "../utils/storage.js"
 
 declare global {
 	interface Window {
@@ -64,28 +52,12 @@ const Tab = ({
 	)
 }
 
-const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
+const Tabs = ({ plugins }: TabsProps) => {
 	const { settings } = useSettingsContext()
 	const { htmlErrors } = useHtmlErrors()
-	const { setPersistOpen } = usePersistOpen()
 	const { activeTab } = settings
 	const { visibleTabs } = useTabs(plugins)
 	const scrollRef = useHorizontalScroll()
-	const { setDetachedWindowOwner, detachedWindowOwner, detachedWindow } = useDetachedWindowControls()
-	const handleDetachment = () => {
-		const rdtWindow = window.open(
-			window.location.href,
-			"",
-			`popup,width=${window.innerWidth},height=${settings.height},top=${window.screen.height},left=${window.screenLeft}}`
-		)
-
-		if (rdtWindow) {
-			setDetachedWindowOwner(true)
-			setStorageItem(REACT_ROUTER_DEV_TOOLS_IS_DETACHED, "true")
-			setSessionItem(REACT_ROUTER_DEV_TOOLS_DETACHED_OWNER, "true")
-			rdtWindow.RDT_MOUNTED = true
-		}
-	}
 
 	const getErrorCount = () => {
 		return htmlErrors.length + (window.HYDRATION_OVERLAY?.ERROR ? 1 : 0)
@@ -112,38 +84,6 @@ const Tabs = ({ plugins, setIsOpen }: TabsProps) => {
 						)}
 					/>
 				))}
-				<div className={clsx("mt-auto flex w-full flex-col items-center")}>
-					{!detachedWindow && setIsOpen && (
-						<>
-							{!detachedWindowOwner && (
-								<Tab
-									className="transition-all hover:text-green-600"
-									tab={{
-										icon: <Icon name="CopySlash" size="md" onClick={handleDetachment} />,
-										id: "detach",
-										name: "Detach",
-										hideTimeline: false,
-										component: <></>,
-									}}
-								/>
-							)}
-							<Tab
-								className="hover:text-red-600"
-								tab={{
-									icon: <Icon name="X" size="md" />,
-									id: "close",
-									name: "Close",
-									hideTimeline: false,
-									component: <></>,
-								}}
-								onClick={() => {
-									setPersistOpen(false)
-									setIsOpen(false)
-								}}
-							/>
-						</>
-					)}
-				</div>
 			</div>
 		</div>
 	)

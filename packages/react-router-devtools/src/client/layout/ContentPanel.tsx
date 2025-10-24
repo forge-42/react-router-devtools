@@ -5,7 +5,6 @@ import { TimelineTab } from "../tabs/TimelineTab.js"
 import type { Tab } from "../tabs/index.js"
 
 interface ContentPanelProps {
-	leftSideOriented: boolean
 	plugins?: Tab[]
 }
 

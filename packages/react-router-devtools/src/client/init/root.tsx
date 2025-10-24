@@ -1,22 +1,10 @@
-import { useEffect, useState } from "react"
-import { createPortal } from "react-dom"
+import { TanStackDevtools } from "@tanstack/react-devtools"
 import type { RdtClientConfig } from "../context/RDTContext.js"
 import { RequestProvider } from "../context/requests/request-context.js"
-import { ReactRouterDevTools, type ReactRouterDevtoolsProps } from "../react-router-dev-tools.js"
+import { EmbeddedDevTools } from "../embedded-dev-tools.js"
+import type { ReactRouterDevtoolsProps } from "../react-router-dev-tools.js"
 import { hydrationDetector } from "./hydration.js"
-
-let hydrating = true
-
-function useHydrated() {
-	const [hydrated, setHydrated] = useState(() => !hydrating)
-
-	useEffect(function hydrate() {
-		hydrating = false
-		setHydrated(true)
-	}, [])
-
-	return hydrated
-}
+import triggerImage from "./trigger.svg"
 
 export const defineClientConfig = (config: RdtClientConfig) => config
 
@@ -26,21 +14,19 @@ export const defineClientConfig = (config: RdtClientConfig) => config
  */
 
 // biome-ignore lint/suspicious/noExplicitAny: we don't know or care about props type
-export const withViteDevTools = (Component: any, config?: ReactRouterDevtoolsProps) => (props: any) => {
+export const withViteDevTools = (Component: any, _config?: ReactRouterDevtoolsProps) => (props: any) => {
 	hydrationDetector()
 	// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type here as we spread it below
 	function AppWithDevTools(props: any) {
-		const hydrated = useHydrated()
-		if (!hydrated)
-			return (
-				<RequestProvider>
-					<Component {...props} />
-				</RequestProvider>
-			)
 		return (
 			<RequestProvider>
 				<Component {...props} />
-				{createPortal(<ReactRouterDevTools {...config} />, document.body)}
+				<TanStackDevtools
+					config={{
+						triggerImage,
+					}}
+					plugins={[{ name: "React Router Devtools", render: <EmbeddedDevTools /> }]}
+				/>
 			</RequestProvider>
 		)
 	}

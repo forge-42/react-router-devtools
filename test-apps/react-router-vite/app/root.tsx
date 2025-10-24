@@ -1,16 +1,16 @@
 import {
-  ActionFunctionArgs,
+  type ActionFunctionArgs,
   data,
   Form,
   Links,
-  LoaderFunctionArgs,
+  type LoaderFunctionArgs,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "react-router";
 import { userSomething } from "./modules/user.server";
-
+import { EmbeddedDevTools } from "../../../packages/react-router-devtools/dist/client"
 
 export const links = () => [];
 
@@ -63,7 +63,7 @@ function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-
+    <EmbeddedDevTools />
       </body>
     </html>
   );

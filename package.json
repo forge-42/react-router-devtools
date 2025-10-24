@@ -64,11 +64,11 @@
 	"nx": {
 		"includedScripts": ["test:unused", "check", "test:deps"]
 	},
-	"overrides": {
-		"react-router-devtools": "workspace:*"
-	},
 	"pnpm": {
-		"onlyBuiltDependencies": ["esbuild", "msw"]
+		"onlyBuiltDependencies": ["esbuild", "msw"],
+		"overrides": {
+			"react-router-devtools": "workspace:*"
+		}
 	},
 	"private": true
 }

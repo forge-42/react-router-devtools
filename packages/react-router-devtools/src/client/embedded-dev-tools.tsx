@@ -1,8 +1,6 @@
 import clsx from "clsx"
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router"
 import { RDTContextProvider } from "./context/RDTContext.js"
-import { useSettingsContext } from "./context/useRDTContext.js"
 import { useReactTreeListeners } from "./hooks/useReactTreeListeners.js"
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js"
 import { useTimelineHandler } from "./hooks/useTimelineHandler.js"
@@ -20,20 +18,20 @@ const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: Embed
 	useTimelineHandler()
 	useReactTreeListeners()
 	useSetRouteBoundaries()
-	const { settings } = useSettingsContext()
-	const { position } = settings
-	const leftSideOriented = position.includes("left")
-	const url = useLocation().search
+
 	const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin))
-	if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null
+
 	return (
 		<div
 			id={REACT_ROUTER_DEV_TOOLS}
+			style={{
+				height: "100%",
+			}}
 			className={clsx("react-router-dev-tools react-router-dev-tools-reset h-full flex-row w-full", className)}
 		>
 			<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
 				<Tabs plugins={plugins} />
-				<ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />
+				<ContentPanel plugins={plugins} />
 			</MainPanel>
 		</div>
 	)

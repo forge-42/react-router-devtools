@@ -61,28 +61,6 @@ export const useServerInfo = () => {
 	return { server, setServerInfo }
 }
 
-export const useDetachedWindowControls = () => {
-	const { state, dispatch } = useRDTContext()
-	const { detachedWindow, detachedWindowOwner } = state
-
-	const setDetachedWindowOwner = useCallback(
-		(isDetachedWindowOwner: boolean) => {
-			dispatch({
-				type: "SET_DETACHED_WINDOW_OWNER",
-				payload: isDetachedWindowOwner,
-			})
-		},
-		[dispatch]
-	)
-
-	return {
-		detachedWindow: detachedWindow || window.RDT_MOUNTED,
-		detachedWindowOwner,
-		setDetachedWindowOwner,
-		isDetached: detachedWindow || detachedWindowOwner,
-	}
-}
-
 export const useSettingsContext = () => {
 	const { dispatch, state } = useRDTContext()
 	const { settings } = state
