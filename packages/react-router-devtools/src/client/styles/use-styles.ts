@@ -1584,6 +1584,55 @@ const stylesFactory = (theme: "light" | "dark") => {
 				container: css`
 					position: relative;
 				`,
+				filterBar: css`
+					display: flex;
+					align-items: center;
+					gap: 1rem;
+					padding: 1rem;
+					background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+					border-bottom: 2px solid #4b5563;
+					border-radius: 0.5rem 0.5rem 0 0;
+				`,
+				filterLabel: css`
+					font-size: 0.875rem;
+					font-weight: 700;
+					color: #d1d5db;
+					text-transform: uppercase;
+					letter-spacing: 0.05em;
+					white-space: nowrap;
+				`,
+				filterButtons: css`
+					display: flex;
+					flex-wrap: wrap;
+					gap: 0.5rem;
+					align-items: center;
+				`,
+				filterButton: css`
+					display: flex;
+					align-items: center;
+					gap: 0.375rem;
+					padding: 0.5rem 0.875rem;
+					font-size: 0.8125rem;
+					font-weight: 600;
+					border: 2px solid transparent;
+					border-radius: 0.375rem;
+					background-color: rgba(31, 41, 55, 0.5);
+					transition: all 0.2s;
+					cursor: pointer;
+					white-space: nowrap;
+					&:hover {
+						background-color: rgba(31, 41, 55, 0.8);
+					}
+				`,
+				filterButtonActive: css`
+					background-color: rgba(31, 41, 55, 1);
+					font-weight: 700;
+				`,
+				filterCount: css`
+					font-size: 0.75rem;
+					opacity: 0.7;
+					font-weight: 500;
+				`,
 				flexContainer: css`
 					display: flex;
 				`,

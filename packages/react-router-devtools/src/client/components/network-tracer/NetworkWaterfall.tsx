@@ -32,6 +32,17 @@ const TYPE_TEXT_COLORS = {
 	"custom-event": "text-white",
 }
 
+type EventType = "loader" | "client-loader" | "action" | "client-action" | "custom-event"
+
+const EVENT_TYPE_FILTERS: { value: EventType | "all"; label: string; color: string }[] = [
+	{ value: "all", label: "All Events", color: "#ffffff" },
+	{ value: "loader", label: "Loader", color: "#4ade80" },
+	{ value: "client-loader", label: "Client Loader", color: "#60a5fa" },
+	{ value: "action", label: "Action", color: "#f59e0b" },
+	{ value: "client-action", label: "Client Action", color: "#ef4444" },
+	{ value: "custom-event", label: "Custom Event", color: "#ffffff" },
+]
+
 const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const { styles } = useStyles()
@@ -40,9 +51,14 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 })
 	const [selectedRequestIndex, setSelectedRequest] = useState<number | null>(null)
 	const [now, setNow] = useState(Date.now())
+	const [activeFilter, setActiveFilter] = useState<EventType | "all">("all")
 	const selectedRequest = selectedRequestIndex !== null ? requests[selectedRequestIndex] : null
+
+	// Filter requests based on active filter
+	const filteredRequests = activeFilter === "all" ? requests : requests.filter((req) => req.type === activeFilter)
+
 	// Check if there are any active requests
-	const hasActiveRequests = requests.some(
+	const hasActiveRequests = filteredRequests.some(
 		(req) => !req.endTime || (req.endTime && now - req.endTime < INACTIVE_THRESHOLD)
 	)
 	useEffect(() => {
@@ -53,11 +69,11 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 		return () => clearInterval(interval)
 	}, [hasActiveRequests])
 
-	const minTime = Math.min(...requests.map((r) => r.startTime))
+	const minTime = Math.min(...filteredRequests.map((r) => r.startTime))
 	const maxTime = hasActiveRequests
 		? now + FUTURE_BUFFER
-		: requests.length > 0
-			? Math.max(...requests.map((r) => r.endTime || r.startTime)) + 1000
+		: filteredRequests.length > 0
+			? Math.max(...filteredRequests.map((r) => r.endTime || r.startTime)) + 1000
 			: now
 	const duration = maxTime - minTime
 	const pixelsPerMs = scale
@@ -130,17 +146,49 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 		if (e.key === "ArrowLeft" && order > 0) {
 			onChangeRequest(order - 1)
 		}
-		if (e.key === "ArrowRight" && order < requests.length - 1) {
+		if (e.key === "ArrowRight" && order < filteredRequests.length - 1) {
 			onChangeRequest(order + 1)
 		}
 	})
 	return (
 		<div className={styles.network.waterfall.container}>
+			{/* Filter Bar */}
+			<div className={styles.network.waterfall.filterBar}>
+				<div className={styles.network.waterfall.filterLabel}>Filter:</div>
+				<div className={styles.network.waterfall.filterButtons}>
+					{EVENT_TYPE_FILTERS.map((filter) => (
+						<button
+							key={filter.value}
+							type="button"
+							className={cx(
+								styles.network.waterfall.filterButton,
+								activeFilter === filter.value && styles.network.waterfall.filterButtonActive
+							)}
+							style={{
+								borderColor: activeFilter === filter.value ? filter.color : "transparent",
+								color: activeFilter === filter.value ? filter.color : "#9ca3af",
+							}}
+							onClick={() => setActiveFilter(filter.value)}
+						>
+							{filter.label}
+							{filter.value !== "all" && (
+								<span className={styles.network.waterfall.filterCount}>
+									({requests.filter((r) => r.type === filter.value).length})
+								</span>
+							)}
+							{filter.value === "all" && (
+								<span className={styles.network.waterfall.filterCount}>({requests.length})</span>
+							)}
+						</button>
+					))}
+				</div>
+			</div>
+
 			<div className={styles.network.waterfall.flexContainer}>
 				<div>
 					<div className={styles.network.waterfall.requestsHeader}>Requests</div>
 					<div style={{ gap: BAR_PADDING }} className={styles.network.waterfall.requestsList}>
-						{requests.map((request, index) => {
+						{filteredRequests.map((request, index) => {
 							const borderColorClass =
 								request.type === "loader"
 									? styles.network.waterfall.requestButtonGreen
@@ -208,7 +256,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 						isDragging ? styles.network.waterfall.scrollContainerGrabbing : styles.network.waterfall.scrollContainerGrab
 					)}
 					style={{
-						height: Math.min(requests.length * (BAR_HEIGHT + BAR_PADDING) + 24, window.innerHeight - 200),
+						height: Math.min(filteredRequests.length * (BAR_HEIGHT + BAR_PADDING) + 24, window.innerHeight - 200),
 					}}
 					onMouseDown={handleMouseDown}
 					onMouseMove={handleMouseMove}
@@ -229,14 +277,16 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 									<span className={styles.network.waterfall.timeLabel}>{i}s</span>
 									<div
 										className={styles.network.waterfall.timeDivider}
-										style={{ height: BAR_HEIGHT * requests.length + 1 + (BAR_PADDING * requests.length + 1) }}
+										style={{
+											height: BAR_HEIGHT * filteredRequests.length + 1 + (BAR_PADDING * filteredRequests.length + 1),
+										}}
 									/>
 								</div>
 							))}
 						</div>
 
 						<AnimatePresence mode="popLayout">
-							{requests.map((request, index) => (
+							{filteredRequests.map((request, index) => (
 								<NetworkBar
 									key={request.id + request.startTime}
 									request={request}
@@ -258,7 +308,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 				<AnimatePresence mode="wait">
 					<RequestDetails
 						key={selectedRequest.id + selectedRequest.startTime}
-						total={requests.length}
+						total={filteredRequests.length}
 						index={selectedRequestIndex}
 						request={selectedRequest}
 						onChangeRequest={onChangeRequest}
