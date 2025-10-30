@@ -1,4 +1,4 @@
-import { animate, motion, useMotionValue } from "framer-motion"
+import { motion, useMotionValue } from "framer-motion"
 import type React from "react"
 import { useEffect } from "react"
 import type { RequestEvent } from "../../../shared/request-event"
@@ -40,44 +40,50 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 }) => {
 	const { styles } = useStyles()
 	const startX = (request.startTime - minTime) * pixelsPerMs
-	const currentEndTime = request.endTime || now
-	const duration = currentEndTime - request.startTime
 	const y = index * (barHeight + barPadding) + 24
 	const state = request.endTime ? "finished" : "pending"
 
 	const color =
 		state === "pending" ? COLORS.pending : COLORS[request.aborted ? "error" : (request.type as keyof typeof COLORS)]
 
-	const barWidth = useMotionValue(2)
+	// For finished requests, use the final width directly without animation
+	const finalWidth = request.endTime
+		? Math.max(2, (request.endTime - request.startTime) * pixelsPerMs)
+		: Math.max(2, (now - request.startTime) * pixelsPerMs)
+
+	const barWidth = useMotionValue(finalWidth)
 
 	useEffect(() => {
-		const updateWidth = () => {
-			if (request.endTime) {
-				animate(barWidth, Math.max(2, (request.endTime - request.startTime) * pixelsPerMs), {
-					duration: 0.3,
-					ease: "easeOut",
-				})
-			} else if (isActive) {
-				barWidth.set(Math.max(2, (now - request.startTime) * pixelsPerMs))
-				requestAnimationFrame(updateWidth)
+		// Only animate if the request is not finished
+		if (!request.endTime && isActive) {
+			let animationFrameId: number
+
+			const updateWidth = () => {
+				const currentWidth = Math.max(2, (Date.now() - request.startTime) * pixelsPerMs)
+				barWidth.set(currentWidth)
+				animationFrameId = requestAnimationFrame(updateWidth)
+			}
+
+			animationFrameId = requestAnimationFrame(updateWidth)
+
+			return () => {
+				cancelAnimationFrame(animationFrameId)
+				barWidth.stop()
 			}
 		}
 
-		if (isActive) {
-			requestAnimationFrame(updateWidth)
+		// For finished requests, set the width once and never change it
+		if (request.endTime) {
+			barWidth.set(finalWidth)
 		}
+	}, [request.endTime, request.startTime, pixelsPerMs, barWidth, isActive, finalWidth])
 
-		if (!isActive) {
-			barWidth.stop()
-		}
-
-		return () => {
-			barWidth.stop()
-		}
-	}, [request.endTime, request.startTime, pixelsPerMs, now, barWidth, isActive])
+	const currentEndTime = request.endTime || now
+	const duration = currentEndTime - request.startTime
 
 	return (
 		<motion.div
+			initial={false}
 			style={{
 				position: "absolute",
 				top: y,
@@ -90,11 +96,12 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 			}}
 			transition={{
 				x: { duration: 0.3, ease: "easeOut" },
+				backgroundColor: { duration: 0.2, ease: "easeOut" },
 			}}
 			className={styles.network.bar.container}
 			onClick={(e) => onClick(e, request, index)}
 		>
-			{isActive && (
+			{!request.endTime && (
 				<motion.div
 					className={styles.network.bar.shimmer}
 					animate={{ x: ["-100%", "100%"] }}

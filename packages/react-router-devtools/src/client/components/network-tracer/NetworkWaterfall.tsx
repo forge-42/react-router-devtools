@@ -235,7 +235,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 							))}
 						</div>
 
-						<AnimatePresence>
+						<AnimatePresence mode="popLayout">
 							{requests.map((request, index) => (
 								<NetworkBar
 									key={request.id + request.startTime}
@@ -254,19 +254,18 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 					</div>
 				</div>
 			</div>
-			<div className={styles.network.waterfall.detailsContainer}>
-				{selectedRequest && (
-					<AnimatePresence>
-						<RequestDetails
-							total={requests.length}
-							index={selectedRequestIndex}
-							request={selectedRequest}
-							onChangeRequest={onChangeRequest}
-							onClose={onClose}
-						/>
-					</AnimatePresence>
-				)}
-			</div>
+			{selectedRequest && (
+				<AnimatePresence mode="wait">
+					<RequestDetails
+						key={selectedRequest.id + selectedRequest.startTime}
+						total={requests.length}
+						index={selectedRequestIndex}
+						request={selectedRequest}
+						onChangeRequest={onChangeRequest}
+						onClose={onClose}
+					/>
+				</AnimatePresence>
+			)}
 			{/* 		<div className="sticky top-0 z-10 bg-gray-900 p-2 border-b border-gray-700 flex items-center gap-2">
 				<button
 					type="button"

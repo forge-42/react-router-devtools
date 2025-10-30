@@ -1728,29 +1728,101 @@ const stylesFactory = (theme: "light" | "dark") => {
 				container: css`
 					width: 100%;
 					margin-top: 1rem;
-					background-color: ${bgPrimary};
+					background-color: #111827;
 					border-radius: 0.5rem;
-					box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-					padding: 1rem;
+					border: 2px solid #4b5563;
+					overflow: hidden;
 					z-index: 50;
+					box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 				`,
 				content: css`
 					font-size: 0.875rem;
 				`,
 				header: css`
-					font-weight: 700;
-					font-size: 1.125rem;
-					margin-bottom: 0.5rem;
+					background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+					border-bottom: 2px solid #4b5563;
+					padding: 1.25rem;
+				`,
+				headerTop: css`
 					display: flex;
-					flex-direction: column;
-					gap: 1rem;
-					width: 100%;
 					align-items: center;
+					justify-content: space-between;
+					margin-bottom: 1rem;
+				`,
+				headerTitle: css`
+					font-size: 0.875rem;
+					font-weight: 700;
+					color: #d1d5db;
+					text-transform: uppercase;
+					letter-spacing: 0.1em;
 				`,
 				headerRow: css`
 					display: flex;
 					align-items: center;
 					gap: 0.5rem;
+				`,
+				mainInfo: css`
+					display: flex;
+					flex-direction: column;
+					gap: 0.5rem;
+				`,
+				requestPath: css`
+					display: flex;
+					flex-direction: column;
+					gap: 0.25rem;
+				`,
+				requestUrl: css`
+					font-size: 1.125rem;
+					font-weight: 700;
+					color: #ffffff;
+					word-break: break-all;
+					text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+				`,
+				requestId: css`
+					font-size: 0.75rem;
+					color: #9ca3af;
+					font-family: monospace;
+					background-color: rgba(75, 85, 99, 0.3);
+					padding: 0.25rem 0.5rem;
+					border-radius: 0.25rem;
+					display: inline-block;
+					width: fit-content;
+				`,
+				metadataGrid: css`
+					display: grid;
+					grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+					gap: 1rem;
+					padding: 1.25rem;
+					background-color: ${bgPrimary};
+				`,
+				metadataItem: css`
+					display: flex;
+					flex-direction: column;
+					gap: 0.5rem;
+					padding: 1rem;
+					background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+					border-radius: 0.5rem;
+					border: 2px solid #374151;
+					transition: all 0.2s;
+					&:hover {
+						border-color: #4b5563;
+						transform: translateY(-1px);
+						box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+					}
+				`,
+				metadataLabel: css`
+					font-size: 0.75rem;
+					color: #9ca3af;
+					text-transform: uppercase;
+					letter-spacing: 0.05em;
+					font-weight: 600;
+				`,
+				metadataValue: css`
+					font-size: 0.875rem;
+					color: #ffffff;
+					font-weight: 600;
+					display: flex;
+					align-items: center;
 				`,
 				tagsContainer: css`
 					display: flex;
@@ -1761,43 +1833,56 @@ const stylesFactory = (theme: "light" | "dark") => {
 					width: max-content;
 					display: flex;
 					align-items: center;
-					border-radius: 0.25rem;
-					padding-left: 0.625rem;
-					padding-right: 0.625rem;
-					padding-top: 0.125rem;
-					padding-bottom: 0.125rem;
-					font-size: 0.875rem;
-					font-weight: 500;
-					border: 1px solid;
+					border-radius: 0.375rem;
+					padding-left: 0.75rem;
+					padding-right: 0.75rem;
+					padding-top: 0.25rem;
+					padding-bottom: 0.25rem;
+					font-size: 0.75rem;
+					font-weight: 700;
+					border: 2px solid;
+					text-transform: uppercase;
+					letter-spacing: 0.05em;
 				`,
 				typeBadgeGreen: css`
 					border-color: #10b981;
+					color: #10b981;
+					background-color: rgba(16, 185, 129, 0.15);
 				`,
 				typeBadgeBlue: css`
 					border-color: #3b82f6;
+					color: #3b82f6;
+					background-color: rgba(59, 130, 246, 0.15);
 				`,
 				typeBadgeYellow: css`
 					border-color: #eab308;
+					color: #eab308;
+					background-color: rgba(234, 179, 8, 0.15);
 				`,
 				typeBadgePurple: css`
 					border-color: #a855f7;
+					color: #a855f7;
+					background-color: rgba(168, 85, 247, 0.15);
 				`,
 				typeBadgeWhite: css`
 					border-color: #ffffff;
+					color: #ffffff;
+					background-color: rgba(255, 255, 255, 0.15);
 				`,
 				typeBadgeRed: css`
 					border-color: #dc2626;
+					color: #dc2626;
+					background-color: rgba(220, 38, 38, 0.15);
 				`,
 				controls: css`
 					display: flex;
-					margin-left: auto;
 					align-items: center;
-					gap: 1rem;
+					gap: 0.5rem;
 				`,
 				navButtons: css`
 					display: flex;
 					align-items: center;
-					gap: 0.5rem;
+					gap: 0.25rem;
 				`,
 				navButton: css`
 					color: #9ca3af;
@@ -1807,10 +1892,13 @@ const stylesFactory = (theme: "light" | "dark") => {
 					width: 2rem;
 					height: 2rem;
 					border-radius: 0.375rem;
-					border: 1px solid #6b7280;
-					color: #6b7280;
+					border: 2px solid #374151;
+					background-color: transparent;
+					transition: all 0.2s;
 					&:hover {
 						color: #ffffff;
+						background-color: #374151;
+						border-color: #6b7280;
 					}
 				`,
 				navButtonLeft: css`
@@ -1820,17 +1908,20 @@ const stylesFactory = (theme: "light" | "dark") => {
 					transform: rotate(-90deg);
 				`,
 				closeButton: css`
-					color: #9ca3af;
+					color: #dc2626;
 					display: flex;
 					align-items: center;
 					justify-content: center;
 					width: 2rem;
 					height: 2rem;
 					border-radius: 0.375rem;
-					border: 1px solid #dc2626;
-					color: #dc2626;
+					border: 2px solid #991b1b;
+					background-color: transparent;
+					transition: all 0.2s;
 					&:hover {
 						color: #ffffff;
+						background-color: #dc2626;
+						border-color: #dc2626;
 					}
 				`,
 				title: css`
@@ -1841,23 +1932,40 @@ const stylesFactory = (theme: "light" | "dark") => {
 					font-weight: 700;
 					color: #10b981;
 				`,
+				durationPending: css`
+					font-weight: 600;
+					color: #94a3b8;
+					font-style: italic;
+				`,
 				section: css`
-					margin-top: 1rem;
-					border: 2px solid #1f2937;
+					margin: 1rem 1.25rem;
+					border: 2px solid #4b5563;
 					border-radius: 0.5rem;
 					overflow: hidden;
+					background-color: #1f2937;
 				`,
 				sectionHeader: css`
 					width: 100%;
 					padding-left: 1rem;
 					padding-right: 1rem;
-					padding-top: 0.5rem;
-					padding-bottom: 0.5rem;
-					background-color: #1f2937;
-					font-size: 1.125rem;
+					padding-top: 0.875rem;
+					padding-bottom: 0.875rem;
+					background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+					font-size: 0.875rem;
+					font-weight: 700;
+					color: #ffffff;
+					display: flex;
+					align-items: center;
+					gap: 0.5rem;
+					border-bottom: 2px solid #4b5563;
+					text-transform: uppercase;
+					letter-spacing: 0.05em;
 				`,
 				sectionContent: css`
-					padding: 1rem;
+					padding: 1.25rem;
+					max-height: 400px;
+					overflow-y: auto;
+					background-color: #111827;
 				`,
 			},
 
