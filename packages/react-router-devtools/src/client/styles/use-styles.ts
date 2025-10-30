@@ -2098,6 +2098,42 @@ const stylesFactory = (theme: "light" | "dark") => {
 				background-image: linear-gradient(to right, #f3f4f6, #d1d5db) !important;
 			`,
 		},
+
+		// TanStack Devtools Trigger
+		tanstackTrigger: {
+			container: css`
+
+				height: 3rem;
+				width: 3rem;
+				cursor: pointer;
+				padding: 0.5rem;
+				background-color: #212121;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 9999px;
+				transition: all 0.2s;
+
+				&:hover {
+					cursor: pointer;
+					outline-offset: 2px;
+					outline: 2px solid #212121;
+				}
+			`,
+			logo: css`
+				outline: none;
+				width: 100%;
+				height: 100%;
+				margin-top: -0.25rem;
+				border-radius: 9999px;
+				transition: all 200ms;
+				overflow: visible;
+
+				&:focus {
+					outline: none;
+				}
+			`,
+		},
 	}
 }
 

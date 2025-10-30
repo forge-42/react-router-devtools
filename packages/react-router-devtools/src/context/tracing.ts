@@ -1,3 +1,4 @@
+import { eventClient } from "../shared/event-client"
 import type { AllDataFunctionArgs, NetworkRequestType, RequestEvent } from "../shared/request-event"
 import { sendEvent } from "../shared/send-event"
 
@@ -6,9 +7,7 @@ export const traceEvent =
 	// biome-ignore lint/suspicious/noExplicitAny: can be any type
 	async <T>(name: string, event: (...args: any) => T) => {
 		const isServer = type === "action" || type === "loader"
-		const emitEventFunction = isServer
-			? sendEvent
-			: (data: RequestEvent) => import.meta.hot?.send("request-event", data)
+		const emitEventFunction = isServer ? sendEvent : (data: RequestEvent) => eventClient.emit("request-event", data)
 		const startTime = Date.now()
 		emitEventFunction({
 			type: "custom-event",
@@ -34,7 +33,7 @@ export const traceEvent =
 
 export const traceStart = (type: NetworkRequestType, args: AllDataFunctionArgs) => (name: string) => {
 	const isServer = type === "action" || type === "loader"
-	const emitEventFunction = isServer ? sendEvent : (data: RequestEvent) => import.meta.hot?.send("request-event", data)
+	const emitEventFunction = isServer ? sendEvent : (data: RequestEvent) => eventClient.emit("request-event", data)
 	const startTime = Date.now()
 	emitEventFunction({
 		type: "custom-event",
@@ -51,9 +50,7 @@ export const traceEnd =
 	(type: NetworkRequestType, args: AllDataFunctionArgs) =>
 	<T>(name: string, startTime: number, data?: T) => {
 		const isServer = type === "action" || type === "loader"
-		const emitEventFunction = isServer
-			? sendEvent
-			: (data: RequestEvent) => import.meta.hot?.send("request-event", data)
+		const emitEventFunction = isServer ? sendEvent : (data: RequestEvent) => eventClient.emit("request-event", data)
 
 		emitEventFunction({
 			type: "custom-event",

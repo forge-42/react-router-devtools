@@ -68,6 +68,7 @@ export const handleDevToolsViteRequest = (
 			// eslint-disable-next-line no-empty
 		}
 		res.write("OK")
+		res.end()
 	})
 }
 

@@ -59,9 +59,7 @@
 			"require": "./dist/client.css"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/forge-42/react-router-devtools.git"
@@ -140,8 +138,8 @@
 		"@radix-ui/react-accordion": "^1.2.2",
 		"@radix-ui/react-select": "^2.1.5",
 		"@tanstack/devtools-event-client": "^0.3.3",
-		"@tanstack/devtools-vite": "^0.3.8",
-		"@tanstack/react-devtools": "^0.7.7",
+		"@tanstack/devtools-vite": "^0.3.11",
+		"@tanstack/react-devtools": "^0.8.0",
 		"beautify": "^0.0.8",
 		"bippy": "^0.3.7",
 		"chalk": "5.4.1",

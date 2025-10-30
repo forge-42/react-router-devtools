@@ -10,6 +10,7 @@ import { Tabs } from "./layout/Tabs.js"
 import type { ReactRouterDevtoolsProps } from "./react-router-dev-tools.js"
 // Import to ensure global reset styles are injected
 import "./styles/use-styles.js"
+import { RequestProvider } from "./context/requests/request-context.js"
 import { REACT_ROUTER_DEV_TOOLS } from "./utils/storage.js"
 
 export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
@@ -59,7 +60,9 @@ const EmbeddedDevTools = ({ plugins, mainPanelClassName, className }: EmbeddedDe
 
 	return (
 		<RDTContextProvider>
-			<Embedded mainPanelClassName={mainPanelClassName} className={className} plugins={plugins} />
+			<RequestProvider>
+				<Embedded mainPanelClassName={mainPanelClassName} className={className} plugins={plugins} />
+			</RequestProvider>
 		</RDTContextProvider>
 	)
 }

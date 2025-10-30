@@ -1,10 +1,10 @@
 import { TanStackDevtools } from "@tanstack/react-devtools"
+import { Logo } from "../components/logo.js"
 import type { RdtClientConfig } from "../context/RDTContext.js"
-import { RequestProvider } from "../context/requests/request-context.js"
 import { EmbeddedDevTools } from "../embedded-dev-tools.js"
 import type { ReactRouterDevtoolsProps } from "../react-router-dev-tools.js"
+import { useStyles } from "../styles/use-styles.js"
 import { hydrationDetector } from "./hydration.js"
-import triggerImage from "./trigger.svg"
 
 export const defineClientConfig = (config: RdtClientConfig) => config
 
@@ -18,16 +18,25 @@ export const withViteDevTools = (Component: any, _config?: ReactRouterDevtoolsPr
 	hydrationDetector()
 	// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type here as we spread it below
 	function AppWithDevTools(props: any) {
+		const { styles } = useStyles()
 		return (
-			<RequestProvider>
+			<>
 				<Component {...props} />
 				<TanStackDevtools
 					config={{
-						triggerImage,
+						customTrigger: (
+							<div data-testid="react-router-devtools-trigger" className={styles.tanstackTrigger.container}>
+								<Logo className={styles.tanstackTrigger.logo} />
+							</div>
+						),
+					}}
+					eventBusConfig={{
+						connectToServerBus: true,
+						debug: true,
 					}}
 					plugins={[{ name: "React Router Devtools", render: <EmbeddedDevTools /> }]}
 				/>
-			</RequestProvider>
+			</>
 		)
 	}
 	return AppWithDevTools(props)

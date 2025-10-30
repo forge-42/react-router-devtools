@@ -1,10 +1,8 @@
 import { devtools } from "@tanstack/devtools-vite"
 import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
-import { cutArrayToLastN } from "../client/utils/common.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
-import type { RequestEvent } from "../shared/request-event.js"
 import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
 import { type WriteFileData, handleWriteFile } from "./file.js"
 import { runner } from "./node-server.js"
@@ -26,7 +24,6 @@ declare global {
 }
 
 const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>()
-const unusedEvents = new Map<string, RequestEvent>()
 
 type ReactRouterViteConfig = {
 	client?: Partial<RdtClientConfig>
@@ -98,7 +95,11 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		process.rdt_config = serverConfig
 	}
 	return [
-		...devtools(),
+		...devtools({
+			eventBusConfig: {
+				debug: true,
+			},
+		}),
 
 		{
 			name: "react-router-devtools",
@@ -259,7 +260,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					process.rdt_port = server.config.server.port ?? 5173
 					port = process.rdt_port
 				})
-				const channel = server.hot
 				const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
 				const openInEditor = async (
 					path: string | undefined,
@@ -271,36 +271,15 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					}
 					editor.open(path, lineNum, columnNum)
 				}
+
+				// Handle open-source requests via middleware (still needed for URL handling)
 				server.middlewares.use((req, res, next) =>
 					handleDevToolsViteRequest(req, res, next, (parsedData) => {
-						const { type, data, routine } = parsedData
+						const { routine } = parsedData
 						if (routine === "open-source") {
-							return handleOpenSource({ data: { type: data.type, data }, openInEditor, appDir })
+							handleOpenSource({ data: { type: parsedData.type, data: parsedData.data }, openInEditor, appDir })
 						}
-						if (routine === "request-event") {
-							unusedEvents.set(parsedData.id + parsedData.startTime, parsedData)
-							server.hot.send("request-event", JSON.stringify(parsedData))
-
-							return
-						}
-						const id = data.id
-						const existingData = routeInfo.get(id)
-						if (existingData) {
-							if (type === "loader") {
-								existingData.loader = cutArrayToLastN([...existingData.loader, data], 30)
-							}
-							if (type === "action") {
-								existingData.action = cutArrayToLastN([...existingData.action, data], 30)
-							}
-						} else {
-							if (type === "loader") {
-								routeInfo.set(id, { loader: [data], action: [] })
-							}
-							if (type === "action") {
-								routeInfo.set(id, { loader: [], action: [data] })
-							}
-						}
-						server.hot.send("route-info", JSON.stringify({ type, data }))
+						// Note: response is already ended in handleDevToolsViteRequest
 					})
 				)
 
@@ -324,31 +303,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				})
 
 				if (!server.config.isProduction) {
-					channel?.on("remove-event", (data) => {
-						const parsedData = data
-						const { id, startTime } = parsedData
-
-						unusedEvents.delete(id + startTime)
-					})
-					channel?.on("get-events", (_, client) => {
-						const events = Array.from(unusedEvents.values())
-
-						if (events) {
-							client.send("get-events", JSON.stringify(events))
-						}
-					})
-					channel?.on("request-event", (data, client) => {
-						unusedEvents.set(data.id + data.startTime, data)
-						client.send(
-							"request-event",
-							JSON.stringify({
-								type: "request-event",
-								data: data,
-								...data,
-							})
-						)
-					})
-
 					server.hot.on("open-source", (data: OpenSourceData) =>
 						handleOpenSource({
 							data: {
