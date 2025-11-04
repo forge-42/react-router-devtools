@@ -32,7 +32,6 @@ export const withViteDevTools = (Component: any, _config?: ReactRouterDevtoolsPr
 					}}
 					eventBusConfig={{
 						connectToServerBus: true,
-						debug: true,
 					}}
 					plugins={[{ name: "React Router Devtools", render: <EmbeddedDevTools /> }]}
 				/>

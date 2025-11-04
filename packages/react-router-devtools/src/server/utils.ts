@@ -284,6 +284,7 @@ export const analyzeLoaderOrAction =
 				method: args.request.method,
 				url: args.request.url,
 				id: routeId,
+				routeId: routeId,
 			})
 			let aborted = false
 			args.request.signal.addEventListener("abort", () => {
@@ -295,6 +296,7 @@ export const analyzeLoaderOrAction =
 					startTime,
 					endTime: Date.now(),
 					id: routeId,
+					routeId: routeId,
 					method: args.request.method,
 					aborted: true,
 				})
@@ -317,6 +319,7 @@ export const analyzeLoaderOrAction =
 							endTime,
 							data: res,
 							id: routeId,
+							routeId: routeId,
 							url: args.request.url,
 							method: args.request.method,
 							// biome-ignore lint/suspicious/noExplicitAny: we don't know the type

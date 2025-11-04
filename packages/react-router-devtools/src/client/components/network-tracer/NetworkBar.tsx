@@ -83,20 +83,27 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 
 	return (
 		<motion.div
-			initial={false}
+			layout
+			initial={{ opacity: 0, scale: 0.8 }}
+			animate={{ opacity: 1, scale: 1 }}
+			exit={{ opacity: 0, scale: 0.8 }}
 			style={{
 				position: "absolute",
 				top: y,
 				height: barHeight,
 				backgroundColor: color,
-				borderRadius: "2px",
+				borderRadius: "3px",
 				width: barWidth,
 				minWidth: "2px",
 				x: startX,
+				boxShadow: request.endTime ? "0 1px 3px rgba(0, 0, 0, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.2)",
 			}}
 			transition={{
-				x: { duration: 0.3, ease: "easeOut" },
-				backgroundColor: { duration: 0.2, ease: "easeOut" },
+				layout: { duration: 0.2, ease: "easeOut" },
+				opacity: { duration: 0.2 },
+				scale: { duration: 0.2 },
+				x: { duration: 0.25, ease: "easeOut" },
+				backgroundColor: { duration: 0.15, ease: "easeOut" },
 			}}
 			className={styles.network.bar.container}
 			onClick={(e) => onClick(e, request, index)}
@@ -107,14 +114,14 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 					animate={{ x: ["-100%", "100%"] }}
 					transition={{
 						repeat: Number.POSITIVE_INFINITY,
-						duration: 1.5,
+						duration: 1.2,
 						ease: "linear",
 					}}
 				/>
 			)}
 
 			<div className={cx(styles.network.bar.tooltip, "network-bar-tooltip")}>
-				{request.method} {request.url}
+				<strong>{request.id}</strong> - {request.method} {request.url}
 				<br />
 				{request.endTime ? `Duration: ${duration.toFixed(0)}ms` : `Elapsed: ${duration.toFixed(0)}ms...`}
 			</div>

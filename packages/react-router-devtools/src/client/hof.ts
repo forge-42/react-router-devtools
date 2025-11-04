@@ -25,6 +25,7 @@ const analyzeClientLoaderOrAction = (
 			headers,
 			startTime,
 			id: routeId,
+			routeId: routeId,
 			method: args.request.method,
 		})
 		let aborted = false
@@ -37,6 +38,7 @@ const analyzeClientLoaderOrAction = (
 				startTime,
 				endTime: Date.now(),
 				id: routeId,
+				routeId: routeId,
 				method: args.request.method,
 				aborted: true,
 			})
@@ -51,6 +53,7 @@ const analyzeClientLoaderOrAction = (
 				startTime,
 				endTime: Date.now(),
 				id: routeId,
+				routeId: routeId,
 				data,
 				method: args.request.method,
 			})

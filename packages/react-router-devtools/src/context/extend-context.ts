@@ -32,7 +32,7 @@ const extendContextObject = (routeId: string, type: NetworkRequestType, args: Al
 			 * @returns The result of the event
 
 			 */
-			trace: traceEvent(type, args),
+			trace: traceEvent(type, args, routeId),
 			/**
 	 * start is a function that will start a trace for the name provided to it and return the start time
 	 * This is used together with traceEnd to trace the time of the event
@@ -44,7 +44,7 @@ const extendContextObject = (routeId: string, type: NetworkRequestType, args: Al
 	 * @returns The start time of the event
 
 	 */
-			start: traceStart(type, args),
+			start: traceStart(type, args, routeId),
 			/**
 			 * end is a function that will end a trace for the name provided to it and return the end time
 			 *
@@ -53,7 +53,7 @@ const extendContextObject = (routeId: string, type: NetworkRequestType, args: Al
 			 * @param data - The data to be sent with the event
 			 * @returns The data provided in the last parameter
 			 */
-			end: traceEnd(type, args),
+			end: traceEnd(type, args, routeId),
 		},
 	}
 }

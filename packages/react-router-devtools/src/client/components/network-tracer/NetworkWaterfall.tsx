@@ -16,8 +16,8 @@ interface Props {
 	width: number
 }
 
-const BAR_HEIGHT = 20
-const BAR_PADDING = 8
+const BAR_HEIGHT = 16
+const BAR_PADDING = 6
 const TIME_COLUMN_INTERVAL = 1000 // 1 second
 const _MIN_SCALE = 0.1
 const _MAX_SCALE = 10
@@ -51,11 +51,25 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 })
 	const [selectedRequestIndex, setSelectedRequest] = useState<number | null>(null)
 	const [now, setNow] = useState(Date.now())
-	const [activeFilter, setActiveFilter] = useState<EventType | "all">("all")
+	const [activeTypeFilter, setActiveTypeFilter] = useState<EventType | "all">("all")
+	const [activeRouteFilters, setActiveRouteFilters] = useState<Set<string>>(new Set())
 	const selectedRequest = selectedRequestIndex !== null ? requests[selectedRequestIndex] : null
 
-	// Filter requests based on active filter
-	const filteredRequests = activeFilter === "all" ? requests : requests.filter((req) => req.type === activeFilter)
+	// Get unique routes from all requests
+	const uniqueRoutes = Array.from(new Set(requests.map((req) => req.routeId))).sort()
+
+	// Filter requests based on active filters
+	let filteredRequests = requests
+
+	// Apply type filter
+	if (activeTypeFilter !== "all") {
+		filteredRequests = filteredRequests.filter((req) => req.type === activeTypeFilter)
+	}
+
+	// Apply route filters (if any selected)
+	if (activeRouteFilters.size > 0) {
+		filteredRequests = filteredRequests.filter((req) => activeRouteFilters.has(req.routeId))
+	}
 
 	// Check if there are any active requests
 	const hasActiveRequests = filteredRequests.some(
@@ -150,11 +164,28 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 			onChangeRequest(order + 1)
 		}
 	})
+
+	const toggleRouteFilter = (route: string) => {
+		setActiveRouteFilters((prev) => {
+			const newFilters = new Set(prev)
+			if (newFilters.has(route)) {
+				newFilters.delete(route)
+			} else {
+				newFilters.add(route)
+			}
+			return newFilters
+		})
+	}
+
+	const clearRouteFilters = () => {
+		setActiveRouteFilters(new Set())
+	}
+
 	return (
 		<div className={styles.network.waterfall.container}>
-			{/* Filter Bar */}
+			{/* Type Filter Bar */}
 			<div className={styles.network.waterfall.filterBar}>
-				<div className={styles.network.waterfall.filterLabel}>Filter:</div>
+				<div className={styles.network.waterfall.filterLabel}>Type:</div>
 				<div className={styles.network.waterfall.filterButtons}>
 					{EVENT_TYPE_FILTERS.map((filter) => (
 						<button
@@ -162,13 +193,13 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 							type="button"
 							className={cx(
 								styles.network.waterfall.filterButton,
-								activeFilter === filter.value && styles.network.waterfall.filterButtonActive
+								activeTypeFilter === filter.value && styles.network.waterfall.filterButtonActive
 							)}
 							style={{
-								borderColor: activeFilter === filter.value ? filter.color : "transparent",
-								color: activeFilter === filter.value ? filter.color : "#9ca3af",
+								borderColor: activeTypeFilter === filter.value ? filter.color : "transparent",
+								color: activeTypeFilter === filter.value ? filter.color : "#9ca3af",
 							}}
-							onClick={() => setActiveFilter(filter.value)}
+							onClick={() => setActiveTypeFilter(filter.value)}
 						>
 							{filter.label}
 							{filter.value !== "all" && (
@@ -183,6 +214,69 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 					))}
 				</div>
 			</div>
+
+			{/* Route Filter Bar */}
+			<div className={styles.network.waterfall.filterBar}>
+				<div className={styles.network.waterfall.filterLabel}>
+					Routes:
+					{activeRouteFilters.size > 0 && (
+						<span className={styles.network.waterfall.filterCount} style={{ marginLeft: "0.25rem" }}>
+							({activeRouteFilters.size} selected)
+						</span>
+					)}
+				</div>
+				<div className={styles.network.waterfall.filterButtons}>
+					<button
+						type="button"
+						className={cx(
+							styles.network.waterfall.filterButton,
+							activeRouteFilters.size === 0 && styles.network.waterfall.filterButtonActive
+						)}
+						style={{
+							borderColor: activeRouteFilters.size === 0 ? "#ffffff" : "transparent",
+							color: activeRouteFilters.size === 0 ? "#ffffff" : "#9ca3af",
+						}}
+						onClick={clearRouteFilters}
+					>
+						All Routes
+						<span className={styles.network.waterfall.filterCount}>({uniqueRoutes.length})</span>
+					</button>
+					{uniqueRoutes.map((route) => {
+						const isActive = activeRouteFilters.has(route)
+						const routeCount = requests.filter((r) => r.routeId === route).length
+						return (
+							<button
+								key={route}
+								type="button"
+								className={cx(
+									styles.network.waterfall.filterButton,
+									isActive && styles.network.waterfall.filterButtonActive
+								)}
+								style={{
+									borderColor: isActive ? "#60a5fa" : "transparent",
+									color: isActive ? "#60a5fa" : "#9ca3af",
+								}}
+								onClick={() => toggleRouteFilter(route)}
+							>
+								{route}
+								<span className={styles.network.waterfall.filterCount}>({routeCount})</span>
+							</button>
+						)
+					})}
+				</div>
+			</div>
+
+			{/* Results summary */}
+			{(activeTypeFilter !== "all" || activeRouteFilters.size > 0) && (
+				<div className={styles.network.waterfall.filterSummary}>
+					Showing {filteredRequests.length} of {requests.length} events
+					{activeRouteFilters.size > 0 && (
+						<button type="button" className={styles.network.waterfall.clearFiltersButton} onClick={clearRouteFilters}>
+							Clear route filters
+						</button>
+					)}
+				</div>
+			)}
 
 			<div className={styles.network.waterfall.flexContainer}>
 				<div>

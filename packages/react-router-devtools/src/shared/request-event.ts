@@ -18,6 +18,7 @@ export type RequestEvent = {
 	type: NetworkRequestTypeFull
 	headers: Record<string, string>
 	id: string
+	routeId: string
 	startTime: number
 	endTime?: number | undefined
 	// biome-ignore lint/suspicious/noExplicitAny: can be anything

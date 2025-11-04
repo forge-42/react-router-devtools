@@ -44,7 +44,6 @@ export const loader = async ({ request, context,devTools, params  }: LoaderFunct
 export const clientLoader =  async ({ request, serverLoader,  devTools }: ClientLoaderFunctionArgs) => {
   const headers = Object.fromEntries(request.headers.entries());
   const serverLoaderResults = await serverLoader();
-
   const trace = devTools?.tracing.trace
   const data = await trace?.("CLIENT LOADER API call",async () => {
     const also = await new Promise((resolve, reject) => {
