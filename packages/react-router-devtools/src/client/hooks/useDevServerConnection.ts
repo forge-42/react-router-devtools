@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import { useNavigation } from "react-router"
 import type { ActionEvent, LoaderEvent } from "../../server/event-queue.js"
+import { eventClient } from "../../shared/event-client.js"
 import type { ServerInfo } from "../context/rdtReducer.js"
 import { useServerInfo } from "../context/useRDTContext.js"
 import { cutArrayToLastN } from "../utils/common.js"
@@ -49,46 +49,27 @@ const updateRouteInfo = (
 }
 
 const useDevServerConnection = () => {
-	const navigation = useNavigation()
 	const { server, setServerInfo } = useServerInfo()
 
-	// Pull the event queue from the server when the page is idle
+	// Listen to loader and action events from the event client
 	useEffect(() => {
-		if (typeof import.meta.hot === "undefined") return
-		if (navigation.state !== "idle") return
-		// We send a pull & clear event to pull the event queue and clear it
-		import.meta.hot.send("all-route-info")
-	}, [navigation.state])
-
-	useEffect(() => {
-		// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-		const cb2 = (data: any) => {
-			const events = JSON.parse(data).data
-			const routes: ServerInfo["routes"] = {}
-			for (const routeInfo of Object.values(events)) {
-				// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-				const { loader, action } = routeInfo as any
-				const events = [
-					// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-					loader.map((e: any) => ({ type: "loader", data: e })),
-					// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-					action.map((e: any) => ({ type: "action", data: e })),
-				].flat()
-				for (const event of events) {
-					updateRouteInfo(server, routes, event, false)
-				}
-			}
-
+		// Listen to loader events
+		const unsubscribeLoader = eventClient.on("loader-event", (event) => {
+			const routes: ServerInfo["routes"] = { ...server?.routes }
+			updateRouteInfo(server, routes, { type: "loader", data: event.payload as LoaderEvent["data"] }, false)
 			setServerInfo({ routes })
-		}
-		if (typeof import.meta.hot !== "undefined") {
-			import.meta.hot.on("all-route-info", cb2)
-		}
+		})
+
+		// Listen to action events
+		const unsubscribeAction = eventClient.on("action-event", (event) => {
+			const routes: ServerInfo["routes"] = { ...server?.routes }
+			updateRouteInfo(server, routes, { type: "action", data: event.payload as ActionEvent["data"] }, false)
+			setServerInfo({ routes })
+		})
 
 		return () => {
-			if (typeof import.meta.hot !== "undefined") {
-				import.meta.hot.dispose(cb2)
-			}
+			unsubscribeLoader()
+			unsubscribeAction()
 		}
 	}, [server, setServerInfo])
 

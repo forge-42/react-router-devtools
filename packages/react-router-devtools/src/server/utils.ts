@@ -1,6 +1,6 @@
 import chalk from "chalk"
 import type { ActionFunctionArgs, LoaderFunctionArgs, UNSAFE_DataWithResponseInit } from "react-router"
-import { bigIntReplacer } from "../shared/bigint-util.js"
+import { eventClient } from "../shared/event-client.js"
 import { sendEvent } from "../shared/send-event.js"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
@@ -223,6 +223,35 @@ export const extractHeadersFromResponseOrRequest = (
 	return Object.fromEntries(headers.entries())
 }
 
+/**
+ * Converts BigInt values to strings in an object/array structure
+ * This allows the data to be serialized to JSON without errors
+ */
+// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
+const serializeBigInt = (obj: any): any => {
+	if (obj === null || obj === undefined) {
+		return obj
+	}
+
+	if (typeof obj === "bigint") {
+		return obj.toString()
+	}
+
+	if (Array.isArray(obj)) {
+		return obj.map(serializeBigInt)
+	}
+
+	if (typeof obj === "object") {
+		const result: Record<string, unknown> = {}
+		for (const [key, value] of Object.entries(obj)) {
+			result[key] = serializeBigInt(value)
+		}
+		return result
+	}
+
+	return obj
+}
+
 const storeAndEmitActionOrLoaderInfo = async (
 	type: "action" | "loader",
 	routeId: string,
@@ -233,34 +262,24 @@ const storeAndEmitActionOrLoaderInfo = async (
 	const responseHeaders = extractHeadersFromResponseOrRequest(response)
 	const requestHeaders = extractHeadersFromResponseOrRequest(args.request)
 
-	// create the event
-	const event = {
-		type,
-		data: {
-			id: routeId,
-			executionTime: end,
-			timestamp: new Date().getTime(),
-			responseData: isDataFunctionResponse(response) ? response.data : response,
-			requestHeaders,
-			responseHeaders,
-		},
-	}
-	if (typeof process === "undefined") {
-		return
-	}
-	const port = process.rdt_port
+	const responseData = isDataFunctionResponse(response) ? response.data : response
 
-	if (port) {
-		fetch(`http://localhost:${port}/__rrdt`, {
-			method: "POST",
-			body: JSON.stringify(event, bigIntReplacer),
-		})
-			.then(async (res) => {
-				if (res.ok) {
-					await res.text()
-				}
-			})
-			.catch(() => {})
+	// create the event data matching LoaderEvent["data"] / ActionEvent["data"] type
+	const eventData = {
+		id: routeId,
+		executionTime: end,
+		timestamp: new Date().getTime(),
+		responseData: serializeBigInt(responseData),
+		requestHeaders: requestHeaders || {},
+		responseHeaders: responseHeaders || {},
+		requestData: undefined, // TODO: Extract request data if needed (e.g., formData for actions)
+	}
+
+	// Emit the event via event client
+	if (type === "loader") {
+		eventClient.emit("loader-event", eventData)
+	} else {
+		eventClient.emit("action-event", eventData)
 	}
 }
 
