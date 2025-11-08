@@ -1,10 +1,9 @@
 import type { UIMatch } from "react-router"
 import { parseCacheControlHeader } from "../../server/parser.js"
-import type { OpenSourceData } from "../../vite/editor.js"
 import { type ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js"
 import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js"
-import { useDevServerConnection } from "../hooks/useDevServerConnection.js"
 import { cx, useStyles } from "../styles/use-styles.js"
+import { openSource } from "../utils/open-source.js"
 import { isLayoutRoute } from "../utils/routing.js"
 import { CacheInfo } from "./CacheInfo.js"
 import { EditorButton } from "./EditorButton.js"
@@ -72,13 +71,12 @@ const ROUTE_COLORS = {
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
 	const { styles } = useStyles()
 	const { server, setServerInfo } = useServerInfo()
-	const { isConnected, sendJsonMessage } = useDevServerConnection()
+	const isDev = typeof import.meta.hot !== "undefined"
 	// biome-ignore lint/suspicious/noExplicitAny: we don't know or care about loader data type
 	const loaderData = getLoaderData(route.loaderData ?? (route.data as any))
 	const serverInfo = server?.routes?.[route.id]
 	const isRoot = route.id === "root"
 	const { setSettings, settings } = useSettingsContext()
-	const editorName = settings.editorName
 	const cacheControl = serverInfo?.lastLoader.responseHeaders
 		? parseCacheControlHeader(new Headers(serverInfo?.lastLoader.responseHeaders))
 		: undefined
@@ -132,15 +130,11 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 						/>
 					)}
 					<div className={styles.routeSegmentInfo.actionButtons}>
-						{isConnected && import.meta.env.DEV && (
+						{isDev && import.meta.env.DEV && entryRoute?.module && (
 							<EditorButton
-								name={editorName}
 								data-testid={`${route.id}-open-source`}
 								onClick={() => {
-									sendJsonMessage({
-										type: "open-source",
-										data: { routeID: route.id },
-									} satisfies OpenSourceData)
+									openSource(`${entryRoute.module}`)
 								}}
 							/>
 						)}

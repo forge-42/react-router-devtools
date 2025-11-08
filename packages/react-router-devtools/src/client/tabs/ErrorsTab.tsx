@@ -3,8 +3,8 @@ import { useEffect, useState } from "react"
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued"
 import { Icon } from "../components/icon/Icon.js"
 import { useHtmlErrors } from "../context/useRDTContext.js"
-import { useDevServerConnection } from "../hooks/useDevServerConnection.js"
 import { useStyles } from "../styles/use-styles.js"
+import { openSource } from "../utils/open-source.js"
 // @ts-expect-error
 const DiffViewer: typeof ReactDiffViewer.default = ReactDiffViewer.default
 	? // @ts-expect-error
@@ -16,7 +16,6 @@ const DiffViewer: typeof ReactDiffViewer.default = ReactDiffViewer.default
 const ErrorsTab = () => {
 	const { styles } = useStyles()
 	const { htmlErrors } = useHtmlErrors()
-	const { sendJsonMessage } = useDevServerConnection()
 	const [SSRHtml, setSSRHtml] = useState("")
 	const [CSRHtml, setCSRHtml] = useState("")
 	const [hasHydrationMismatch, setHasHydrationMismatch] = useState(false)
@@ -63,12 +62,7 @@ const ErrorsTab = () => {
 								The parent element is located inside of the
 								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 								<div
-									onClick={() =>
-										sendJsonMessage({
-											type: "open-source",
-											data: { source: error.parent.file },
-										})
-									}
+									onClick={() => error.parent.file && openSource(error.parent.file)}
 									className={styles.errorsTab.errorFile}
 								>
 									{error.parent.file}
@@ -79,12 +73,7 @@ const ErrorsTab = () => {
 								The child element is located inside of the
 								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 								<div
-									onClick={() =>
-										sendJsonMessage({
-											type: "open-source",
-											data: { source: error.child.file },
-										})
-									}
+									onClick={() => error.child.file && openSource(error.child.file)}
 									className={styles.errorsTab.errorFile}
 								>
 									{error.child.file}

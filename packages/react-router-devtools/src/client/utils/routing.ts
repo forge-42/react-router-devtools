@@ -90,17 +90,17 @@ export const constructRoutePath = (route: ExtendedRoute, routeWildcards: RouteWi
 	return { pathToOpen, path, hasWildcard }
 }
 
-export const createExtendedRoutes = () => {
-	if (!window.__reactRouterManifest) {
+export const createExtendedRoutes = (routes?: Record<string, EntryRoute>) => {
+	const manifestRoutes = routes ?? window.__reactRouterManifest?.routes
+	if (!manifestRoutes) {
 		return []
 	}
 	return (
-		Object.values(window.__reactRouterManifest.routes)
+		Object.values(manifestRoutes)
 			.map((route) => {
 				return {
 					...route,
-					// biome-ignore lint/style/noNonNullAssertion: we know this is defined
-					url: convertReactRouterPathToUrl(window.__reactRouterManifest!.routes, route),
+					url: convertReactRouterPathToUrl(manifestRoutes, route),
 					errorBoundary: findParentErrorBoundary(route),
 				}
 			})

@@ -1,8 +1,6 @@
 import * as Test from "@testing-library/react"
 import * as testSuite from "../context/useRDTContext"
 
-import * as devHook from "../hooks/useDevServerConnection.js"
-
 describe("ErrorsTab", () => {
 	it("should show no errors title if there are no errors", async ({ renderDevTools }) => {
 		const { container } = renderDevTools({
@@ -61,23 +59,16 @@ describe("ErrorsTab", () => {
 			],
 			setHtmlErrors: vi.fn(),
 		})
-		const sendOpenSource = vi.fn()
-		vi.spyOn(devHook, "useDevServerConnection").mockReturnValue({
-			sendJsonMessage: sendOpenSource,
-			connectionStatus: "Open",
-			isConnected: true,
-		})
+		const mockOpenSource = vi.fn()
+		vi.mock("../utils/open-source", () => ({
+			openSource: mockOpenSource,
+		}))
 		const { container } = renderDevTools({
 			activeTab: "errors",
 		})
 		const parentElement = container.getByText("./src/client/context/useRDTContext.ts")
 		Test.fireEvent.click(parentElement)
-		expect(sendOpenSource).toHaveBeenCalledWith({
-			data: {
-				source: "./src/client/context/useRDTContext.ts",
-			},
-			type: "open-source",
-		})
+		expect(mockOpenSource).toHaveBeenCalledWith("./src/client/context/useRDTContext.ts")
 	})
 
 	it("should send the open source request when clicked on the child element text", async ({ renderDevTools }) => {
@@ -96,23 +87,16 @@ describe("ErrorsTab", () => {
 			],
 			setHtmlErrors: vi.fn(),
 		})
-		const sendOpenSource = vi.fn()
-		vi.spyOn(devHook, "useDevServerConnection").mockReturnValue({
-			sendJsonMessage: sendOpenSource,
-			connectionStatus: "Open",
-			isConnected: true,
-		})
+		const mockOpenSource = vi.fn()
+		vi.mock("../utils/open-source", () => ({
+			openSource: mockOpenSource,
+		}))
 		const { container } = renderDevTools({
 			activeTab: "errors",
 		})
 		const childEl = container.getByText("./src/client/tabs/ErrorsTab.test.tsx")
 		Test.fireEvent.click(childEl)
-		expect(sendOpenSource).toHaveBeenCalledWith({
-			data: {
-				source: "./src/client/tabs/ErrorsTab.test.tsx",
-			},
-			type: "open-source",
-		})
+		expect(mockOpenSource).toHaveBeenCalledWith("./src/client/tabs/ErrorsTab.test.tsx")
 	})
 
 	it("should show a hydration mismatch error if the server has a mismatch", async ({ renderDevTools }) => {

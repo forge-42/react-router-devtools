@@ -1,9 +1,7 @@
+import { openSource } from "../utils/open-source.js"
 import { useAttachDocumentListener } from "./useAttachListener.js"
-import { useDevServerConnection } from "./useDevServerConnection.js"
 
 const useOpenElementSource = () => {
-	const { sendJsonMessage } = useDevServerConnection()
-
 	// biome-ignore lint/suspicious/noExplicitAny: this should be fixed
 	useAttachDocumentListener("contextmenu", (e: any) => {
 		if (!e.shiftKey || !e) {
@@ -17,10 +15,7 @@ const useOpenElementSource = () => {
 
 		if (rdtSource) {
 			const [source, line, column] = rdtSource.split(":")
-			return sendJsonMessage({
-				type: "open-source",
-				data: { source, line, column },
-			})
+			return openSource(source, line, column)
 		}
 		for (const key in e.target) {
 			if (key.startsWith("__reactFiber")) {
@@ -30,12 +25,10 @@ const useOpenElementSource = () => {
 				const originalSource = fiberNode?._debugSource
 				const source = fiberNode?._debugOwner?._debugSource ?? fiberNode?._debugSource
 				const line = source?.fileName?.startsWith("/") ? originalSource?.lineNumber : source?.lineNumber
+
 				const fileName = source?.fileName?.startsWith("/") ? originalSource?.fileName : source?.fileName
 				if (fileName && line) {
-					return sendJsonMessage({
-						type: "open-source",
-						data: { source: fileName, line, column: 0 },
-					})
+					return openSource(fileName, line)
 				}
 			}
 		}

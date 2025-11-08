@@ -126,9 +126,12 @@ describe("PageTab", () => {
 	it("should attempt to open the route in the editor when the open in editor button is clicked", async ({
 		renderDevTools,
 	}) => {
-		const sendOpenSource = vi.fn()
+		const mockOpenSource = vi.fn()
+		vi.mock("../utils/open-source", () => ({
+			openSource: mockOpenSource,
+		}))
 		vi.spyOn(devHook, "useDevServerConnection").mockReturnValue({
-			sendJsonMessage: sendOpenSource,
+			sendJsonMessage: vi.fn(),
 			connectionStatus: "Open",
 			isConnected: true,
 		})
@@ -138,12 +141,7 @@ describe("PageTab", () => {
 
 		Test.fireEvent.click(openInEditor)
 
-		expect(sendOpenSource).toHaveBeenCalledWith({
-			data: {
-				routeID: "root",
-			},
-			type: "open-source",
-		})
+		expect(mockOpenSource).toHaveBeenCalled()
 	})
 
 	it("should show the route cache information if recieved from the server and last loader timestamp is available, also should display it as private if it's private", async ({

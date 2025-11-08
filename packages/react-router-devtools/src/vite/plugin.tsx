@@ -3,10 +3,9 @@ import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
-import { DEFAULT_EDITOR_CONFIG, type EditorConfig, type OpenSourceData, handleOpenSource } from "./editor.js"
-import { type WriteFileData, handleWriteFile } from "./file.js"
+import { eventClient } from "../shared/event-client.js"
 import { runner } from "./node-server.js"
-import { handleDevToolsViteRequest, processPlugins } from "./utils.js"
+import { processPlugins } from "./utils.js"
 import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
 import { injectRdtClient } from "./utils/inject-client.js"
 import { injectContext } from "./utils/inject-context.js"
@@ -23,7 +22,132 @@ declare global {
 	}
 }
 
+// Module-level route info storage
 const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>()
+// Module-level routes map storage
+const routesMap = new Map<string, Route[]>()
+// Cache for appDir
+let cachedAppDir: string | null = null
+
+// Helper function to get appDir from react-router.config.ts or fallback to ./app
+const getAppDir = async (): Promise<string> => {
+	if (cachedAppDir) return cachedAppDir
+
+	try {
+		const path = await import("node:path")
+		const configPath = path.join(process.cwd(), "react-router.config.ts")
+		const config = await runner.executeFile(configPath)
+		cachedAppDir = config.appDirectory || "./app"
+	} catch (_e) {
+		// If config doesn't exist or can't be read, fallback to ./app
+		cachedAppDir = "./app"
+	}
+	// biome-ignore lint/style/noNonNullAssertion: cachedAppDir is always set in the try or catch block
+	return cachedAppDir!
+}
+
+// Helper function to load and flatten routes
+const loadRoutes = async () => {
+	// If routes are already loaded, skip
+	if (routesMap.has("flat")) {
+		return true
+	}
+
+	try {
+		const path = await import("node:path")
+		const appDir = await getAppDir()
+
+		// Set the route config
+		const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), appDir, "routes.ts"))).default
+		const routeConfig = await routeConfigExport
+		routesMap.set("routes", routeConfig)
+
+		const recursiveFlatten = (routeOrRoutes: Route | Route[]): Route[] => {
+			if (Array.isArray(routeOrRoutes)) {
+				return routeOrRoutes.flatMap((route) => recursiveFlatten(route))
+			}
+			if (routeOrRoutes.children) {
+				return [
+					routeOrRoutes,
+					...recursiveFlatten(
+						routeOrRoutes.children.map((child) => {
+							// ./path.tsx => path
+							// ../path.tsx => path
+							const withoutExtension = child.file
+								.split(".")
+								.slice(0, -1)
+								.join(".")
+								.replace(/^\.\//, "")
+								.replace(/^\.\.\//, "")
+							// ./path.tsx => path
+							// ../path.tsx => path
+							const withoutExtensionParent = routeOrRoutes.file
+								.split(".")
+								.slice(0, -1)
+								.join(".")
+								.replace(/^\.\//, "")
+								.replace(/^\.\.\//, "")
+
+							return {
+								...child,
+								id: child.id ?? withoutExtension,
+								parentId: withoutExtensionParent,
+							}
+						})
+					),
+				]
+			}
+			return [routeOrRoutes]
+		}
+		routesMap.set(
+			"flat",
+			// biome-ignore lint/style/noNonNullAssertion: set right above
+			routesMap
+				.get("routes")!
+				.map((route) => {
+					// ./path.tsx => path
+					// ../path.tsx => path
+					const withoutExtension = route.file
+						.split(".")
+						.slice(0, -1)
+						.join(".")
+						.replace(/^\.\//, "")
+						.replace(/^\.\.\//, "")
+					return { ...route, parentId: "root", id: route.id ?? withoutExtension }
+				})
+				.flatMap(recursiveFlatten)
+		)
+		return true
+	} catch (_e) {
+		// If loading fails, routesMap will remain empty
+		return false
+	}
+}
+
+// Flag to ensure we only set up listeners once
+let listenersSetUp = false
+
+// Set up event listeners
+const setupEventListeners = () => {
+	if (listenersSetUp) return
+	listenersSetUp = true
+
+	const unsubscribe1 = eventClient.on("routes-tab-mounted", async () => {
+		// Always try to load routes when tab mounts (in case they weren't loaded before)
+		await loadRoutes()
+
+		const flatRoutes = routesMap.get("flat") || []
+		eventClient.emit("routes-info", flatRoutes)
+	})
+
+	const unsubscribe2 = eventClient.on("request-all-route-info", () => {
+		const allRouteInfo = Object.fromEntries(routeInfo.entries())
+		eventClient.emit("all-route-info", allRouteInfo)
+	})
+
+	// Return unsubscribe functions in case we need them
+	return { unsubscribe1, unsubscribe2 }
+}
 
 type ReactRouterViteConfig = {
 	client?: Partial<RdtClientConfig>
@@ -34,10 +158,6 @@ type ReactRouterViteConfig = {
 		server?: boolean
 		devTools?: boolean
 	}
-	/** The directory where the react router app is located. Defaults to the "./app" relative to where vite.config is being defined. */
-	appDir?: string
-	editor?: EditorConfig
-	enhancedLogs?: boolean
 }
 
 type Route = {
@@ -55,16 +175,17 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	const serverConfig = args?.server || {}
 	const clientConfig = {
 		...args?.client,
-		editorName: args?.editor?.name,
+		editorName: "Editor",
 	}
 
 	const includeClient = args?.includeInProd?.client ?? false
 	const includeServer = args?.includeInProd?.server ?? false
 	const includeDevtools = args?.includeInProd?.devTools ?? false
 	let port = 5173
-	const routesMap = new Map<string, Route[]>()
-	const appDir = args?.appDir || "./app"
+	// Get appDir synchronously from cache (will be populated when first route loads)
+	const appDir = cachedAppDir || "./app"
 	const appDirName = appDir.replace("./", "")
+
 	const shouldInject = (mode: string | undefined, include: boolean) => mode === "development" || include
 	const isTransformable = (id: string) => {
 		const extensions = [".tsx", ".jsx", ".ts", ".js"]
@@ -107,69 +228,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				return shouldInject(config.mode, includeClient)
 			},
 			async configResolved(resolvedViteConfig) {
-				try {
-					const path = await import("node:path")
-					// Set the route config
-					const routeConfigExport = (await runner.executeFile(path.join(process.cwd(), appDir, "routes.ts"))).default
-					const routeConfig = await routeConfigExport
-					routesMap.set("routes", routeConfig)
-
-					const recursiveFlatten = (routeOrRoutes: Route | Route[]): Route[] => {
-						if (Array.isArray(routeOrRoutes)) {
-							return routeOrRoutes.flatMap((route) => recursiveFlatten(route))
-						}
-						if (routeOrRoutes.children) {
-							return [
-								routeOrRoutes,
-								...recursiveFlatten(
-									routeOrRoutes.children.map((child) => {
-										// ./path.tsx => path
-										// ../path.tsx => path
-										const withoutExtension = child.file
-											.split(".")
-											.slice(0, -1)
-											.join(".")
-											.replace(/^\.\//, "")
-											.replace(/^\.\.\//, "")
-										// ./path.tsx => path
-										// ../path.tsx => path
-										const withoutExtensionParent = routeOrRoutes.file
-											.split(".")
-											.slice(0, -1)
-											.join(".")
-											.replace(/^\.\//, "")
-											.replace(/^\.\.\//, "")
-
-										return {
-											...child,
-											id: child.id ?? withoutExtension,
-											parentId: withoutExtensionParent,
-										}
-									})
-								),
-							]
-						}
-						return [routeOrRoutes]
-					}
-					routesMap.set(
-						"flat",
-						// biome-ignore lint/style/noNonNullAssertion: set right above
-						routesMap
-							.get("routes")!
-							.map((route) => {
-								// ./path.tsx => path
-								// ../path.tsx => path
-								const withoutExtension = route.file
-									.split(".")
-									.slice(0, -1)
-									.join(".")
-									.replace(/^\.\//, "")
-									.replace(/^\.\.\//, "")
-								return { ...route, parentId: "root", id: route.id ?? withoutExtension }
-							})
-							.flatMap(recursiveFlatten)
-					)
-				} catch (_e) {}
 				const reactRouterIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router")
 				const devToolsIndex = resolvedViteConfig.plugins.findIndex((p) => p.name === "react-router-devtools")
 				if (reactRouterIndex >= 0 && devToolsIndex > reactRouterIndex) {
@@ -241,6 +299,9 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				return config.mode === "development"
 			},
 			async configureServer(server) {
+				// Set up event listeners when server is configured
+				setupEventListeners()
+
 				if (server.config.appType !== "custom") {
 					return
 				}
@@ -260,64 +321,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					process.rdt_port = server.config.server.port ?? 5173
 					port = process.rdt_port
 				})
-				const editor = args?.editor ?? DEFAULT_EDITOR_CONFIG
-				const openInEditor = async (
-					path: string | undefined,
-					lineNum: string | undefined,
-					columnNum: string | undefined
-				) => {
-					if (!path) {
-						return
-					}
-					editor.open(path, lineNum, columnNum)
-				}
-
-				// Handle open-source requests via middleware (still needed for URL handling)
-				server.middlewares.use((req, res, next) =>
-					handleDevToolsViteRequest(req, res, next, (parsedData) => {
-						const { routine } = parsedData
-						if (routine === "open-source") {
-							handleOpenSource({ data: { type: parsedData.type, data: parsedData.data }, openInEditor, appDir })
-						}
-						// Note: response is already ended in handleDevToolsViteRequest
-					})
-				)
-
-				server.hot.on("all-route-info", (_data, client) => {
-					client.send(
-						"all-route-info",
-						JSON.stringify({
-							type: "all-route-info",
-							data: Object.fromEntries(routeInfo.entries()),
-						})
-					)
-				})
-				server.hot.on("routes-info", (_data, client) => {
-					client.send(
-						"routes-info",
-						JSON.stringify({
-							type: "routes-info",
-							data: routesMap.get("flat"),
-						})
-					)
-				})
-
-				if (!server.config.isProduction) {
-					server.hot.on("open-source", (data: OpenSourceData) =>
-						handleOpenSource({
-							data: {
-								...data,
-								data: {
-									...data.data,
-									source: data.data.source ? normalizePath(`${process.cwd()}/${data.data.source}`) : undefined,
-								},
-							},
-							openInEditor,
-							appDir,
-						})
-					)
-					server.hot.on("add-route", (data: WriteFileData) => handleWriteFile({ ...data, openInEditor, appDir }))
-				}
 			},
 		},
 	]

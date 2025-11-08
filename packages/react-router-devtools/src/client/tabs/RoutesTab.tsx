@@ -1,5 +1,6 @@
 import { type MouseEvent, useEffect, useState } from "react"
 import { useMatches, useNavigate } from "react-router"
+import { eventClient } from "../../shared/event-client.js"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
 import { NewRouteForm } from "../components/NewRouteForm.js"
 import { useSettingsContext } from "../context/useRDTContext.js"
@@ -20,7 +21,7 @@ const RoutesTab = () => {
 	const { settings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
-	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
+	const [routes, setRoutes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
 	const [treeRoutes, setTreeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
 	const isTreeView = routeViewMode === "tree"
 	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
@@ -29,26 +30,33 @@ const RoutesTab = () => {
 	}
 
 	useEffect(function fetchAllRoutesOnMount() {
-		import.meta.hot?.send("routes-info")
-		// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-		const cb = (event: any) => {
-			const parsed = JSON.parse(event)
-			// biome-ignore lint/suspicious/noExplicitAny: can be any type
-			const data = parsed.data as Record<string, any>[]
+		// Listen for routes info response from the server FIRST
+		const unsubscribe = eventClient.on("routes-info", (event) => {
+			const data = event.payload
 
-			// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
+			// Build route object from server routes data
+			// biome-ignore lint/suspicious/noExplicitAny: can be any type
 			const routeObject: Record<string, any> = {}
 			for (const route of data) {
 				routeObject[route.id] = route
 			}
 
+			// Add root from manifest
 			routeObject.root = window.__reactRouterManifest?.routes?.root
 
+			// Update tree view routes with merged data
 			setTreeRoutes(createRouteTree(routeObject))
-		}
-		import.meta.hot?.on("routes-info", cb)
+
+			// Update list view routes - pass the server routes directly
+			const updatedRoutes = createExtendedRoutes(routeObject) as ExtendedRoute[]
+			setRoutes(updatedRoutes)
+		})
+
+		// Request routes info from the server AFTER listener is set up
+		eventClient.emit("routes-tab-mounted", {})
+
 		return () => {
-			import.meta.hot?.off("routes-info", cb)
+			unsubscribe()
 		}
 	}, [])
 	return (
