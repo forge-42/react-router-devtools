@@ -4,7 +4,6 @@ import type { RdtClientConfig } from "../context/RDTContext.js"
 import { EmbeddedDevTools } from "../embedded-dev-tools.js"
 import type { ReactRouterDevtoolsProps } from "../react-router-dev-tools.js"
 import { useStyles } from "../styles/use-styles.js"
-import { hydrationDetector } from "./hydration.js"
 
 export const defineClientConfig = (config: RdtClientConfig) => config
 
@@ -15,7 +14,6 @@ export const defineClientConfig = (config: RdtClientConfig) => config
 
 // biome-ignore lint/suspicious/noExplicitAny: we don't know or care about props type
 export const withViteDevTools = (Component: any, _config?: ReactRouterDevtoolsProps) => (props: any) => {
-	hydrationDetector()
 	// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type here as we spread it below
 	function AppWithDevTools(props: any) {
 		const { styles } = useStyles()

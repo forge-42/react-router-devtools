@@ -98,25 +98,4 @@ describe("ErrorsTab", () => {
 		Test.fireEvent.click(childEl)
 		expect(mockOpenSource).toHaveBeenCalledWith("./src/client/tabs/ErrorsTab.test.tsx")
 	})
-
-	it("should show a hydration mismatch error if the server has a mismatch", async ({ renderDevTools }) => {
-		window.HYDRATION_OVERLAY = {
-			ERROR: true,
-			SSR_HTML: "hydration-mismatch",
-			CSR_HTML: "hydration-mismatch2",
-			APP_ROOT_SELECTOR: "",
-		}
-		const { container } = renderDevTools({
-			activeTab: "errors",
-		})
-		// The tab should show the number of errors
-		expect(container.getByText("Errors (2)")).toBeDefined()
-		// Shows the overlay properly
-		expect(container.getByText("Hydration mismatch comparison")).toBeDefined()
-		expect(container.getByText("Server-Side Render")).toBeDefined()
-		expect(container.getByText("Client-Side Render")).toBeDefined()
-		expect(container.getByText("hydration-mismatch2")).toBeDefined()
-		// @ts-expect-error
-		window.HYDRATION_OVERLAY = undefined
-	})
 })

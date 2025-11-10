@@ -56,11 +56,7 @@ const Tabs = ({ plugins }: TabsProps) => {
 	const { visibleTabs } = useTabs(plugins)
 	const scrollRef = useHorizontalScroll()
 
-	const getErrorCount = () => {
-		return htmlErrors.length + (window.HYDRATION_OVERLAY?.ERROR ? 1 : 0)
-	}
-
-	const hasErrors = getErrorCount() > 0
+	const hasErrors = htmlErrors.length > 0
 	return (
 		<div className={styles.layout.tabs.container}>
 			<div ref={scrollRef} className={cx("react-router-dev-tools-tab", styles.layout.tabs.scrollContainer)}>
@@ -69,7 +65,7 @@ const Tabs = ({ plugins }: TabsProps) => {
 						key={tab.id}
 						tab={{
 							...tab,
-							name: tab.id === "errors" && hasErrors ? `Errors (${getErrorCount()})` : tab.name,
+							name: tab.id === "errors" && hasErrors ? `Errors (${htmlErrors.length})` : tab.name,
 						}}
 						activeTab={activeTab}
 						className={cx(

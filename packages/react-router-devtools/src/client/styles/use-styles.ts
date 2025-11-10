@@ -1150,23 +1150,6 @@ const stylesFactory = (theme: "light" | "dark") => {
 				cursor: pointer;
 				color: #ffffff;
 			`,
-			hydrationContainer: css`
-				position: relative;
-				margin-top: 1rem;
-				width: 100%;
-				border: 2px solid #1f2937;
-				overflow-y: auto;
-				border-radius: 0.25rem;
-			`,
-			hydrationTitle: css`
-				font-size: 1.25rem;
-				padding: 0.5rem;
-				text-align: center;
-			`,
-			hydrationDivider: css`
-				margin-bottom: 0.25rem;
-				border-color: rgba(75, 85, 99, 0.3);
-			`,
 		},
 
 		// Settings Tab
