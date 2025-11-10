@@ -29,11 +29,11 @@ const PageTab = () => {
 			/>
 			<div className={styles.pageTab.content}>
 				<TabContent>
-					<ol className={cx(styles.pageTab.routesList, state === "loading" && styles.pageTab.routesListLoading)}>
+					<ul className={cx(styles.pageTab.routesList, state === "loading" && styles.pageTab.routesListLoading)}>
 						{routes.toReversed().map((route, i) => (
 							<RouteSegmentInfo route={route} i={i} key={route.id} />
 						))}
-					</ol>
+					</ul>
 				</TabContent>
 			</div>
 		</>

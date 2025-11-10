@@ -2,12 +2,16 @@ import type { UIMatch } from "react-router"
 import { parseCacheControlHeader } from "../../server/parser.js"
 import { type ServerRouteInfo, defaultServerRouteState } from "../context/rdtReducer.js"
 import { useServerInfo, useSettingsContext } from "../context/useRDTContext.js"
-import { cx, useStyles } from "../styles/use-styles.js"
+import { useStyles } from "../styles/use-styles.js"
 import { openSource } from "../utils/open-source.js"
 import { isLayoutRoute } from "../utils/routing.js"
 import { CacheInfo } from "./CacheInfo.js"
 import { EditorButton } from "./EditorButton.js"
 import { InfoCard } from "./InfoCard.js"
+import { RouteSegmentBody } from "./RouteSegmentBody.js"
+import { RouteSegmentCard } from "./RouteSegmentCard.js"
+import { type RouteColor, RouteSegmentHeader } from "./RouteSegmentHeader.js"
+import { Tag } from "./Tag.js"
 import { Icon } from "./icon/Icon.js"
 import { JsonRenderer } from "./jsonRenderer.js"
 
@@ -60,14 +64,6 @@ const cleanServerInfo = (routeInfo: ServerRouteInfo) => {
 	}
 }
 
-const ROUTE_COLORS = {
-	GREEN: "green",
-	BLUE: "blue",
-	TEAL: "teal",
-	RED: "red",
-	PURPLE: "purple",
-} as const
-
 export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
 	const { styles } = useStyles()
 	const { server, setServerInfo } = useServerInfo()
@@ -98,83 +94,93 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 		setServerInfo({ routes: newServerInfo })
 	}
 
-	const routeColor = isRoot ? ROUTE_COLORS.PURPLE : isLayout ? ROUTE_COLORS.BLUE : ROUTE_COLORS.GREEN
+	const routeColor: RouteColor = isRoot ? "purple" : isLayout ? "blue" : "green"
+	const iconName: "Root" | "Layout" | "CornerDownRight" = isRoot ? "Root" : isLayout ? "Layout" : "CornerDownRight"
+
+	const headerActions = (
+		<div className={styles.routeSegmentCard.headerActions}>
+			{isDev && import.meta.env.DEV && entryRoute?.module && (
+				<EditorButton
+					data-testid={`${route.id}-open-source`}
+					onClick={() => {
+						openSource(`${entryRoute.module}`)
+					}}
+				/>
+			)}
+			{settings.showRouteBoundariesOn === "click" && (
+				<button
+					type="button"
+					data-testid={`${route.id}-show-route-boundaries`}
+					className={styles.routeSegmentInfo.showBoundaryButton}
+					onClick={() => {
+						const routeId = route.id === "root" ? "root" : i.toString()
+						if (routeId !== settings.hoveredRoute) {
+							// Remove the classes from the old hovered route
+							setSettings({
+								isHoveringRoute: false,
+							})
+							// Add the classes to the new hovered route
+							setTimeout(() => {
+								setSettings({
+									hoveredRoute: routeId,
+									isHoveringRoute: true,
+								})
+							})
+						} else {
+							// Just change the isHoveringRoute state
+							setSettings({
+								isHoveringRoute: !settings.isHoveringRoute,
+							})
+						}
+					}}
+				>
+					<Icon name="Radio" size="sm" />
+					Show Route Boundary
+				</button>
+			)}
+		</div>
+	)
 
 	return (
-		<li
+		<RouteSegmentCard
 			data-testid={route.id}
 			onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
 			onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
-			className={styles.routeSegmentInfo.listItem}
 		>
-			<div
-				className={cx(
-					styles.routeSegmentInfo.iconWrapper,
-					styles.routeSegmentInfo[
-						`iconWrapper${routeColor.charAt(0).toUpperCase() + routeColor.slice(1)}` as keyof typeof styles.routeSegmentInfo
-					]
-				)}
-			>
-				<Icon name={isRoot ? "Root" : isLayout ? "Layout" : "CornerDownRight"} size="sm" />
-			</div>
-			<h2 className={styles.routeSegmentInfo.header}>
-				{route.pathname}
-
-				<div className={styles.routeSegmentInfo.headerActions}>
-					{Boolean(cacheControl && serverInfo?.lastLoader.timestamp) && (
+			<RouteSegmentHeader
+				icon={iconName}
+				color={routeColor}
+				title={route.pathname}
+				subtitle={route.id}
+				rightContent={headerActions}
+			/>
+			<RouteSegmentBody>
+				{/* Cache Info */}
+				{Boolean(cacheControl && serverInfo?.lastLoader.timestamp) && (
+					<div className={styles.routeSegmentCard.cacheSection}>
 						<CacheInfo
 							key={JSON.stringify(serverInfo?.lastLoader ?? "")}
 							// biome-ignore lint/style/noNonNullAssertion: <explanation>
 							cacheControl={cacheControl!}
 							cacheDate={new Date(serverInfo?.lastLoader.timestamp ?? "")}
 						/>
-					)}
-					<div className={styles.routeSegmentInfo.actionButtons}>
-						{isDev && import.meta.env.DEV && entryRoute?.module && (
-							<EditorButton
-								data-testid={`${route.id}-open-source`}
-								onClick={() => {
-									openSource(`${entryRoute.module}`)
-								}}
-							/>
-						)}
-						{settings.showRouteBoundariesOn === "click" && (
-							<button
-								type="button"
-								data-testid={`${route.id}-show-route-boundaries`}
-								className={styles.routeSegmentInfo.showBoundaryButton}
-								onClick={() => {
-									const routeId = route.id === "root" ? "root" : i.toString()
-									if (routeId !== settings.hoveredRoute) {
-										// Remove the classes from the old hovered route
-										setSettings({
-											isHoveringRoute: false,
-										})
-										// Add the classes to the new hovered route
-										setTimeout(() => {
-											setSettings({
-												hoveredRoute: routeId,
-												isHoveringRoute: true,
-											})
-										})
-									} else {
-										// Just change the isHoveringRoute state
-										setSettings({
-											isHoveringRoute: !settings.isHoveringRoute,
-										})
-									}
-								}}
-							>
-								Show Route Boundary
-							</button>
-						)}
+					</div>
+				)}
+
+				{/* Component Tags */}
+				<div className={styles.routeSegmentCard.componentsSection}>
+					<span className={styles.routeSegmentCard.componentsSectionLabel}>Components:</span>
+					<div className={styles.routeSegmentCard.tagsContainer}>
+						<Tag color={entryRoute?.hasLoader ? "GREEN" : "RED"}>Loader</Tag>
+						<Tag color={entryRoute?.hasClientLoader ? "GREEN" : "RED"}>Client Loader</Tag>
+						<Tag color={entryRoute?.hasClientAction ? "GREEN" : "RED"}>Client Action</Tag>
+						<Tag color={entryRoute?.hasAction ? "GREEN" : "RED"}>Action</Tag>
+						<Tag color={entryRoute?.hasErrorBoundary ? "GREEN" : "RED"}>ErrorBoundary</Tag>
 					</div>
 				</div>
-			</h2>
-			<div className={styles.routeSegmentInfo.content}>
-				<p className={styles.routeSegmentInfo.routeFileLabel}>Route segment file: {route.id}</p>
 
-				<div className={styles.routeSegmentInfo.cardsContainer}>
+				{/* Info Cards */}
+				<div className={styles.routeSegmentCard.cardsContainer}>
 					{loaderData && <InfoCard title="Returned loader data">{<JsonRenderer data={loaderData} />}</InfoCard>}
 					{serverInfo && import.meta.env.DEV && (
 						<InfoCard onClear={clearServerInfoForRoute} title="Server information">
@@ -193,7 +199,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 						</InfoCard>
 					)}
 				</div>
-			</div>
-		</li>
+			</RouteSegmentBody>
+		</RouteSegmentCard>
 	)
 }

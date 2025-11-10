@@ -1016,7 +1016,9 @@ const stylesFactory = (theme: "light" | "dark") => {
 			`,
 			routesList: css`
 				position: relative;
-				border-left: 1px solid #374151;
+				list-style: none;
+				padding: 0;
+				margin: 0;
 			`,
 			routesListLoading: css`
 				pointer-events: none;
@@ -1123,9 +1125,9 @@ const stylesFactory = (theme: "light" | "dark") => {
 				border-radius: 50%;
 				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 				box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-				animation: fade-in 0.3s ease-in, pulse-subtle 2s ease-in-out infinite;
+				animation: fade-in 0.3s ease-in, pulse-subtle-timeline 2s ease-in-out infinite;
 
-				@keyframes pulse-subtle {
+				@keyframes pulse-subtle-timeline {
 					0%, 100% {
 						box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 					}
@@ -1465,15 +1467,193 @@ const stylesFactory = (theme: "light" | "dark") => {
 				gap: 1.5rem;
 			`,
 			showBoundaryButton: css`
+				display: flex;
+				align-items: center;
+				gap: 0.375rem;
 				border: 1px solid #10b981;
 				border-radius: 0.25rem;
-				padding-left: 0.625rem;
-				padding-right: 0.625rem;
-				padding-top: 0.125rem;
-				padding-bottom: 0.125rem;
+				padding: 0.25rem 0.625rem;
 				font-size: 0.875rem;
 				font-weight: 500;
+				line-height: 1;
 				color: #10b981;
+				cursor: pointer;
+				transition: all 0.2s ease;
+
+				svg {
+					flex-shrink: 0;
+				}
+
+				&:hover {
+					background: rgba(16, 185, 129, 0.1);
+					border-color: #34d399;
+				}
+			`,
+		},
+
+		// RouteSegmentCard
+		routeSegmentCard: {
+			item: css`
+				position: relative;
+				margin-bottom: 0.75rem;
+				border-radius: 0.5rem;
+				background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+				border: 1px solid rgba(71, 85, 105, 0.3);
+				animation: fade-in-left 0.3s ease-in;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
+					border-color: rgba(71, 85, 105, 0.5);
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			`,
+			header: css`
+				position: relative;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				padding: 0.75rem;
+				border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+			`,
+			icon: css`
+				display: flex;
+				flex-shrink: 0;
+				height: 2rem;
+				width: 2rem;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				animation: fade-in 0.3s ease-in;
+			`,
+			iconGreen: css`
+				background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+				color: #ffffff;
+				box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+				animation: fade-in 0.3s ease-in, pulse-subtle-green 2s ease-in-out infinite;
+
+				@keyframes pulse-subtle-green {
+					0%, 100% {
+						box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+					}
+					50% {
+						box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.35);
+					}
+				}
+			`,
+			iconBlue: css`
+				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+				color: #ffffff;
+				box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+				animation: fade-in 0.3s ease-in, pulse-subtle-blue 2s ease-in-out infinite;
+
+				@keyframes pulse-subtle-blue {
+					0%, 100% {
+						box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+					}
+					50% {
+						box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.35);
+					}
+				}
+			`,
+			iconTeal: css`
+				background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%);
+				color: #ffffff;
+				box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.2);
+				animation: fade-in 0.3s ease-in, pulse-subtle-teal 2s ease-in-out infinite;
+
+				@keyframes pulse-subtle-teal {
+					0%, 100% {
+						box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.2);
+					}
+					50% {
+						box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.35);
+					}
+				}
+			`,
+			iconRed: css`
+				background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+				color: #ffffff;
+				box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+				animation: fade-in 0.3s ease-in, pulse-subtle-red 2s ease-in-out infinite;
+
+				@keyframes pulse-subtle-red {
+					0%, 100% {
+						box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+					}
+					50% {
+						box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.35);
+					}
+				}
+			`,
+			iconPurple: css`
+				background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+				color: #ffffff;
+				box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+				animation: fade-in 0.3s ease-in, pulse-subtle-purple 2s ease-in-out infinite;
+
+				@keyframes pulse-subtle-purple {
+					0%, 100% {
+						box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+					}
+					50% {
+						box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.35);
+					}
+				}
+			`,
+			title: css`
+				flex: 1;
+				margin: 0;
+				font-size: 0.938rem;
+				font-weight: 600;
+				color: #e5e7eb;
+			`,
+			subtitle: css`
+				font-size: 0.813rem;
+				font-weight: 400;
+				color: #94a3b8;
+			`,
+			headerActions: css`
+				display: flex;
+				gap: 0.5rem;
+				align-items: center;
+			`,
+			body: css`
+				padding: 1rem;
+			`,
+			cacheSection: css`
+				margin-bottom: 1rem;
+			`,
+			componentsSection: css`
+				margin-bottom: 1rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			`,
+			componentsSectionLabel: css`
+				font-size: 0.875rem;
+				font-weight: 500;
+				color: #94a3b8;
+			`,
+			tagsContainer: css`
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			`,
+			routeFileLabel: css`
+				margin-bottom: 0.5rem;
+				display: block;
+				font-size: 0.75rem;
+				font-weight: 400;
+				color: #64748b;
+			`,
+			cardsContainer: css`
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1.5rem;
 			`,
 		},
 
@@ -1599,13 +1779,21 @@ const stylesFactory = (theme: "light" | "dark") => {
 			gap: 0.25rem;
 			border-radius: 0.25rem;
 			border: 1px solid #1f9cf0;
-			padding-left: 0.625rem;
-			padding-right: 0.625rem;
-			padding-top: 0.125rem;
-			padding-bottom: 0.125rem;
+			padding: 0.25rem 0.625rem;
 			font-size: 0.875rem;
 			font-weight: 500;
+			line-height: 1;
 			color: #1f9cf0;
+			transition: all 0.2s ease;
+
+			svg {
+				flex-shrink: 0;
+			}
+
+			&:hover {
+				background: rgba(31, 156, 240, 0.1);
+				border-color: #60a5fa;
+			}
 		`,
 
 		// NewRouteForm
@@ -2423,7 +2611,7 @@ const stylesFactory = (theme: "light" | "dark") => {
 					align-items: center;
 					justify-content: center;
 					border: 0;
-					border-right: 1px solid transparent;
+					border-right: 2px solid transparent;
 					padding: 0.5rem;
 					font-family: ${fontFamilySans};
 					transition: all 0.2s ease;

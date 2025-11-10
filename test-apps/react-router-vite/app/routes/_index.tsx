@@ -94,7 +94,7 @@ export default function Index() {
   data.append("obj", JSON.stringify({ test: "test" }));
   console.log(data);
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+    <div style={{ fontFamily: "system-ui, sans-serif", backgroundColor: "#f0f0f0", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
       <Button
         onClick={(e) => {
