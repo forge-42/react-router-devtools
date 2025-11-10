@@ -20,8 +20,10 @@ interface NetworkBarProps {
 const COLORS = {
 	loader: "#4ade80",
 	"client-loader": "#60a5fa",
-	action: "#f59e0b",
+	action: "#FFD700",
 	"client-action": "#ef4444",
+	middleware: "#FFA500",
+	"client-middleware": "#FF69B4",
 	"custom-event": "#ffffff",
 	pending: "#94a3b8",
 	error: "#dc2626",

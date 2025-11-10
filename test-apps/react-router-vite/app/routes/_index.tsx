@@ -4,6 +4,22 @@ import { Link, useFetcher, useSubmit } from "react-router";
 import { Button } from "../components/Button";
 import * as ss from "~/utils/example";
 
+// Server middleware for index route
+const indexServerMiddleware = async (args: any, next: () => Promise<Response>) => {
+  console.log("Index server middleware - processing request");
+  return next();
+}
+
+export const middleware = [indexServerMiddleware];
+
+// Client middleware for index route
+const indexClientMiddleware = async (args: any, next: () => Promise<Response>) => {
+  console.log("Index client middleware - processing request");
+  return next();
+}
+
+export const clientMiddleware = [indexClientMiddleware];
+
 
 export const meta: MetaFunction = () => {
   return [

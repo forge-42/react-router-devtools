@@ -31,7 +31,11 @@ export const RequestDetails: React.FC<RequestDetailsProps> = ({ request, onClose
 					? styles.network.details.typeBadgeYellow
 					: request.type === "client-action"
 						? styles.network.details.typeBadgePurple
-						: styles.network.details.typeBadgeWhite
+						: request.type === "middleware"
+							? styles.network.details.typeBadgeOrange
+							: request.type === "client-middleware"
+								? styles.network.details.typeBadgePinkLight
+								: styles.network.details.typeBadgeWhite
 
 	const duration = request.endTime ? request.endTime - request.startTime : 0
 

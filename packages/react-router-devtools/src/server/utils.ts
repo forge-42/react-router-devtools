@@ -3,7 +3,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs, UNSAFE_DataWithResponseIni
 import { eventClient } from "../shared/event-client.js"
 import { sendEvent } from "../shared/send-event.js"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
-import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
+import { actionLog, errorLog, infoLog, loaderLog, middlewareLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
 
 export const analyzeCookies = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
@@ -351,3 +351,54 @@ export const analyzeLoaderOrAction =
 				errorHandler(routeId, err, true)
 			}
 		}
+
+// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
+export const analyzeMiddleware = (middleware: any, routeId: string, index: number, middlewareName?: string) => {
+	// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
+	return async (args: any, next: any) => {
+		const start = performance.now()
+		const startTime = Date.now()
+		const name = middlewareName || middleware.name || `Anonymous ${index}`
+
+		middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} triggered`)
+
+		// Send start event
+		const headers = Object.fromEntries(args.request.headers.entries())
+		sendEvent({
+			type: "middleware",
+			url: args.request.url,
+			headers,
+			startTime,
+			id: routeId,
+			routeId: routeId,
+			method: args.request.method,
+			middlewareName: name,
+			middlewareIndex: index,
+		})
+
+		try {
+			const result = await middleware(args, next)
+			const end = diffInMs(start)
+
+			middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} triggered - ${chalk.white(`${end}ms`)}`)
+
+			// Send end event
+			sendEvent({
+				type: "middleware",
+				url: args.request.url,
+				headers,
+				startTime,
+				endTime: Date.now(),
+				id: routeId,
+				routeId: routeId,
+				method: args.request.method,
+				middlewareName: name,
+				middlewareIndex: index,
+			})
+
+			return result
+		} catch (err) {
+			errorHandler(routeId, err, true)
+		}
+	}
+}

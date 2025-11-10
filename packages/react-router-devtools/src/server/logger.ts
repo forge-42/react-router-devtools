@@ -43,6 +43,16 @@ export const actionLog = (message: string) => {
 	return messageToLog
 }
 
+export const middlewareLog = (message: string) => {
+	const config = getConfig()
+	if (config.logs?.middleware === false) {
+		return
+	}
+	const messageToLog = `${chalk.hex("#FF8C00").bold("MIDDLEWARE")} ${message}`
+	log(messageToLog)
+	return messageToLog
+}
+
 // const successLog = (message: string) => {
 // log(`${chalk.greenBright.bold("SUCCESS")} ${message}`);
 //};

@@ -9,6 +9,7 @@ import { processPlugins } from "./utils.js"
 import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
 import { injectRdtClient } from "./utils/inject-client.js"
 import { injectContext } from "./utils/inject-context.js"
+import { augmentMiddlewareFunctions } from "./utils/middleware-augment.js"
 // this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
@@ -288,6 +289,20 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					return
 				}
 				const finalCode = augmentDataFetchingFunctions(code, routeId, id)
+				return finalCode
+			},
+		},
+		{
+			name: "react-router-devtools:middleware-augment",
+			apply(config) {
+				return shouldInject(config.mode, includeServer)
+			},
+			transform(code, id) {
+				const routeId = isTransformable(id)
+				if (!routeId) {
+					return
+				}
+				const finalCode = augmentMiddlewareFunctions(code, routeId, id)
 				return finalCode
 			},
 		},

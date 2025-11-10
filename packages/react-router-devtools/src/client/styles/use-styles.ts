@@ -1557,6 +1557,12 @@ const stylesFactory = (theme: "light" | "dark") => {
 					font-weight: 700;
 					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 				`,
+				filterColorCircle: css`
+					width: 0.5rem;
+					height: 0.5rem;
+					border-radius: 50%;
+					flex-shrink: 0;
+				`,
 				filterCount: css`
 					font-size: 0.6875rem;
 					opacity: 0.65;
@@ -1648,10 +1654,19 @@ const stylesFactory = (theme: "light" | "dark") => {
 					border-color: #3b82f6;
 				`,
 				requestButtonYellow: css`
-					border-color: #eab308;
+					border-color: #FFD700;
 				`,
 				requestButtonPurple: css`
 					border-color: #a855f7;
+				`,
+				requestButtonOrange: css`
+					border-color: #FFA500;
+				`,
+				requestButtonPink: css`
+					border-color: #FF1493;
+				`,
+				requestButtonPinkLight: css`
+					border-color: #FF69B4;
 				`,
 				requestButtonWhite: css`
 					border-color: #ffffff;
@@ -1669,10 +1684,19 @@ const stylesFactory = (theme: "light" | "dark") => {
 					background-color: #3b82f6;
 				`,
 				requestIndicatorYellow: css`
-					background-color: #eab308;
+					background-color: #FFD700;
 				`,
 				requestIndicatorPurple: css`
 					background-color: #a855f7;
+				`,
+				requestIndicatorOrange: css`
+					background-color: #FFA500;
+				`,
+				requestIndicatorPink: css`
+					background-color: #FF1493;
+				`,
+				requestIndicatorPinkLight: css`
+					background-color: #FF69B4;
 				`,
 				requestIndicatorWhite: css`
 					background-color: #ffffff;
@@ -1871,14 +1895,29 @@ const stylesFactory = (theme: "light" | "dark") => {
 					background-color: rgba(59, 130, 246, 0.15);
 				`,
 				typeBadgeYellow: css`
-					border-color: #eab308;
-					color: #eab308;
-					background-color: rgba(234, 179, 8, 0.15);
+					border-color: #FFD700;
+					color: #FFD700;
+					background-color: rgba(255, 215, 0, 0.15);
 				`,
 				typeBadgePurple: css`
 					border-color: #a855f7;
 					color: #a855f7;
 					background-color: rgba(168, 85, 247, 0.15);
+				`,
+				typeBadgeOrange: css`
+					border-color: #FFA500;
+					color: #FFA500;
+					background-color: rgba(255, 165, 0, 0.15);
+				`,
+				typeBadgePink: css`
+					border-color: #FF1493;
+					color: #FF1493;
+					background-color: rgba(255, 20, 147, 0.15);
+				`,
+				typeBadgePinkLight: css`
+					border-color: #FF69B4;
+					color: #FF69B4;
+					background-color: rgba(255, 105, 180, 0.15);
 				`,
 				typeBadgeWhite: css`
 					border-color: #ffffff;

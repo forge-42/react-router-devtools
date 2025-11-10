@@ -29,17 +29,28 @@ const TYPE_TEXT_COLORS = {
 	"client-loader": "text-blue-500",
 	action: "text-yellow-500",
 	"client-action": "text-purple-500",
+	middleware: "text-orange-500",
+	"client-middleware": "text-pink-400",
 	"custom-event": "text-white",
 }
 
-type EventType = "loader" | "client-loader" | "action" | "client-action" | "custom-event"
+type EventType =
+	| "loader"
+	| "client-loader"
+	| "action"
+	| "client-action"
+	| "middleware"
+	| "client-middleware"
+	| "custom-event"
 
 const EVENT_TYPE_FILTERS: { value: EventType | "all"; label: string; color: string }[] = [
 	{ value: "all", label: "All Events", color: "#ffffff" },
 	{ value: "loader", label: "Loader", color: "#4ade80" },
 	{ value: "client-loader", label: "Client Loader", color: "#60a5fa" },
-	{ value: "action", label: "Action", color: "#f59e0b" },
+	{ value: "action", label: "Action", color: "#FFD700" },
 	{ value: "client-action", label: "Client Action", color: "#ef4444" },
+	{ value: "middleware", label: "Middleware", color: "#FFA500" },
+	{ value: "client-middleware", label: "Client Middleware", color: "#FF69B4" },
 	{ value: "custom-event", label: "Custom Event", color: "#ffffff" },
 ]
 
@@ -201,6 +212,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 							}}
 							onClick={() => setActiveTypeFilter(filter.value)}
 						>
+							<span className={styles.network.waterfall.filterColorCircle} style={{ backgroundColor: filter.color }} />
 							{filter.label}
 							{filter.value !== "all" && (
 								<span className={styles.network.waterfall.filterCount}>
@@ -292,7 +304,11 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 											? styles.network.waterfall.requestButtonYellow
 											: request.type === "client-action"
 												? styles.network.waterfall.requestButtonPurple
-												: styles.network.waterfall.requestButtonWhite
+												: request.type === "middleware"
+													? styles.network.waterfall.requestButtonOrange
+													: request.type === "client-middleware"
+														? styles.network.waterfall.requestButtonPinkLight
+														: styles.network.waterfall.requestButtonWhite
 
 							const indicatorColorClass =
 								request.type === "loader"
@@ -303,7 +319,11 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 											? styles.network.waterfall.requestIndicatorYellow
 											: request.type === "client-action"
 												? styles.network.waterfall.requestIndicatorPurple
-												: styles.network.waterfall.requestIndicatorWhite
+												: request.type === "middleware"
+													? styles.network.waterfall.requestIndicatorOrange
+													: request.type === "client-middleware"
+														? styles.network.waterfall.requestIndicatorPinkLight
+														: styles.network.waterfall.requestIndicatorWhite
 
 							return (
 								<div

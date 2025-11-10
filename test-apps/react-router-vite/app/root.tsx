@@ -12,6 +12,39 @@ import {
 import { userSomething } from "./modules/user.server";
 import { EmbeddedDevTools } from "../../../packages/react-router-devtools/dist/client"
 
+// Server middleware
+const authMiddleware = async (args: any, next: () => Promise<Response>) => {
+  console.log("Auth middleware - checking authentication");
+  return next();
+}
+
+const loggingMiddleware = async (args: any, next: () => Promise<Response>) => {
+  console.log("Logging middleware - request:", args.request.url);
+  const response = await next();
+  console.log("Logging middleware - response status:", response.status);
+  return response;
+}
+
+export const middleware = [authMiddleware, loggingMiddleware];
+
+// Client middleware
+const clientAuthMiddleware = async (args: any, next: () => Promise<Response>) => {
+  console.log("Client auth middleware - checking client-side authentication");
+  return next();
+}
+
+const clientLoggingMiddleware = async (args: any, next: () => Promise<Response>) => {
+  console.log("Client logging middleware - request:", args.request.url);
+  const response = await next();
+  console.log("Client logging middleware - response status:", response.status);
+  return response;
+}
+
+export const clientMiddleware = [
+  clientAuthMiddleware,
+  clientLoggingMiddleware,
+];
+
 export const links = () => [];
 
 export const loader = ({context, devTools }: LoaderFunctionArgs) => {
