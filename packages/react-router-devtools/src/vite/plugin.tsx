@@ -187,6 +187,14 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	const appDir = cachedAppDir || "./app"
 	const appDirName = appDir.replace("./", "")
 
+	// Load routes eagerly so they're available during transformation
+	let routesLoaded = false
+	const ensureRoutesLoaded = async () => {
+		if (!routesLoaded) {
+			routesLoaded = await loadRoutes()
+		}
+	}
+
 	const shouldInject = (mode: string | undefined, include: boolean) => mode === "development" || include
 	const isTransformable = (id: string) => {
 		const extensions = [".tsx", ".jsx", ".ts", ".js"]
@@ -269,7 +277,8 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			apply(config) {
 				return shouldInject(config.mode, includeDevtools)
 			},
-			transform(code, id) {
+			async transform(code, id) {
+				await ensureRoutesLoaded()
 				const routeId = isTransformable(id)
 				if (!routeId) {
 					return
@@ -283,7 +292,8 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			apply(config) {
 				return shouldInject(config.mode, includeServer)
 			},
-			transform(code, id) {
+			async transform(code, id) {
+				await ensureRoutesLoaded()
 				const routeId = isTransformable(id)
 				if (!routeId) {
 					return
@@ -297,7 +307,8 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 			apply(config) {
 				return shouldInject(config.mode, includeServer)
 			},
-			transform(code, id) {
+			async transform(code, id) {
+				await ensureRoutesLoaded()
 				const routeId = isTransformable(id)
 				if (!routeId) {
 					return

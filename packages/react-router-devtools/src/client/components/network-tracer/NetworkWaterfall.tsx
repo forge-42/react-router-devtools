@@ -64,7 +64,6 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	const [now, setNow] = useState(Date.now())
 	const [activeTypeFilter, setActiveTypeFilter] = useState<EventType | "all">("all")
 	const [activeRouteFilters, setActiveRouteFilters] = useState<Set<string>>(new Set())
-	const selectedRequest = selectedRequestIndex !== null ? requests[selectedRequestIndex] : null
 
 	// Get unique routes from all requests
 	const uniqueRoutes = Array.from(new Set(requests.map((req) => req.routeId))).sort()
@@ -82,10 +81,21 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 		filteredRequests = filteredRequests.filter((req) => activeRouteFilters.has(req.routeId))
 	}
 
+	// Get the selected request from the filtered list
+	const selectedRequest = selectedRequestIndex !== null ? filteredRequests[selectedRequestIndex] : null
+
 	// Check if there are any active requests
 	const hasActiveRequests = filteredRequests.some(
 		(req) => !req.endTime || (req.endTime && now - req.endTime < INACTIVE_THRESHOLD)
 	)
+
+	// Reset selected index when filters change and current selection is out of bounds
+	useEffect(() => {
+		if (selectedRequestIndex !== null && selectedRequestIndex >= filteredRequests.length) {
+			setSelectedRequest(null)
+		}
+	}, [selectedRequestIndex, filteredRequests.length])
+
 	useEffect(() => {
 		if (!hasActiveRequests) {
 			return
