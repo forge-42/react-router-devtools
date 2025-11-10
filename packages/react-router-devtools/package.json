@@ -141,7 +141,6 @@
 		"@tanstack/devtools-vite": "^0.3.11",
 		"@tanstack/react-devtools": "^0.8.0",
 		"beautify": "^0.0.8",
-		"bippy": "^0.3.7",
 		"chalk": "5.4.1",
 		"clsx": "2.1.1",
 		"date-fns": "^4.1.0",
