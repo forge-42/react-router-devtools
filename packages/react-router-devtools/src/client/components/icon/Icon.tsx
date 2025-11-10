@@ -17,6 +17,7 @@ type IconSizes = keyof typeof IconSize
 
 interface IconProps extends SVGProps<SVGSVGElement> {
 	name: IconName
+	title?: string
 	testId?: string
 	className?: string
 	size?: IconSizes
@@ -29,7 +30,7 @@ const strokeIcon: Partial<IconName>[] = []
  * Icon component wrapper for SVG icons.
  * @returns SVG icon as a react component
  */
-export const Icon = ({ name, testId, className, size = "sm", ...props }: IconProps) => {
+export const Icon = ({ name, title, testId, className, size = "sm", ...props }: IconProps) => {
 	const { styles } = useStyles()
 	const iconSize = IconSize[size]
 	const isEmptyFill = emptyFill.includes(name)
@@ -46,7 +47,7 @@ export const Icon = ({ name, testId, className, size = "sm", ...props }: IconPro
 			data-name={name}
 			{...props}
 		>
-			<title>{name}</title>
+			<title>{title ?? name}</title>
 			<defs>
 				<symbol
 					id="Layout"

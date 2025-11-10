@@ -709,27 +709,40 @@ const stylesFactory = (theme: "light" | "dark") => {
 		// RouteToggle component
 		routeToggle: {
 			container: css`
-				position: absolute;
-				left: 0;
-				top: 0;
 				display: flex;
 				align-items: center;
 				gap: 0.5rem;
-				border-radius: 0.5rem;
-				border: 1px solid ${textPrimary};
-				padding: 0.25rem 0.75rem;
+				border-radius: 0.375rem;
+				border: 1px solid rgba(148, 163, 184, 0.3);
+				background: linear-gradient(135deg, rgba(148, 163, 184, 0.1) 0%, rgba(100, 116, 139, 0.1) 100%);
+				padding: 0.375rem 0.625rem;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background: linear-gradient(135deg, rgba(148, 163, 184, 0.2) 0%, rgba(100, 116, 139, 0.2) 100%);
+					border-color: rgba(148, 163, 184, 0.5);
+				}
 			`,
 			icon: css`
-				height: 1.25rem;
-				width: 1.25rem;
+				height: 1.5rem;
+				width: 1.5rem;
 				cursor: pointer;
+				color: #64748b;
+				transition: all 0.2s ease;
+				padding: 0.25rem;
+				border-radius: 0.25rem;
+
+				&:hover {
+					color: #cbd5e1;
+					background: rgba(148, 163, 184, 0.2);
+				}
 			`,
 			iconActive: css`
-				color: #eab308;
+				color: #3b82f6;
+				background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%);
+				box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
 			`,
-		},
-
-		// RouteInfo component
+		}, // RouteInfo component
 		routeInfo: {
 			container: css`
 				position: relative;
@@ -944,34 +957,48 @@ const stylesFactory = (theme: "light" | "dark") => {
 		pageTab: {
 			header: css`
 				position: sticky;
-				width: 100%;
 				top: 0;
-				z-index: 30;
-				margin-bottom: 0.5rem;
-				padding-top: 0.5rem;
+				z-index: 10;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+				border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+				padding: 0.75rem 1rem;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+				min-height: 3.5rem;
+				height: 3.5rem;
 			`,
 			headerContent: css`
-				margin-bottom: 0.25rem;
 				display: flex;
-				justify-content: space-between;
+				align-items: center;
+				gap: 0.75rem;
 			`,
 			title: css`
-				font-size: 1.125rem;
+				margin: 0;
+				font-size: 1rem;
 				font-weight: 600;
+				color: #ffffff;
 			`,
 			revalidateButton: css`
-				z-index: 20;
+				display: flex;
+				align-items: center;
+				gap: 0.375rem;
 				cursor: pointer;
-				border-radius: 0.5rem;
-				border: 1px solid #10b981;
-				padding-top: 0.25rem;
-				padding-bottom: 0.25rem;
-				padding-left: 0.75rem;
-				padding-right: 0.75rem;
-				font-size: 0.875rem;
+				border-radius: 0.375rem;
+				border: 1px solid rgba(16, 185, 129, 0.3);
+				background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+				padding: 0.375rem 0.625rem;
+				font-size: 0.813rem;
 				font-weight: 600;
-				color: #ffffff !important;
-				background-color: transparent;
+				color: #6ee7b7;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+					border-color: rgba(16, 185, 129, 0.5);
+					color: #34d399;
+				}
 			`,
 			revalidateButtonDisabled: css`
 				pointer-events: none;
@@ -986,13 +1013,6 @@ const stylesFactory = (theme: "light" | "dark") => {
 				display: flex;
 				height: 100%;
 				flex-direction: column;
-				padding: 1.5rem;
-				padding-left: 1rem;
-				padding-right: 0.5rem;
-				@media (min-width: 1024px) {
-					padding-left: 1.5rem;
-					padding-right: 1.5rem;
-				}
 			`,
 			routesList: css`
 				position: relative;
@@ -1011,94 +1031,221 @@ const stylesFactory = (theme: "light" | "dark") => {
 				display: flex;
 				height: 100%;
 				flex-direction: column;
-				overflow-y: auto;
-				padding: 1.5rem;
+				overflow: hidden;
 			`,
-			clearButton: css`
-				position: absolute;
-				right: 0.75rem;
+			header: css`
+				position: sticky;
 				top: 0;
-				z-index: 20;
-				cursor: pointer;
-				border-radius: 0.5rem;
-				border: 1px solid #ef4444;
-				padding: 0.25rem 0.75rem;
-				font-size: 0.875rem;
+				z-index: 10;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+				border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+				padding: 0.75rem 1rem;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+				min-height: 3.5rem;
+				height: 3.5rem;
+			`,
+			headerContent: css`
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			`,
+			headerTitle: css`
+				margin: 0;
+				font-size: 1rem;
 				font-weight: 600;
 				color: #ffffff;
+			`,
+			headerCount: css`
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 1.5rem;
+				height: 1.5rem;
+				padding: 0 0.5rem;
+				border-radius: 9999px;
+				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+				font-size: 0.75rem;
+				font-weight: 700;
+				color: #ffffff;
+			`,
+			clearButton: css`
+				display: flex;
+				align-items: center;
+				gap: 0.375rem;
+				cursor: pointer;
+				border-radius: 0.375rem;
+				border: 1px solid rgba(239, 68, 68, 0.3);
+				background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+				padding: 0.375rem 0.625rem;
+				font-size: 0.813rem;
+				font-weight: 600;
+				color: #fca5a5;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+					border-color: rgba(239, 68, 68, 0.5);
+					color: #f87171;
+				}
 			`,
 			list: css`
 				position: relative;
+				overflow-y: auto;
 			`,
 			item: css`
-				margin-bottom: 0.5rem;
-				margin-left: 2rem;
+				position: relative;
+				margin-bottom: 0.75rem;
+				border-radius: 0.5rem;
+				background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+				border: 1px solid rgba(71, 85, 105, 0.3);
 				animation: fade-in-left 0.3s ease-in;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
+					border-color: rgba(71, 85, 105, 0.5);
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
 			`,
 			icon: css`
-				position: absolute;
-				left: -0.75rem;
-				margin-top: 0.5rem;
 				display: flex;
-				height: 1.5rem;
-				width: 1.5rem;
+				flex-shrink: 0;
+				height: 2rem;
+				width: 2rem;
 				align-items: center;
 				justify-content: center;
 				border-radius: 50%;
-				background-color: #1e3a8a;
-				ring: 4px;
-				ring-color: #1e3a8a;
-				animation: fade-in 0.3s ease-in;
+				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+				box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+				animation: fade-in 0.3s ease-in, pulse-subtle 2s ease-in-out infinite;
+
+				@keyframes pulse-subtle {
+					0%, 100% {
+						box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+					}
+					50% {
+						box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.35);
+					}
+				}
 			`,
-			title: css`
-				margin-top: -0.75rem;
-				margin-bottom: 0.25rem;
+			itemHeader: css`
+				position: relative;
 				display: flex;
 				align-items: center;
-				gap: 0.5rem;
-				font-size: 1.125rem;
+				gap: 0.75rem;
+				padding: 0.75rem;
+				border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+			`,
+			title: css`
+				flex: 1;
+				margin: 0;
+				font-size: 0.938rem;
 				font-weight: 600;
-				color: #ffffff;
+				color: #e5e7eb;
+			`,
+			methodTag: css`
+				flex-shrink: 0;
+			`,
+			itemBody: css`
+				padding: 0.75rem;
 			`,
 			eventContainer: css`
-				margin-bottom: 1rem;
+				margin-top: 0.5rem;
+			`,
+			eventInfoGrid: css`
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+				gap: 0.5rem;
+				margin-bottom: 0.75rem;
+				padding: 0.625rem 0.75rem;
+				border-radius: 0.25rem;
+				background: rgba(15, 23, 42, 0.3);
+				border: 1px solid rgba(71, 85, 105, 0.2);
+			`,
+			eventInfoItem: css`
+				display: flex;
+				flex-direction: column;
+				gap: 0.125rem;
+			`,
+			eventInfoLabel: css`
+				font-size: 0.688rem;
+				font-weight: 500;
+				color: #64748b;
+				text-transform: uppercase;
+				letter-spacing: 0.025em;
+			`,
+			eventInfoValue: css`
+				font-size: 0.75rem;
+				font-weight: 400;
+				color: #cbd5e1;
+				word-break: break-word;
 			`,
 			eventTime: css`
-				margin-bottom: 0.5rem;
+				margin-bottom: 0.375rem;
 				display: block;
-				font-size: 0.875rem;
+				font-size: 0.813rem;
 				font-weight: 400;
-				line-height: 1;
-				color: #6b7280;
+				line-height: 1.4;
+				color: #94a3b8;
 			`,
 			eventText: css`
-				margin-bottom: 1rem;
-				font-size: 1rem;
+				margin-bottom: 0.625rem;
+				font-size: 0.875rem;
 				font-weight: 400;
-				color: #9ca3af;
+				color: #cbd5e1;
+				line-height: 1.5;
 			`,
 			eventDataContainer: css`
 				display: flex;
-				gap: 2rem;
+				gap: 1.5rem;
+				flex-wrap: wrap;
 			`,
 			eventData: css`
-				margin-bottom: 1rem;
+				margin-bottom: 0.5rem;
 				text-overflow: ellipsis;
 				overflow: hidden;
-				font-size: 1rem;
+				font-size: 0.875rem;
 				font-weight: 400;
-				color: #9ca3af;
+				color: #cbd5e1;
 			`,
 		},
 
 		// Settings Tab
 		settingsTab: {
 			container: css`
-				margin-bottom: 1rem;
+				display: flex;
+				flex-direction: column;
+				height: 100%;
 			`,
 			header: css`
-				font-size: 1.125rem;
+				position: sticky;
+				top: 0;
+				z-index: 10;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+				border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+				padding: 0.75rem 1rem;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+				min-height: 3.5rem;
+				height: 3.5rem;
+			`,
+			headerTitle: css`
+				margin: 0;
+				font-size: 1rem;
 				font-weight: 600;
+				color: #ffffff;
+			`,
+			content: css`
+				flex: 1;
+				overflow-y: auto;
 			`,
 			divider: css`
 				margin-top: 0.5rem;
@@ -1120,16 +1267,49 @@ const stylesFactory = (theme: "light" | "dark") => {
 
 		// Routes Tab
 		routesTab: {
+			wrapper: css`
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			`,
+			header: css`
+				position: sticky;
+				top: 0;
+				z-index: 10;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+				border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+				padding: 0.75rem 1rem;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+				min-height: 3.5rem;
+				height: 3.5rem;
+			`,
+			headerContent: css`
+				display: flex;
+				align-items: center;
+				width: 100%;
+				justify-content: space-between;
+				gap: 0.75rem;
+			`,
+			headerTitle: css`
+				margin: 0;
+				font-size: 1rem;
+				font-weight: 600;
+				color: #ffffff;
+			`,
 			container: css`
 				position: relative;
-				height: 100%;
+				flex: 1;
+				overflow: hidden;
 				width: 100%;
 			`,
 			containerWithPadding: css`
 				position: relative;
-				height: 100%;
+				flex: 1;
+				overflow: hidden;
 				width: 100%;
-				padding-top: 2rem;
 			`,
 			treeContainer: css`
 				display: flex;
@@ -1140,7 +1320,6 @@ const stylesFactory = (theme: "light" | "dark") => {
 				height: 100%;
 				width: 100%;
 				overflow-y: auto;
-				padding-right: 1rem;
 			`,
 			addNewItem: css`
 				color: #ffffff;
@@ -1477,27 +1656,73 @@ const stylesFactory = (theme: "light" | "dark") => {
 			`,
 		},
 
+		// Network Tab
+		networkTab: {
+			wrapper: css`
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			`,
+			header: css`
+				position: sticky;
+				top: 0;
+				z-index: 10;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+				border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+				padding: 0.75rem 1rem;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+				min-height: 3.5rem;
+				height: 3.5rem;
+			`,
+			headerContent: css`
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			`,
+			headerTitle: css`
+				margin: 0;
+				font-size: 1rem;
+				font-weight: 600;
+				color: #ffffff;
+			`,
+			container: css`
+				position: relative;
+				flex: 1;
+				overflow: hidden;
+				width: 100%;
+			`,
+		},
+
 		// Network Components
 		network: {
 			// NetworkPanel
 			panel: {
 				container: css`
+					height: 100%;
+					overflow-y: auto;
 					color: #e5e7eb;
 				`,
 				innerContainer: css`
+					height: 100%;
 					margin-left: auto;
 					margin-right: auto;
-					padding: 0.25rem;
+					padding: 1rem;
 				`,
 				cardContainer: css`
+					height: 100%;
 					background-color: #1f2937;
 					border-radius: 0.5rem;
 					box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 					overflow: hidden;
 				`,
 				networkContainer: css`
+					height: 100%;
 					border-top: 1px solid #374151;
 					padding: 1rem;
+					overflow-y: auto;
 				`,
 			},
 
@@ -2065,6 +2290,54 @@ const stylesFactory = (theme: "light" | "dark") => {
 			},
 		},
 
+		// TabContent component - Reusable container for tab content padding
+		tabContent: {
+			container: css`
+				padding: 1rem;
+
+				@media (min-width: 1024px) {
+					padding: 1.5rem;
+				}
+			`,
+		},
+
+		// TabHeader component - Reusable header for all tabs
+		tabHeader: {
+			container: css`
+				position: sticky;
+				top: 0;
+				z-index: 10;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+				border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+				padding: 0.75rem 1rem;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+				min-height: 3.5rem;
+				height: 3.5rem;
+			`,
+			containerRtl: css`
+				background: linear-gradient(225deg, #1e293b 0%, #0f172a 100%);
+			`,
+			leftContent: css`
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			`,
+			title: css`
+				margin: 0;
+				font-size: 1rem;
+				font-weight: 600;
+				color: #ffffff;
+			`,
+			rightContent: css`
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			`,
+		},
+
 		// Layout Components
 		layout: {
 			// ContentPanel
@@ -2082,15 +2355,6 @@ const stylesFactory = (theme: "light" | "dark") => {
 					overflow-y: auto;
 					overflow-x: hidden;
 					background-color: ${bgPrimary};
-					padding-left: 0.25rem;
-					padding-right: 0.25rem;
-					padding-top: 0.75rem;
-					padding-bottom: 1rem;
-
-					@media (min-width: 1024px) {
-						padding-left: 1rem;
-						padding-right: 1rem;
-					}
 				`,
 				mainContentUnset: css`
 					all: unset;
@@ -2107,7 +2371,6 @@ const stylesFactory = (theme: "light" | "dark") => {
 					display: none;
 					height: 100%;
 					width: 33.333333%;
-					padding: 0.5rem;
 					overflow-y: auto;
 
 					@media (min-width: 1024px) {
@@ -2160,22 +2423,26 @@ const stylesFactory = (theme: "light" | "dark") => {
 					align-items: center;
 					justify-content: center;
 					border: 0;
-					border-bottom: 1px solid #212121;
-					border-right: 1px solid #212121;
+					border-right: 1px solid transparent;
 					padding: 0.5rem;
 					font-family: ${fontFamilySans};
-					transition: all 0.3s;
+					transition: all 0.2s ease;
+					background: linear-gradient(135deg, rgba(31, 41, 55, 0.5) 0%, rgba(17, 24, 39, 0.5) 100%);
 
 					&:hover {
-						background-color: rgba(33, 33, 33, 0.5);
+						background: linear-gradient(135deg, rgba(51, 65, 85, 0.6) 0%, rgba(30, 41, 59, 0.6) 100%);
+						border-right-color: rgba(59, 130, 246, 0.5);
+						transform: translateY(-1px);
+						box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
 					}
 				`,
 				tabActive: css`
-					background-color: ${bgPrimary};
+					background: linear-gradient(135deg, ${bgPrimary} 0%, rgba(15, 23, 42, 0.95) 100%);
+					border-right-color: rgba(59, 130, 246, 0.7);
 				`,
 				tabInactive: css`
 					&:hover {
-						background-color: #212121;
+						background: linear-gradient(135deg, rgba(51, 65, 85, 0.6) 0%, rgba(30, 41, 59, 0.6) 100%);
 					}
 				`,
 				tabIcon: css`

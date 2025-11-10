@@ -35,6 +35,7 @@ const Tab = ({
 		<div
 			data-testid={tab.id}
 			onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabsType }))}
+			title={typeof tab.name === "string" ? tab.name : undefined}
 			className={cx(
 				"group",
 				styles.layout.tabs.tab,
@@ -43,7 +44,6 @@ const Tab = ({
 			)}
 		>
 			<div className={cx(className, styles.layout.tabs.tabIcon)}>{tab.icon}</div>
-			<div className={styles.layout.tabs.tabTooltip}>{tab.name}</div>
 		</div>
 	)
 }

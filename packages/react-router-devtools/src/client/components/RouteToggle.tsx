@@ -12,6 +12,7 @@ export const RouteToggle = () => {
 				className={cx(styles.routeToggle.icon, routeViewMode === "tree" && styles.routeToggle.iconActive)}
 				onClick={() => setSettings({ routeViewMode: "tree" })}
 				name="Network"
+				title="Grid"
 			/>
 			/
 			<Icon

@@ -1,6 +1,9 @@
 import { useMatches, useRevalidator } from "react-router"
 
 import { RouteSegmentInfo } from "../components/RouteSegmentInfo.js"
+import { TabContent } from "../components/TabContent.js"
+import { TabHeader } from "../components/TabHeader.js"
+import { Icon } from "../components/icon/Icon.js"
 import { cx, useStyles } from "../styles/use-styles.js"
 
 const PageTab = () => {
@@ -10,9 +13,10 @@ const PageTab = () => {
 
 	return (
 		<>
-			<div className={styles.pageTab.header}>
-				<div className={styles.pageTab.headerContent}>
-					<div className={styles.pageTab.title}>Active Route Segments</div>
+			<TabHeader
+				icon={<Icon name="Layers" />}
+				title="Active Route Segments"
+				rightContent={
 					<button
 						type="button"
 						onClick={() => revalidate()}
@@ -21,15 +25,16 @@ const PageTab = () => {
 					>
 						{state !== "idle" ? "Revalidating..." : "Revalidate"}
 					</button>
-				</div>
-				<hr className={styles.pageTab.divider} />
-			</div>
+				}
+			/>
 			<div className={styles.pageTab.content}>
-				<ol className={cx(styles.pageTab.routesList, state === "loading" && styles.pageTab.routesListLoading)}>
-					{routes.toReversed().map((route, i) => (
-						<RouteSegmentInfo route={route} i={i} key={route.id} />
-					))}
-				</ol>
+				<TabContent>
+					<ol className={cx(styles.pageTab.routesList, state === "loading" && styles.pageTab.routesListLoading)}>
+						{routes.toReversed().map((route, i) => (
+							<RouteSegmentInfo route={route} i={i} key={route.id} />
+						))}
+					</ol>
+				</TabContent>
 			</div>
 		</>
 	)
