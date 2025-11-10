@@ -3,7 +3,6 @@ import { Icon } from "../components/icon/Icon.js"
 import { NetworkTab } from "./NetworkTab.js"
 import { PageTab } from "./PageTab.js"
 import { RoutesTab } from "./RoutesTab.js"
-import { SettingsTab } from "./SettingsTab.js"
 
 export type Tabs = (typeof tabs)[number]["id"]
 
@@ -37,12 +36,5 @@ export const tabs = [
 		component: <NetworkTab />,
 
 		hideTimeline: true,
-	},
-	{
-		name: "Settings",
-		icon: <Icon size="md" name="Settings" />,
-		id: "settings",
-		component: <SettingsTab />,
-		hideTimeline: false,
 	},
 ] as const

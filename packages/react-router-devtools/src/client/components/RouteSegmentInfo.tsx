@@ -76,15 +76,6 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 	const cacheControl = serverInfo?.lastLoader.responseHeaders
 		? parseCacheControlHeader(new Headers(serverInfo?.lastLoader.responseHeaders))
 		: undefined
-	const onHover = (path: string, type: "enter" | "leave") => {
-		if (settings.showRouteBoundariesOn === "click") {
-			return
-		}
-		setSettings({
-			hoveredRoute: path,
-			isHoveringRoute: type === "enter",
-		})
-	}
 	const entryRoute = window.__reactRouterManifest?.routes[route.id]
 	const isLayout = isLayoutRoute(entryRoute)
 
@@ -107,46 +98,40 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 					}}
 				/>
 			)}
-			{settings.showRouteBoundariesOn === "click" && (
-				<button
-					type="button"
-					data-testid={`${route.id}-show-route-boundaries`}
-					className={styles.routeSegmentInfo.showBoundaryButton}
-					onClick={() => {
-						const routeId = route.id === "root" ? "root" : i.toString()
-						if (routeId !== settings.hoveredRoute) {
-							// Remove the classes from the old hovered route
+			<button
+				type="button"
+				data-testid={`${route.id}-show-route-boundaries`}
+				className={styles.routeSegmentInfo.showBoundaryButton}
+				onClick={() => {
+					const routeId = route.id === "root" ? "root" : i.toString()
+					if (routeId !== settings.hoveredRoute) {
+						// Remove the classes from the old hovered route
+						setSettings({
+							isHoveringRoute: false,
+						})
+						// Add the classes to the new hovered route
+						setTimeout(() => {
 							setSettings({
-								isHoveringRoute: false,
+								hoveredRoute: routeId,
+								isHoveringRoute: true,
 							})
-							// Add the classes to the new hovered route
-							setTimeout(() => {
-								setSettings({
-									hoveredRoute: routeId,
-									isHoveringRoute: true,
-								})
-							})
-						} else {
-							// Just change the isHoveringRoute state
-							setSettings({
-								isHoveringRoute: !settings.isHoveringRoute,
-							})
-						}
-					}}
-				>
-					<Icon name="Radio" size="sm" />
-					Show Route Boundary
-				</button>
-			)}
+						})
+					} else {
+						// Just change the isHoveringRoute state
+						setSettings({
+							isHoveringRoute: !settings.isHoveringRoute,
+						})
+					}
+				}}
+			>
+				<Icon name="Radio" size="sm" />
+				Show Route Boundary
+			</button>
 		</div>
 	)
 
 	return (
-		<RouteSegmentCard
-			data-testid={route.id}
-			onMouseEnter={() => onHover(route.id === "root" ? "root" : i.toString(), "enter")}
-			onMouseLeave={() => onHover(route.id === "root" ? "root" : i.toString(), "leave")}
-		>
+		<RouteSegmentCard data-testid={route.id}>
 			<RouteSegmentHeader
 				icon={iconName}
 				color={routeColor}
@@ -169,7 +154,7 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 
 				{/* Component Tags */}
 				<div className={styles.routeSegmentCard.componentsSection}>
-					<span className={styles.routeSegmentCard.componentsSectionLabel}>Components:</span>
+					<span className={styles.routeSegmentCard.componentsSectionLabel}>Exports:</span>
 					<div className={styles.routeSegmentCard.tagsContainer}>
 						<Tag color={entryRoute?.hasLoader ? "GREEN" : "RED"}>Loader</Tag>
 						<Tag color={entryRoute?.hasClientLoader ? "GREEN" : "RED"}>Client Loader</Tag>

@@ -1876,6 +1876,51 @@ const stylesFactory = (theme: "light" | "dark") => {
 				font-weight: 600;
 				color: #ffffff;
 			`,
+			headerCount: css`
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 1.5rem;
+				height: 1.5rem;
+				padding: 0 0.5rem;
+				border-radius: 9999px;
+				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+				font-size: 0.75rem;
+				font-weight: 700;
+				color: #ffffff;
+			`,
+			limitWarning: css`
+				display: flex;
+				align-items: center;
+				gap: 0.375rem;
+				padding: 0.375rem 0.625rem;
+				border-radius: 0.375rem;
+				border: 1px solid rgba(251, 191, 36, 0.3);
+				background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+				font-size: 0.813rem;
+				font-weight: 600;
+				color: #fbbf24;
+			`,
+			clearButton: css`
+				display: flex;
+				align-items: center;
+				gap: 0.375rem;
+				cursor: pointer;
+				border-radius: 0.375rem;
+				border: 1px solid rgba(239, 68, 68, 0.3);
+				background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+				padding: 0.375rem 0.625rem;
+				font-size: 0.813rem;
+				font-weight: 600;
+				color: #fca5a5;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+					border-color: rgba(239, 68, 68, 0.5);
+					color: #f87171;
+				}
+			`,
 			container: css`
 				position: relative;
 				flex: 1;

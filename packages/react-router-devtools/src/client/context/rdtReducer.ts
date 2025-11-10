@@ -72,11 +72,6 @@ export type ReactRouterDevtoolsState = {
 		routeViewMode: "list" | "tree"
 
 		withServerDevTools: boolean
-
-		/**
-		 * Whether to show route boundaries on hover of the route segment or clicking a button
-		 */
-		showRouteBoundariesOn: "hover" | "click"
 	}
 	server?: ServerInfo
 	persistOpen: boolean
@@ -86,7 +81,6 @@ export const initialState: ReactRouterDevtoolsState = {
 	timeline: [],
 	server: undefined,
 	settings: {
-		showRouteBoundariesOn: "click",
 		editorName: "VSCode",
 		routeBoundaryGradient: "watermelon",
 		routeWildcards: {},

@@ -3,7 +3,6 @@ import { useMatches } from "react-router"
 import { ROUTE_BOUNDARY_GRADIENTS } from "../context/rdtReducer.js"
 import { useSettingsContext } from "../context/useRDTContext.js"
 import { useStyles } from "../styles/use-styles.js"
-import { useAttachListener } from "./useAttachListener.js"
 import { ROUTE_CLASS } from "./useReactTreeListeners.js"
 
 export const useSetRouteBoundaries = () => {
@@ -40,28 +39,7 @@ export const useSetRouteBoundaries = () => {
 		},
 		[settings.hoveredRoute, settings.isHoveringRoute, settings.routeBoundaryGradient, matches.length, styles.gradients]
 	)
-	// Mouse left the document => remove classes => set isHovering to false
-	useAttachListener("mouseleave", "document", () => {
-		if (settings.showRouteBoundariesOn === "click") {
-			return
-		}
-		applyOrRemoveClasses()
 
-		setSettings({
-			isHoveringRoute: false,
-		})
-	})
-	// Mouse is scrolling => remove classes => set isHovering to false
-	useAttachListener("wheel", "window", () => {
-		if (settings.showRouteBoundariesOn === "click") {
-			return
-		}
-		applyOrRemoveClasses(false)
-
-		setSettings({
-			isHoveringRoute: false,
-		})
-	})
 	// We apply/remove classes on state change which happens in Page tab
 	// biome-ignore lint/correctness/useExhaustiveDependencies: investigate
 	useEffect(() => {

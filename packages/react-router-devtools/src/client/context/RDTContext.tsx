@@ -53,10 +53,7 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 	return state
 }
 
-export type RdtClientConfig = Pick<
-	ReactRouterDevtoolsState["settings"],
-	"showRouteBoundariesOn" | "expansionLevel" | "routeBoundaryGradient"
->
+export type RdtClientConfig = Pick<ReactRouterDevtoolsState["settings"], "expansionLevel" | "routeBoundaryGradient">
 
 export const RDTContextProvider = ({ children, config }: ContextProps) => {
 	const [state, dispatch] = useReducer(rdtReducer, getExistingStateFromStorage(config))
