@@ -1,6 +1,5 @@
 import type { JSX } from "react"
 import { Icon } from "../components/icon/Icon.js"
-import { ErrorsTab } from "./ErrorsTab.js"
 import { NetworkTab } from "./NetworkTab.js"
 import { PageTab } from "./PageTab.js"
 import { RoutesTab } from "./RoutesTab.js"
@@ -29,15 +28,6 @@ export const tabs = [
 		icon: <Icon size="md" name="GitMerge" />,
 		id: "routes",
 		component: <RoutesTab />,
-		hideTimeline: false,
-	},
-
-	{
-		name: "Errors",
-		icon: <Icon size="md" name="Shield" />,
-		id: "errors",
-		component: <ErrorsTab />,
-
 		hideTimeline: false,
 	},
 	{

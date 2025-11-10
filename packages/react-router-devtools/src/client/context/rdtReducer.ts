@@ -47,16 +47,6 @@ export type ServerInfo = {
 	}
 }
 
-type HTMLErrorPrimitive = {
-	file?: string
-	tag: string
-}
-
-export type HTMLError = {
-	child: HTMLErrorPrimitive
-	parent: HTMLErrorPrimitive
-}
-
 export type ReactRouterDevtoolsState = {
 	timeline: TimelineEvent[]
 	settings: {
@@ -88,7 +78,6 @@ export type ReactRouterDevtoolsState = {
 		 */
 		showRouteBoundariesOn: "hover" | "click"
 	}
-	htmlErrors: HTMLError[]
 	server?: ServerInfo
 	persistOpen: boolean
 }
@@ -108,7 +97,6 @@ export const initialState: ReactRouterDevtoolsState = {
 		routeViewMode: "tree",
 		withServerDevTools: true,
 	},
-	htmlErrors: [],
 	persistOpen: false,
 }
 
@@ -149,11 +137,6 @@ type SetServerInfo = {
 	payload: ServerInfo
 }
 
-type SetHtmlErrors = {
-	type: "SET_HTML_ERRORS"
-	payload: HTMLError[]
-}
-
 /** Aggregate of all action types */
 export type ReactRouterDevtoolsActions =
 	| SetTimelineEvent
@@ -162,7 +145,6 @@ export type ReactRouterDevtoolsActions =
 	| SetWholeState
 	| SetIsSubmittedAction
 	| SetServerInfo
-	| SetHtmlErrors
 	| SetPersistOpenAction
 
 export const rdtReducer = (
@@ -170,11 +152,6 @@ export const rdtReducer = (
 	{ type, payload }: ReactRouterDevtoolsActions
 ): ReactRouterDevtoolsState => {
 	switch (type) {
-		case "SET_HTML_ERRORS":
-			return {
-				...state,
-				htmlErrors: [...payload],
-			}
 		case "SET_SERVER_INFO":
 			return {
 				...state,

@@ -24,21 +24,6 @@ const useRDTContext = () => {
 	}
 }
 
-export const useHtmlErrors = () => {
-	const { state, dispatch } = useRDTContext()
-	const { htmlErrors } = state
-	const setHtmlErrors = useCallback(
-		(htmlErrors: ReactRouterDevtoolsState["htmlErrors"]) => {
-			dispatch({
-				type: "SET_HTML_ERRORS",
-				payload: htmlErrors,
-			})
-		},
-		[dispatch]
-	)
-	return { htmlErrors, setHtmlErrors }
-}
-
 export const useServerInfo = () => {
 	const { state, dispatch } = useRDTContext()
 	const { server } = state

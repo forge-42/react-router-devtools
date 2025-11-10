@@ -1,4 +1,4 @@
-import { useHtmlErrors, useSettingsContext } from "../context/useRDTContext.js"
+import { useSettingsContext } from "../context/useRDTContext.js"
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll.js"
 import { useTabs } from "../hooks/useTabs.js"
 import { cx } from "../styles/use-styles.js"
@@ -50,28 +50,16 @@ const Tab = ({
 
 const Tabs = ({ plugins }: TabsProps) => {
 	const { settings } = useSettingsContext()
-	const { htmlErrors } = useHtmlErrors()
 	const { styles } = useStyles()
 	const { activeTab } = settings
 	const { visibleTabs } = useTabs(plugins)
 	const scrollRef = useHorizontalScroll()
 
-	const hasErrors = htmlErrors.length > 0
 	return (
 		<div className={styles.layout.tabs.container}>
 			<div ref={scrollRef} className={cx("react-router-dev-tools-tab", styles.layout.tabs.scrollContainer)}>
 				{visibleTabs.map((tab) => (
-					<Tab
-						key={tab.id}
-						tab={{
-							...tab,
-							name: tab.id === "errors" && hasErrors ? `Errors (${htmlErrors.length})` : tab.name,
-						}}
-						activeTab={activeTab}
-						className={cx(
-							tab.id === "errors" && activeTab !== "errors" && hasErrors && styles.layout.tabs.tabErrorPulse
-						)}
-					/>
+					<Tab key={tab.id} tab={tab} activeTab={activeTab} />
 				))}
 			</div>
 		</div>

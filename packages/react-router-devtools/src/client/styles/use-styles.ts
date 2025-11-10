@@ -1091,67 +1091,6 @@ const stylesFactory = (theme: "light" | "dark") => {
 			`,
 		},
 
-		// Errors Tab
-		errorsTab: {
-			container: css`
-				display: flex;
-				flex-direction: column;
-				gap: 0.25rem;
-			`,
-			headerContainer: css`
-				margin-bottom: 0.25rem;
-			`,
-			headerTitle: css`
-				font-size: 1.125rem;
-				font-weight: 600;
-			`,
-			divider: css`
-				margin-top: 0.5rem;
-				border-color: #9ca3af;
-			`,
-			noErrors: css`
-				font-size: 1.5rem;
-			`,
-			errorCard: css`
-				display: flex;
-				justify-content: flex-start;
-				gap: 0.5rem;
-				border-radius: 0.5rem;
-				border: 1px solid rgba(220, 38, 38, 0.2);
-				padding: 0.5rem;
-			`,
-			errorIcon: css`
-				color: #dc2626;
-			`,
-			errorContent: css`
-				display: flex;
-				flex-direction: column;
-				gap: 0.5rem;
-				@media (min-width: 1024px) {
-					gap: 0;
-				}
-			`,
-			errorMessage: css`
-				color: #dc2626;
-				font-weight: 700;
-			`,
-			errorFileInfo: css`
-				display: flex;
-				flex-direction: column;
-				align-items: flex-start;
-				gap: 0.25rem;
-				font-size: 0.875rem;
-				color: #6b7280;
-				@media (min-width: 1024px) {
-					flex-direction: row;
-				}
-			`,
-			errorFile: css`
-				cursor: pointer;
-				color: #ffffff;
-			`,
-		},
-
 		// Settings Tab
 		settingsTab: {
 			container: css`
