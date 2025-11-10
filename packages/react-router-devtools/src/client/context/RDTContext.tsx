@@ -2,15 +2,11 @@ import type { Dispatch } from "react"
 import type React from "react"
 import { createContext, useEffect, useMemo, useReducer } from "react"
 import { bigIntReplacer } from "../../shared/bigint-util.js"
-import { checkIsDetached, checkIsDetachedOwner, checkIsDetachedWindow } from "../utils/detached.js"
 import { tryParseJson } from "../utils/sanitize.js"
 import {
-	REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED,
-	REACT_ROUTER_DEV_TOOLS_DETACHED,
 	REACT_ROUTER_DEV_TOOLS_SETTINGS,
 	REACT_ROUTER_DEV_TOOLS_STATE,
 	getStorageItem,
-	setSessionItem,
 	setStorageItem,
 } from "../utils/storage.js"
 import {
@@ -32,37 +28,6 @@ interface ContextProps {
 	config?: RdtClientConfig
 }
 
-export const setIsDetachedIfRequired = () => {
-	const isDetachedWindow = checkIsDetachedWindow()
-	if (!isDetachedWindow && window.RDT_MOUNTED) {
-		setSessionItem(REACT_ROUTER_DEV_TOOLS_DETACHED, "true")
-	}
-}
-
-export const resetIsDetachedCheck = () => {
-	setStorageItem(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED, "false")
-}
-
-export const detachedModeSetup = () => {
-	resetIsDetachedCheck()
-	setIsDetachedIfRequired()
-	const isDetachedWindow = checkIsDetachedWindow()
-	const isDetached = checkIsDetached()
-	const isDetachedOwner = checkIsDetachedOwner()
-
-	if (isDetachedWindow && !isDetached) {
-		window.close()
-	}
-	if (!isDetached && isDetachedOwner) {
-		//setSessionItem(REMIX_DEV_TOOLS_DETACHED_OWNER, "false");
-		// isDetachedOwner = false;
-	}
-	return {
-		detachedWindow: window.RDT_MOUNTED ?? isDetachedWindow,
-		detachedWindowOwner: isDetachedOwner,
-	}
-}
-
 export const getSettings = () => {
 	const settingsString = getStorageItem(REACT_ROUTER_DEV_TOOLS_SETTINGS)
 	const settings = tryParseJson<ReactRouterDevtoolsState["settings"]>(settingsString)
@@ -75,7 +40,6 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 	const existingState = getStorageItem(REACT_ROUTER_DEV_TOOLS_STATE)
 	const settings = getSettings()
 
-	const { detachedWindow, detachedWindowOwner } = detachedModeSetup()
 	const state: ReactRouterDevtoolsState = {
 		...initialState,
 		...(existingState ? JSON.parse(existingState) : {}),
@@ -85,8 +49,6 @@ export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorN
 			...settings,
 			editorName: config?.editorName ?? initialState.settings.editorName,
 		},
-		detachedWindow,
-		detachedWindowOwner,
 	}
 	return state
 }

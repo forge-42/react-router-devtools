@@ -40,7 +40,7 @@ export const useSetRouteBoundaries = () => {
 		},
 		[settings.hoveredRoute, settings.isHoveringRoute, settings.routeBoundaryGradient, matches.length, styles.gradients]
 	)
-	// Mouse left the document => remove classes => set isHovering to false so that detached mode removes as well
+	// Mouse left the document => remove classes => set isHovering to false
 	useAttachListener("mouseleave", "document", () => {
 		if (settings.showRouteBoundariesOn === "click") {
 			return
@@ -51,7 +51,7 @@ export const useSetRouteBoundaries = () => {
 			isHoveringRoute: false,
 		})
 	})
-	// Mouse is scrolling => remove classes => set isHovering to false so that detached mode removes as well
+	// Mouse is scrolling => remove classes => set isHovering to false
 	useAttachListener("wheel", "window", () => {
 		if (settings.showRouteBoundariesOn === "click") {
 			return

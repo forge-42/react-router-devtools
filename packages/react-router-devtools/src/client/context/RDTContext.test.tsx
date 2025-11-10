@@ -1,19 +1,6 @@
 import { render } from "@testing-library/react"
-import * as detachedMethods from "../utils/detached.js"
-import {
-	REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED,
-	REACT_ROUTER_DEV_TOOLS_DETACHED,
-	REACT_ROUTER_DEV_TOOLS_SETTINGS,
-	REACT_ROUTER_DEV_TOOLS_STATE,
-} from "../utils/storage.js"
-import {
-	RDTContextProvider,
-	//detachedModeSetup,
-	getSettings,
-	resetIsDetachedCheck,
-	setIsDetachedIfRequired,
-	//getExistingStateFromStorage,
-} from "./RDTContext.js"
+import { REACT_ROUTER_DEV_TOOLS_SETTINGS, REACT_ROUTER_DEV_TOOLS_STATE } from "../utils/storage.js"
+import { RDTContextProvider, getSettings } from "./RDTContext.js"
 
 vi.mock("react-router", () => ({
 	useLocation: () => ({
@@ -83,53 +70,5 @@ describe("getSettings", () => {
 		const settings = getSettings()
 
 		expect(settings).toEqual(storedSettings)
-	})
-})
-
-describe("setIsDetachedIfRequired", () => {
-	it('should set REACT_ROUTER_DEV_TOOLS_DETACHED to "true" if window is not detached but RDT_MOUNTED is true', () => {
-		const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(false)
-		const setSessionSpy = vi.spyOn(sessionStorage, "setItem")
-		const window = { RDT_MOUNTED: true }
-
-		// biome-ignore lint/suspicious/noExplicitAny: test
-		;(global as any).window = window
-		setIsDetachedIfRequired()
-		expect(isDetachedWindowSpy).toHaveBeenCalled()
-		expect(setSessionSpy).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_DETACHED, "true")
-	})
-
-	it("should not set REACT_ROUTER_DEV_TOOLS_DETACHED if window is detached", () => {
-		const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(true)
-		const setSessionSpy = vi.spyOn(sessionStorage, "setItem")
-		const window = { RDT_MOUNTED: false }
-
-		// biome-ignore lint/suspicious/noExplicitAny: test
-		;(global as any).window = window
-
-		setIsDetachedIfRequired()
-		expect(isDetachedWindowSpy).toHaveBeenCalled()
-		expect(setSessionSpy).not.toHaveBeenCalled()
-	})
-
-	it("should not set REACT_ROUTER_DEV_TOOLS_DETACHED if RDT_MOUNTED is false && isDetachedWindow is false", () => {
-		const isDetachedWindowSpy = vi.spyOn(detachedMethods, "checkIsDetachedWindow").mockReturnValue(false)
-		const setSessionSpy = vi.spyOn(sessionStorage, "setItem")
-		const window = { RDT_MOUNTED: false }
-		// biome-ignore lint/suspicious/noExplicitAny: test
-		;(global as any).window = window
-
-		setIsDetachedIfRequired()
-		expect(isDetachedWindowSpy).toHaveBeenCalled()
-		expect(setSessionSpy).not.toHaveBeenCalled()
-	})
-})
-
-describe("resetIsDetachedCheck", () => {
-	it('should set REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED to "false" whenever the window is mounted', () => {
-		const setStorageSpy = vi.spyOn(localStorage, "setItem")
-
-		resetIsDetachedCheck()
-		expect(setStorageSpy).toHaveBeenCalledWith(REACT_ROUTER_DEV_TOOLS_CHECK_DETACHED, "false")
 	})
 })

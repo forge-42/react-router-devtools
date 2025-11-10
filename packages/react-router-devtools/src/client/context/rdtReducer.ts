@@ -118,11 +118,6 @@ type SetTimelineEvent = {
 	payload: TimelineEvent
 }
 
-type SetDetachedWindowOwner = {
-	type: "SET_DETACHED_WINDOW_OWNER"
-	payload: boolean
-}
-
 type SetWholeState = {
 	type: "SET_WHOLE_STATE"
 	payload: ReactRouterDevtoolsState
@@ -165,7 +160,6 @@ export type ReactRouterDevtoolsActions =
 	| PurgeTimeline
 	| SetSettings
 	| SetWholeState
-	| SetDetachedWindowOwner
 	| SetIsSubmittedAction
 	| SetServerInfo
 	| SetHtmlErrors
