@@ -1940,6 +1940,7 @@ const stylesFactory = (theme: "light" | "dark") => {
 				overflow: hidden;
 				width: 100%;
 				min-height: 0;
+				display: grid;
 			`,
 		},
 
@@ -1967,10 +1968,10 @@ const stylesFactory = (theme: "light" | "dark") => {
 					overflow: hidden;
 				`,
 				networkContainer: css`
-	height: 100%;
+					height: 100%;
+					overflow-y:auto;
 					border-top: 1px solid #374151;
 					padding: 1rem;
-					overflow: hidden;
 				`,
 			},
 

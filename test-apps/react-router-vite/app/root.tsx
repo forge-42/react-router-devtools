@@ -1,7 +1,6 @@
 import {
   type ActionFunctionArgs,
   data,
-  Form,
   Links,
   type LoaderFunctionArgs,
   Meta,
@@ -10,7 +9,6 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { userSomething } from "./modules/user.server";
-import { EmbeddedDevTools } from "../../../packages/react-router-devtools/dist/client"
 
 // Server middleware
 const authMiddleware = async (args: any, next: () => Promise<Response>) => {
@@ -86,17 +84,12 @@ function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-       <Form method="post">
-        <input readOnly type="text" name="name" value={"name"} />
-       <button type="submit">
-          Submit
-        </button>
-       </Form>
+      <body style={{margin: 0}}>
+
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-    <EmbeddedDevTools />
+
       </body>
     </html>
   );
