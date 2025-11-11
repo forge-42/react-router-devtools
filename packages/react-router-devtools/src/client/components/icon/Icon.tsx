@@ -37,6 +37,7 @@ export const Icon = ({ name, title, testId, className, size = "sm", ...props }: 
 	const isStrokeIcon = strokeIcon.includes(name)
 	const iconClasses = cx(styles.icon.base, className, isEmptyFill && styles.icon.fillTransparent)
 	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: i don't want titles on hover
 		<svg
 			className={iconClasses}
 			fill={isEmptyFill ? "none" : "currentColor"}
@@ -47,7 +48,6 @@ export const Icon = ({ name, title, testId, className, size = "sm", ...props }: 
 			data-name={name}
 			{...props}
 		>
-			<title>{title ?? name}</title>
 			<defs>
 				<symbol
 					id="Layout"

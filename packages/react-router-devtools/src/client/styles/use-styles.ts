@@ -695,8 +695,8 @@ const stylesFactory = (theme: "light" | "dark") => {
 				cursor: pointer;
 				border-radius: 0.25rem;
 				background-color: #ef4444;
-				padding: 0.25rem 0.5rem;
-				font-size: 0.875rem;
+				padding: 0.125rem 0.375rem;
+				font-size: 0.75rem;
 				font-weight: 600;
 				color: #ffffff;
 
@@ -711,11 +711,11 @@ const stylesFactory = (theme: "light" | "dark") => {
 			container: css`
 				display: flex;
 				align-items: center;
-				gap: 0.5rem;
-				border-radius: 0.375rem;
+				gap: 0.375rem;
+				border-radius: 0.25rem;
 				border: 1px solid rgba(148, 163, 184, 0.3);
 				background: linear-gradient(135deg, rgba(148, 163, 184, 0.1) 0%, rgba(100, 116, 139, 0.1) 100%);
-				padding: 0.375rem 0.625rem;
+				padding: 0.25rem 0.375rem;
 				transition: all 0.2s ease;
 
 				&:hover {
@@ -724,13 +724,13 @@ const stylesFactory = (theme: "light" | "dark") => {
 				}
 			`,
 			icon: css`
-				height: 1.5rem;
-				width: 1.5rem;
+				height: 1.125rem;
+				width: 1.125rem;
 				cursor: pointer;
 				color: #64748b;
 				transition: all 0.2s ease;
-				padding: 0.25rem;
-				border-radius: 0.25rem;
+				padding: 0.125rem;
+				border-radius: 0.125rem;
 
 				&:hover {
 					color: #cbd5e1;
@@ -983,13 +983,13 @@ const stylesFactory = (theme: "light" | "dark") => {
 			revalidateButton: css`
 				display: flex;
 				align-items: center;
-				gap: 0.375rem;
+				gap: 0.25rem;
 				cursor: pointer;
-				border-radius: 0.375rem;
+				border-radius: 0.25rem;
 				border: 1px solid rgba(16, 185, 129, 0.3);
 				background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
-				padding: 0.375rem 0.625rem;
-				font-size: 0.813rem;
+				padding: 0.25rem 0.5rem;
+				font-size: 0.75rem;
 				font-weight: 600;
 				color: #6ee7b7;
 				transition: all 0.2s ease;
@@ -1076,13 +1076,13 @@ const stylesFactory = (theme: "light" | "dark") => {
 			clearButton: css`
 				display: flex;
 				align-items: center;
-				gap: 0.375rem;
+				gap: 0.25rem;
 				cursor: pointer;
-				border-radius: 0.375rem;
+				border-radius: 0.25rem;
 				border: 1px solid rgba(239, 68, 68, 0.3);
 				background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
-				padding: 0.375rem 0.625rem;
-				font-size: 0.813rem;
+				padding: 0.25rem 0.5rem;
+				font-size: 0.75rem;
 				font-weight: 600;
 				color: #fca5a5;
 				transition: all 0.2s ease;
@@ -1889,37 +1889,37 @@ const stylesFactory = (theme: "light" | "dark") => {
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
-				min-width: 1.5rem;
-				height: 1.5rem;
-				padding: 0 0.5rem;
+				min-width: 1.25rem;
+				height: 1.25rem;
+				padding: 0 0.375rem;
 				border-radius: 9999px;
 				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-				font-size: 0.75rem;
+				font-size: 0.688rem;
 				font-weight: 700;
 				color: #ffffff;
 			`,
 			limitWarning: css`
 				display: flex;
 				align-items: center;
-				gap: 0.375rem;
-				padding: 0.375rem 0.625rem;
-				border-radius: 0.375rem;
+				gap: 0.25rem;
+				padding: 0.25rem 0.5rem;
+				border-radius: 0.25rem;
 				border: 1px solid rgba(251, 191, 36, 0.3);
 				background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
-				font-size: 0.813rem;
+				font-size: 0.75rem;
 				font-weight: 600;
 				color: #fbbf24;
 			`,
 			clearButton: css`
 				display: flex;
 				align-items: center;
-				gap: 0.375rem;
+				gap: 0.25rem;
 				cursor: pointer;
-				border-radius: 0.375rem;
+				border-radius: 0.25rem;
 				border: 1px solid rgba(239, 68, 68, 0.3);
 				background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
-				padding: 0.375rem 0.625rem;
-				font-size: 0.813rem;
+				padding: 0.25rem 0.5rem;
+				font-size: 0.75rem;
 				font-weight: 600;
 				color: #fca5a5;
 				transition: all 0.2s ease;
@@ -2552,31 +2552,31 @@ const stylesFactory = (theme: "light" | "dark") => {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+				background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
 				border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-				padding: 0.75rem 1rem;
+				padding: 0.375rem 0.75rem;
 				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-				min-height: 3.5rem;
-				height: 3.5rem;
+				min-height: 2.5rem;
+				height: 2.5rem;
 			`,
 			containerRtl: css`
-				background: linear-gradient(225deg, #1e293b 0%, #0f172a 100%);
+				background: linear-gradient(270deg, #1e293b 0%, #0f172a 100%) !important;
 			`,
 			leftContent: css`
 				display: flex;
 				align-items: center;
-				gap: 1rem;
+				gap: 0.5rem;
 			`,
 			title: css`
 				margin: 0;
-				font-size: 1rem;
+				font-size: 0.875rem;
 				font-weight: 600;
 				color: #ffffff;
 			`,
 			rightContent: css`
 				display: flex;
 				align-items: center;
-				gap: 0.75rem;
+				gap: 0.5rem;
 			`,
 		},
 
@@ -2670,7 +2670,8 @@ const stylesFactory = (theme: "light" | "dark") => {
 					padding: 0.5rem;
 					font-family: ${fontFamilySans};
 					transition: all 0.2s ease;
-					background: linear-gradient(135deg, rgba(31, 41, 55, 0.5) 0%, rgba(17, 24, 39, 0.5) 100%);
+					background: #1f2937;
+					color: white;
 
 					&:hover {
 						background: linear-gradient(135deg, rgba(51, 65, 85, 0.6) 0%, rgba(30, 41, 59, 0.6) 100%);
@@ -2681,7 +2682,7 @@ const stylesFactory = (theme: "light" | "dark") => {
 				`,
 				tabActive: css`
 					background: linear-gradient(135deg, ${bgPrimary} 0%, rgba(15, 23, 42, 0.95) 100%);
-					border-right-color: rgba(59, 130, 246, 0.7);
+					border-right: 2px solid rgba(59, 130, 246, 0.7);
 				`,
 				tabInactive: css`
 					&:hover {

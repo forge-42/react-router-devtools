@@ -298,7 +298,7 @@ export const analyzeMiddleware = (middleware: any, routeId: string, index: numbe
 		const startTime = Date.now()
 		const name = middlewareName || middleware.name || `Anonymous ${index}`
 
-		middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} triggered`)
+		middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} started`)
 
 		// Send start event
 		const headers = Object.fromEntries(args.request.headers.entries())
@@ -318,7 +318,7 @@ export const analyzeMiddleware = (middleware: any, routeId: string, index: numbe
 			const result = await middleware(args, next)
 			const end = diffInMs(start)
 
-			middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} triggered - ${chalk.white(`${end}ms`)}`)
+			middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} ended - ${chalk.white(`${end}ms`)}`)
 
 			// Send end event
 			sendEvent({

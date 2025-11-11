@@ -26,11 +26,11 @@ const Tab = ({
 	const { styles } = useStyles()
 
 	return (
-		// biome-ignore lint/a11y/useKeyWithClickEvents: ignored
-		<div
+		<button
 			data-testid={tab.id}
 			onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabsType }))}
 			title={typeof tab.name === "string" ? tab.name : undefined}
+			type="button"
 			className={cx(
 				"group",
 				styles.layout.tabs.tab,
@@ -39,7 +39,7 @@ const Tab = ({
 			)}
 		>
 			<div className={cx(className, styles.layout.tabs.tabIcon)}>{tab.icon}</div>
-		</div>
+		</button>
 	)
 }
 

@@ -2,7 +2,6 @@ import { type MouseEvent, useEffect, useState } from "react"
 import { useMatches, useNavigate } from "react-router"
 import { eventClient } from "../../shared/event-client.js"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
-import { NewRouteForm } from "../components/NewRouteForm.js"
 import { TabContent } from "../components/TabContent.js"
 import { TabHeader } from "../components/TabHeader.js"
 import { Icon } from "../components/icon/Icon.js"
@@ -106,16 +105,6 @@ const RoutesTab = () => {
 					<div className={styles.routesTab.listContainer}>
 						<TabContent>
 							<Accordion type="single" collapsible>
-								{
-									<AccordionItem value="add-new">
-										<AccordionTrigger className={styles.routesTab.addNewItem}>
-											<span className={styles.routesTab.addNewTitle}>Add a new route to the project</span>
-										</AccordionTrigger>
-										<AccordionContent>
-											<NewRouteForm />
-										</AccordionContent>
-									</AccordionItem>
-								}
 								<div className={styles.routesTab.projectRoutesContainer}>
 									<span className={styles.routesTab.projectRoutesTitle}>Project routes</span>
 									<hr className={styles.routesTab.projectRoutesDivider} />
