@@ -16,7 +16,7 @@ const ContentPanel = () => {
 					activeTab === "page" && styles.layout.contentPanel.mainContentPageTab
 				)}
 			>
-				{Component}
+				{Component && <Component />}
 			</div>
 
 			{!hideTimeline && (

@@ -13,7 +13,10 @@ export const useTabs = () => {
 
 	const { Component, hideTimeline } = useMemo(() => {
 		const tab = allTabs.find((tab) => tab.id === activeTab)
-		return { Component: tab?.component, hideTimeline: shouldHideTimeline(tab) }
+		return {
+			Component: tab?.component,
+			hideTimeline: shouldHideTimeline(tab),
+		}
 	}, [activeTab, allTabs])
 
 	return {
