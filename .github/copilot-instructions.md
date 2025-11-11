@@ -1,0 +1,28 @@
+---
+applyTo: '**'
+---
+Provide project context and coding guidelines that AI should follow when generating code, answering questions, or reviewing changes.
+
+Whenever you want to build the packages to test if they work you should run `pnpm run build` from the root of the repository.
+
+If you want to run tests you can run `pnpm run test` from the root of the repository.
+
+If you want to check if the examples work you need to go to `test-apps/<example-name>` and run   `pnpm run dev`.
+
+When writing code, please follow these guidelines:
+- Use TypeScript for all new code.
+- Ensure all new code is covered by tests.
+- Do not use `any` type; prefer specific types or generics.
+- Follow existing code style and conventions.
+
+If you get an error "address already in use :::42069 you should kill the process using that port.
+
+If we add a new functionality add a section about it in the `docs/content` folder explaining how to use it and update the `README.md` file to mention it.
+
+Write tests for any new functionality.
+
+When defining new types, first check if the types exist somewhere and re-use them, do not create new types that are similar to existing ones.
+
+When modifying existing functionality, ensure backward compatibility unless there's a strong reason to introduce breaking changes. If breaking changes are necessary, document them clearly in the relevant documentation files.
+
+If `pnpm run test` fails because of check, you can run `pnpm run check:fix` to fix the issues automatically.

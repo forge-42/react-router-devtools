@@ -1,141 +1,151 @@
-import { type MouseEvent, useEffect, useState } from "react"
+import { type MouseEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { useMatches, useNavigate } from "react-router"
+import { eventClient } from "../../shared/event-client.js"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
-import { NewRouteForm } from "../components/NewRouteForm.js"
-import { useDetachedWindowControls, useSettingsContext } from "../context/useRDTContext.js"
-import { setRouteInLocalStorage } from "../hooks/detached/useListenToRouteChange.js"
+import { TabContent } from "../components/TabContent.js"
+import { TabHeader } from "../components/TabHeader.js"
+import { Icon } from "../components/icon/Icon.js"
+import { useSettingsContext } from "../context/useRDTContext.js"
+import { cx, useStyles } from "../styles/use-styles.js"
 import { type ExtendedRoute, constructRoutePath, createExtendedRoutes } from "../utils/routing.js"
 import { createRouteTree } from "../utils/sanitize.js"
 
-import clsx from "clsx"
 import Tree from "react-d3-tree"
 import { RouteInfo } from "../components/RouteInfo.js"
 import { RouteNode } from "../components/RouteNode.js"
 import { RouteToggle } from "../components/RouteToggle.js"
 
 const RoutesTab = () => {
+	const { styles } = useStyles()
 	const matches = useMatches()
 	const navigate = useNavigate()
-	const activeRoutes = matches.map((match) => match.id)
+	// Memoize active routes to avoid recreating array on every render
+	const activeRoutes = useMemo(() => matches.map((match) => match.id), [matches])
 	const { settings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
-	const { detachedWindow } = useDetachedWindowControls()
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
-	const [routes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
+	const [routes, setRoutes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
 	const [treeRoutes, setTreeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
 	const isTreeView = routeViewMode === "tree"
-	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-		e?.preventDefault()
-		navigate(path)
-		if (detachedWindow) {
-			setRouteInLocalStorage(path)
-		}
-	}
+
+	// Memoize openNewRoute callback to prevent recreating on every render
+	const openNewRoute = useCallback(
+		(path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+			e?.preventDefault()
+			navigate(path)
+		},
+		[navigate]
+	)
 
 	useEffect(function fetchAllRoutesOnMount() {
-		import.meta.hot?.send("routes-info")
-		// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-		const cb = (event: any) => {
-			const parsed = JSON.parse(event)
-			// biome-ignore lint/suspicious/noExplicitAny: can be any type
-			const data = parsed.data as Record<string, any>[]
+		// Listen for routes info response from the server FIRST
+		const unsubscribe = eventClient.on("routes-info", (event) => {
+			const data = event.payload
 
-			// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
+			// Build route object from server routes data
+			// biome-ignore lint/suspicious/noExplicitAny: can be any type
 			const routeObject: Record<string, any> = {}
 			for (const route of data) {
 				routeObject[route.id] = route
 			}
 
+			// Add root from manifest
 			routeObject.root = window.__reactRouterManifest?.routes?.root
 
+			// Update tree view routes with merged data
 			setTreeRoutes(createRouteTree(routeObject))
-		}
-		import.meta.hot?.on("routes-info", cb)
+
+			// Update list view routes - pass the server routes directly
+			const updatedRoutes = createExtendedRoutes(routeObject) as ExtendedRoute[]
+			setRoutes(updatedRoutes)
+		})
+
+		// Request routes info from the server AFTER listener is set up
+		eventClient.emit("routes-tab-mounted", {})
+
 		return () => {
-			import.meta.hot?.off("routes-info", cb)
+			unsubscribe()
 		}
 	}, [])
 	return (
-		<div className={clsx("relative h-full w-full ", !isTreeView && "pt-8")}>
-			<RouteToggle />
-			{isTreeView ? (
-				<div className="flex h-full w-full">
-					<Tree
-						translate={{ x: window.innerWidth / 2 - (isTreeView && activeRoute ? 0 : 0), y: 30 }}
-						pathClassFunc={(link) =>
-							// biome-ignore lint/suspicious/noExplicitAny: need to suppress it as it's always defined
-							activeRoutes.includes((link.target.data.attributes as any).id)
-								? "stroke-yellow-500"
-								: // biome-ignore lint/suspicious/noExplicitAny: need to suppress it as it's always defined
-									window.__reactRouterManifest?.routes?.[(link.target.data.attributes as any).id]
-									? "stroke-gray-400"
-									: "stroke-gray-400/20"
-						}
-						renderCustomNodeElement={(props) =>
-							RouteNode({
-								...props,
-								routeWildcards,
-								setActiveRoute,
-								activeRoutes,
-								navigate,
-							})
-						}
-						orientation="vertical"
-						data={treeRoutes}
-					/>
-					{activeRoute && (
-						<RouteInfo
-							openNewRoute={openNewRoute}
-							onClose={() => setActiveRoute(null)}
-							route={activeRoute}
-							className="w-[600px] border-l border-l-slate-800 p-2 px-4"
+		<div className={styles.routesTab.wrapper}>
+			<TabHeader icon={<Icon name="GitMerge" />} title="Routes" rightContent={<RouteToggle />} />
+			<div className={cx(styles.routesTab.container, !isTreeView && styles.routesTab.containerWithPadding)}>
+				{isTreeView ? (
+					<div className={styles.routesTab.treeContainer}>
+						<Tree
+							translate={{ x: window.innerWidth / 2 - (isTreeView && activeRoute ? 0 : 0), y: 30 }}
+							pathClassFunc={(link) => {
+								// biome-ignore lint/suspicious/noExplicitAny: need to suppress it as it's always defined
+								const targetId = (link.target.data.attributes as any).id
+								if (activeRoutes.includes(targetId)) {
+									return styles.routesTab.strokeYellow
+								}
+								if (window.__reactRouterManifest?.routes?.[targetId]) {
+									return styles.routesTab.strokeGray
+								}
+								return styles.routesTab.strokeGrayMuted
+							}}
+							renderCustomNodeElement={(props) =>
+								RouteNode({
+									...props,
+									routeWildcards,
+									setActiveRoute,
+									activeRoutes,
+									navigate,
+								})
+							}
+							orientation="vertical"
+							data={treeRoutes}
 						/>
-					)}
-				</div>
-			) : (
-				<Accordion className="h-full w-full overflow-y-auto pr-4" type="single" collapsible>
-					{
-						<AccordionItem value="add-new">
-							<AccordionTrigger className="text-white">
-								<span className="text-lg font-semibold">Add a new route to the project</span>
-							</AccordionTrigger>
-							<AccordionContent>
-								<NewRouteForm />
-							</AccordionContent>
-						</AccordionItem>
-					}
-					<div className="py-2">
-						<span className="text-lg font-semibold">Project routes</span>
-						<hr className="mt-2 border-gray-400" />
+						{activeRoute && (
+							<RouteInfo
+								openNewRoute={openNewRoute}
+								onClose={() => setActiveRoute(null)}
+								route={activeRoute}
+								className="w-[600px] border-l border-l-slate-800 p-2 px-4"
+							/>
+						)}
 					</div>
-					{routes?.map((route) => {
-						const { path, pathToOpen } = constructRoutePath(route, routeWildcards)
-						return (
-							<AccordionItem key={route.id} value={route.id}>
-								<AccordionTrigger>
-									<div className="justify-center flex-wrap text-white flex px-3 lg:px-0 flex-col lg:flex-row w-full items-start lg:items-center gap-1 ">
-										<span className="text-gray-500" /> {route.url}{" "}
-										<div className="lg:ml-auto flex-wrap flex items-center gap-2">
-											<span className=" text-left textsm text-gray-500">Url: "{pathToOpen}"</span>
-											{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-											<div
-												title={pathToOpen}
-												className="mr-2  whitespace-nowrap rounded border border-gray-400 px-2 py-1 text-sm"
-												onClick={openNewRoute(path)}
-											>
-												Open in browser
-											</div>
-										</div>
-									</div>
-								</AccordionTrigger>
-								<AccordionContent>
-									<RouteInfo openNewRoute={openNewRoute} route={route} />
-								</AccordionContent>
-							</AccordionItem>
-						)
-					})}
-				</Accordion>
-			)}
+				) : (
+					<div className={styles.routesTab.listContainer}>
+						<TabContent>
+							<Accordion type="single" collapsible>
+								<div className={styles.routesTab.projectRoutesContainer}>
+									<span className={styles.routesTab.projectRoutesTitle}>Project routes</span>
+									<hr className={styles.routesTab.projectRoutesDivider} />
+								</div>
+								{routes?.map((route) => {
+									const { path, pathToOpen } = constructRoutePath(route, routeWildcards)
+									return (
+										<AccordionItem key={route.id} value={route.id}>
+											<AccordionTrigger>
+												<div className={styles.routesTab.routeAccordionTrigger}>
+													<span className={styles.routesTab.routeId} /> {route.url}{" "}
+													<div className={styles.routesTab.routeActions}>
+														<span className={styles.routesTab.routeUrl}>Url: "{pathToOpen}"</span>
+														{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+														<div
+															title={pathToOpen}
+															className={styles.routesTab.openButton}
+															onClick={openNewRoute(path)}
+														>
+															Open in browser
+														</div>
+													</div>
+												</div>
+											</AccordionTrigger>
+											<AccordionContent>
+												<RouteInfo openNewRoute={openNewRoute} route={route} />
+											</AccordionContent>
+										</AccordionItem>
+									)
+								})}
+							</Accordion>
+						</TabContent>
+					</div>
+				)}
+			</div>
 		</div>
 	)
 }

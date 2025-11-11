@@ -11,13 +11,21 @@ export type AllDataFunctionArgs =
 	| ClientLoaderFunctionArgs
 	| ClientActionFunctionArgs
 export type NetworkRequestType = "action" | "loader" | "client-action" | "client-loader"
-type NetworkRequestTypeFull = "action" | "loader" | "client-action" | "client-loader" | "custom-event"
+type NetworkRequestTypeFull =
+	| "action"
+	| "loader"
+	| "client-action"
+	| "client-loader"
+	| "middleware"
+	| "client-middleware"
+	| "custom-event"
 
 export type RequestEvent = {
 	routine?: "request-event"
 	type: NetworkRequestTypeFull
 	headers: Record<string, string>
 	id: string
+	routeId: string
 	startTime: number
 	endTime?: number | undefined
 	// biome-ignore lint/suspicious/noExplicitAny: can be anything
@@ -26,4 +34,6 @@ export type RequestEvent = {
 	status?: string
 	url: string
 	aborted?: boolean
+	middlewareName?: string
+	middlewareIndex?: number
 }

@@ -14,7 +14,7 @@ npm install react-router-devtools -D
 
 This will install it as a dev dependency in your project.
 
-## Enabling the tools
+## Enabling the tools (framework mode)
 
 After you have installed the tools, you need to go to your `vite.config.ts` file which will probably look something like this:
 
@@ -47,6 +47,36 @@ export default defineConfig({
 Make sure your plugin is BEFORE the react router one!
 </WarningAlert>
 
+
+## Enabling the tools (data/declarative mode)
+
+If you are using React Router in data/declarative mode, you can still use the devtools
+by first installing @tanstack/react-devtools and then adding the devtools somewhere under
+the router provider in your app.
+
+```tsx
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { EmbeddedDevTools } from 'react-router-devtools';
+
+export function App() {
+  return (
+    <>
+      <YourRouterProvider>
+        <YourAppComponents />
+        <TanStackDevtools plugins=[{
+          name: "React Router",
+          render: <EmbeddedDevTools />
+        }] />
+      </YourRouterProvider>
+      <TanStackDevtools />
+    </>
+  );
+}
+```
+
+react-router-devtools uses @tanstack/devtools as the base for the UI, you can refer to their
+[documentation](https://tanstack.com/devtools/latest/docs/overview) for more information on how to use the devtools interface.
+
 ### CloudFlare
 
 If you're trying to spin it up on CF, try adding this to your `optimizeDeps` in your `vite.config.js` file:
@@ -54,10 +84,6 @@ If you're trying to spin it up on CF, try adding this to your `optimizeDeps` in 
 optimizeDeps: {
   include: [
     // other optimized deps
-    "beautify",
-    "react-diff-viewer-continued",
-    "classnames",
-    "@bkrem/react-transition-group",
   ],
 },
 ```

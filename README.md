@@ -62,10 +62,6 @@ If you're trying to spin it up on CF, try adding this to your `optimizeDeps` in 
 optimizeDeps: {
   include: [
     // other optimized deps
-    "beautify",
-    "react-diff-viewer-continued",
-    "classnames",
-    "@bkrem/react-transition-group",
   ],
 },
 ```

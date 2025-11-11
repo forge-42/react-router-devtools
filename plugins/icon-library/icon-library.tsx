@@ -76,12 +76,9 @@ const IconLibrary = () => {
 	)
 }
 
-// TODO Import this into your root.tsx and call it inside of the plugins array for react-router-devtools
-export const iconLibraryPlugin = () => ({
-	// TODO Replace with your own icon
-	icon: <Icon name="camera" size="sm" />,
-	component: <IconLibrary />,
+// Export plugin as a function that returns TanStack plugin configuration
+export const iconLibraryPlugin =   ({
 	name: "Icon Library",
-	id: "icon-library",
-	hideTimeline: true,
+	id : "icon-library",
+	render: <IconLibrary />,
 })

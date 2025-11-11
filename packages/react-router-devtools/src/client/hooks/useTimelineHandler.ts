@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 import { useActionData, useFetchers, useNavigation } from "react-router"
 import type { TimelineEvent } from "../context/timeline/types.js"
-import { useDetachedWindowControls, useTimelineContext } from "../context/useRDTContext.js"
+import { useTimelineContext } from "../context/useRDTContext.js"
 
 const uniqueId = () => (Math.random() * Date.now()).toString()
 
@@ -57,12 +57,7 @@ const useTimelineHandler = () => {
 	const navigationEventQueue = useRef<TimelineEvent[]>([])
 	const { setTimelineEvent } = useTimelineContext()
 	const responseData = useActionData()
-	const { detachedWindow } = useDetachedWindowControls()
 	useEffect(() => {
-		// Do not record events if the window is detached, the main window will handle it
-		if (detachedWindow) {
-			return
-		}
 		const { state, location, formAction, formData, formMethod, formEncType } = navigation
 
 		if (state === "idle") {
@@ -134,7 +129,7 @@ const useTimelineHandler = () => {
 			})
 			return
 		}
-	}, [navigation, responseData, setTimelineEvent, detachedWindow])
+	}, [navigation, responseData, setTimelineEvent])
 
 	const fetcherEventQueue = useRef<TimelineEvent[]>([])
 	// Fetchers handler

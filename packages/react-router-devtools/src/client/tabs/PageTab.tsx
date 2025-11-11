@@ -1,39 +1,44 @@
-import clsx from "clsx"
+import { useMemo } from "react"
 import { useMatches, useRevalidator } from "react-router"
 
-import { RouteSegmentInfo } from "../components/RouteSegmentInfo.js"
+import { MemoizedRouteSegmentInfo } from "../components/RouteSegmentInfo.js"
+import { TabContent } from "../components/TabContent.js"
+import { TabHeader } from "../components/TabHeader.js"
+import { Icon } from "../components/icon/Icon.js"
+import { cx, useStyles } from "../styles/use-styles.js"
 
 const PageTab = () => {
+	const { styles } = useStyles()
 	const routes = useMatches()
 	const { revalidate, state } = useRevalidator()
 
+	// Memoize reversed routes to avoid creating new array on every render
+	const reversedRoutes = useMemo(() => routes.toReversed(), [routes])
+
 	return (
 		<>
-			<div className="sticky w-full top-0 z-30 mb-2 bg-[#212121] pt-2">
-				<div className="mb-1 flex justify-between ">
-					<div className="text-lg font-semibold">Active Route Segments</div>
+			<TabHeader
+				icon={<Icon name="Layers" />}
+				title="Active Route Segments"
+				rightContent={
 					<button
 						type="button"
 						onClick={() => revalidate()}
 						data-testid="revalidate-button"
-						className={clsx(
-							"z-20 cursor-pointer rounded-lg border border-green-500 px-3 py-1 text-sm font-semibold text-white",
-							state !== "idle" && "pointer-events-none opacity-50"
-						)}
+						className={cx(styles.pageTab.revalidateButton, state !== "idle" && styles.pageTab.revalidateButtonDisabled)}
 					>
 						{state !== "idle" ? "Revalidating..." : "Revalidate"}
 					</button>
-				</div>
-				<hr className="border-gray-700" />
-			</div>
-			<div className="relative flex h-full flex-col p-6 px-2 pl-4 lg:px-6">
-				<ol
-					className={clsx("relative border-l border-gray-700", state === "loading" && "pointer-events-none opacity-50")}
-				>
-					{routes.map((route, i) => (
-						<RouteSegmentInfo route={route} i={i} key={route.id} />
-					))}
-				</ol>
+				}
+			/>
+			<div className={styles.pageTab.content}>
+				<TabContent>
+					<ul className={cx(styles.pageTab.routesList, state === "loading" && styles.pageTab.routesListLoading)}>
+						{reversedRoutes.map((route, i) => (
+							<MemoizedRouteSegmentInfo route={route} i={i} key={route.id} />
+						))}
+					</ul>
+				</TabContent>
 			</div>
 		</>
 	)

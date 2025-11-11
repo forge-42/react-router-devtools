@@ -48,6 +48,11 @@ export interface DevToolsServerConfig {
 		 * @default true
 		 */
 		serverTimings?: boolean
+		/**
+		 * Whether to log middleware calls in the console
+		 * @default true
+		 */
+		middleware?: boolean
 	}
 }
 declare global {

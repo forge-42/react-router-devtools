@@ -6,7 +6,7 @@ import type {
 } from "react-router"
 
 import type { AllDataFunctionArgs, NetworkRequestType } from "../shared/request-event"
-import { traceEnd, traceEvent, traceStart } from "./tracing"
+import { traceEvent, traceStart } from "./tracing"
 
 const extendContextObject = (routeId: string, type: NetworkRequestType, args: AllDataFunctionArgs) => {
 	/**
@@ -32,7 +32,7 @@ const extendContextObject = (routeId: string, type: NetworkRequestType, args: Al
 			 * @returns The result of the event
 
 			 */
-			trace: traceEvent(type, args),
+			trace: traceEvent(type, args, routeId),
 			/**
 	 * start is a function that will start a trace for the name provided to it and return the start time
 	 * This is used together with traceEnd to trace the time of the event
@@ -44,16 +44,7 @@ const extendContextObject = (routeId: string, type: NetworkRequestType, args: Al
 	 * @returns The start time of the event
 
 	 */
-			start: traceStart(type, args),
-			/**
-			 * end is a function that will end a trace for the name provided to it and return the end time
-			 *
-			 * @param name - The name of the event
-			 * @param startTime - The start time of the sendEvent
-			 * @param data - The data to be sent with the event
-			 * @returns The data provided in the last parameter
-			 */
-			end: traceEnd(type, args),
+			start: traceStart(type, args, routeId),
 		},
 	}
 }

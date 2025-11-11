@@ -1,39 +1,57 @@
 import { type ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react"
+import { eventClient } from "../../../shared/event-client"
 import type { RequestEvent } from "../../../shared/request-event"
 
 const RequestContext = createContext<{
 	requests: RequestEvent[]
 	removeAllRequests: () => void
-}>({ requests: [], removeAllRequests: () => {} })
+	isLimitReached: boolean
+}>({ requests: [], removeAllRequests: () => {}, isLimitReached: false })
 
 const requestMap = new Map<string, RequestEvent>()
+const MAX_REQUESTS = 60
 
 export const RequestProvider = ({ children }: { children: ReactNode }) => {
 	const [requests, setRequests] = useState<RequestEvent[]>([])
-	const setNewRequests = useCallback((payload: string) => {
-		const requests = JSON.parse(payload)
-		const newRequests = Array.isArray(requests) ? requests : [requests]
-		for (const req of newRequests) {
-			requestMap.set(req.id + req.startTime, req)
-			import.meta.hot?.send("remove-event", { ...req, fromClient: true })
+	const [isLimitReached, setIsLimitReached] = useState(false)
+
+	const handleRequestEvent = useCallback((event: { payload: RequestEvent }) => {
+		const req = event.payload
+		requestMap.set(req.id + req.startTime, req)
+
+		// Get all requests and sort by start time (oldest first)
+		const allRequests = Array.from(requestMap.values()).sort((a, b) => a.startTime - b.startTime)
+
+		// If we exceed MAX_REQUESTS, remove the oldest ones
+		if (allRequests.length > MAX_REQUESTS) {
+			const requestsToRemove = allRequests.slice(0, allRequests.length - MAX_REQUESTS)
+			for (const oldRequest of requestsToRemove) {
+				requestMap.delete(oldRequest.id + oldRequest.startTime)
+			}
+			setIsLimitReached(true)
 		}
+
 		setRequests(Array.from(requestMap.values()))
 	}, [])
+
 	useEffect(() => {
-		import.meta.hot?.send("get-events")
-		import.meta.hot?.on("get-events", setNewRequests)
-		import.meta.hot?.on("request-event", setNewRequests)
+		const unsubscribeRequestEvent = eventClient.on("request-event", handleRequestEvent)
+
 		return () => {
-			import.meta.hot?.off?.("get-events", setNewRequests)
-			import.meta.hot?.off?.("request-event", setNewRequests)
+			unsubscribeRequestEvent()
 		}
-	}, [setNewRequests])
+	}, [handleRequestEvent])
 
 	const removeAllRequests = useCallback(() => {
 		setRequests([])
+		setIsLimitReached(false)
 		requestMap.clear()
 	}, [])
-	return <RequestContext.Provider value={{ requests, removeAllRequests }}>{children}</RequestContext.Provider>
+	return (
+		<RequestContext.Provider value={{ requests, removeAllRequests, isLimitReached }}>
+			{children}
+		</RequestContext.Provider>
+	)
 }
 
 export const useRequestContext = () => {

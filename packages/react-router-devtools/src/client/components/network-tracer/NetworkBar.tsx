@@ -1,7 +1,9 @@
-import { animate, motion, useMotionValue } from "framer-motion"
+import { motion, useMotionValue } from "framer-motion"
 import type React from "react"
 import { useEffect } from "react"
 import type { RequestEvent } from "../../../shared/request-event"
+import { cx } from "../../styles/use-styles"
+import { useStyles } from "../../styles/use-styles"
 
 interface NetworkBarProps {
 	request: RequestEvent
@@ -18,8 +20,10 @@ interface NetworkBarProps {
 const COLORS = {
 	loader: "#4ade80",
 	"client-loader": "#60a5fa",
-	action: "#f59e0b",
+	action: "#FFD700",
 	"client-action": "#ef4444",
+	middleware: "#FFA500",
+	"client-middleware": "#FF69B4",
 	"custom-event": "#ffffff",
 	pending: "#94a3b8",
 	error: "#dc2626",
@@ -36,75 +40,90 @@ export const NetworkBar: React.FC<NetworkBarProps> = ({
 	onClick,
 	isActive,
 }) => {
+	const { styles } = useStyles()
 	const startX = (request.startTime - minTime) * pixelsPerMs
-	const currentEndTime = request.endTime || now
-	const duration = currentEndTime - request.startTime
 	const y = index * (barHeight + barPadding) + 24
 	const state = request.endTime ? "finished" : "pending"
 
 	const color =
 		state === "pending" ? COLORS.pending : COLORS[request.aborted ? "error" : (request.type as keyof typeof COLORS)]
 
-	const barWidth = useMotionValue(2)
+	// For finished requests, use the final width directly without animation
+	const finalWidth = request.endTime
+		? Math.max(2, (request.endTime - request.startTime) * pixelsPerMs)
+		: Math.max(2, (now - request.startTime) * pixelsPerMs)
+
+	const barWidth = useMotionValue(finalWidth)
 
 	useEffect(() => {
-		const updateWidth = () => {
-			if (request.endTime) {
-				animate(barWidth, Math.max(2, (request.endTime - request.startTime) * pixelsPerMs), {
-					duration: 0.3,
-					ease: "easeOut",
-				})
-			} else if (isActive) {
-				barWidth.set(Math.max(2, (now - request.startTime) * pixelsPerMs))
-				requestAnimationFrame(updateWidth)
+		// Only animate if the request is not finished
+		if (!request.endTime && isActive) {
+			let animationFrameId: number
+
+			const updateWidth = () => {
+				const currentWidth = Math.max(2, (Date.now() - request.startTime) * pixelsPerMs)
+				barWidth.set(currentWidth)
+				animationFrameId = requestAnimationFrame(updateWidth)
+			}
+
+			animationFrameId = requestAnimationFrame(updateWidth)
+
+			return () => {
+				cancelAnimationFrame(animationFrameId)
+				barWidth.stop()
 			}
 		}
 
-		if (isActive) {
-			requestAnimationFrame(updateWidth)
+		// For finished requests, set the width once and never change it
+		if (request.endTime) {
+			barWidth.set(finalWidth)
 		}
+	}, [request.endTime, request.startTime, pixelsPerMs, barWidth, isActive, finalWidth])
 
-		if (!isActive) {
-			barWidth.stop()
-		}
-
-		return () => {
-			barWidth.stop()
-		}
-	}, [request.endTime, request.startTime, pixelsPerMs, now, barWidth, isActive])
+	const currentEndTime = request.endTime || now
+	const duration = currentEndTime - request.startTime
 
 	return (
 		<motion.div
+			layout
+			initial={{ opacity: 0, scale: 0.8 }}
+			animate={{ opacity: 1, scale: 1 }}
+			exit={{ opacity: 0, scale: 0.8 }}
 			style={{
 				position: "absolute",
 				top: y,
 				height: barHeight,
 				backgroundColor: color,
-				borderRadius: "2px",
+				borderRadius: "3px",
 				width: barWidth,
 				minWidth: "2px",
 				x: startX,
+				boxShadow: request.endTime ? "0 1px 3px rgba(0, 0, 0, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.2)",
 			}}
 			transition={{
-				x: { duration: 0.3, ease: "easeOut" },
+				layout: { duration: 0.2, ease: "easeOut" },
+				opacity: { duration: 0.2 },
+				scale: { duration: 0.2 },
+				x: { duration: 0.25, ease: "easeOut" },
+				backgroundColor: { duration: 0.15, ease: "easeOut" },
 			}}
-			className="relative overflow-hidden group cursor-pointer hover:brightness-110"
+			className={styles.network.bar.container}
 			onClick={(e) => onClick(e, request, index)}
 		>
-			{isActive && (
+			{!request.endTime && (
 				<motion.div
-					className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
+					className={styles.network.bar.shimmer}
 					animate={{ x: ["-100%", "100%"] }}
 					transition={{
 						repeat: Number.POSITIVE_INFINITY,
-						duration: 1.5,
+						duration: 1.2,
 						ease: "linear",
 					}}
 				/>
 			)}
 
-			<div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 px-2 py-1 rounded text-sm whitespace-nowrap pointer-events-none z-10">
-				{request.method} {request.url}
+			<div className={cx(styles.network.bar.tooltip, "network-bar-tooltip")}>
+				<strong>{request.id}</strong> - {request.method} {request.url}
 				<br />
 				{request.endTime ? `Duration: ${duration.toFixed(0)}ms` : `Elapsed: ${duration.toFixed(0)}ms...`}
 			</div>

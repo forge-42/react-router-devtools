@@ -7,8 +7,7 @@ import { Meteors } from "~/components/ui/Meteors"
 import { InfiniteMovingCards } from "~/components/ui/infinite-cards"
 import { Navbar } from "~/components/ui/navbar-menu"
 import { TypewriterEffect } from "~/components/ui/typewritter"
-import { Route } from "./+types"
-import { buildDocPathFromSlug } from "~/utils/path-builders"
+import type { Route } from "./+types"
 import { generateMetaFields } from "~/utils/seo"
 import { getDomain } from "~/utils/get-domain"
 
@@ -97,7 +96,7 @@ export function OpenSourceReveal() {
 				}
 				className="h-[40rem]"
 			>
-				Click <span className="text-red-500">Shift + Right Click</span> to directly go to element source in
+				Click <span className="text-red-500">Shift + Ctrl + Left Click</span> to directly go to element source in
 				<span className="ml-2 text-blue-500">VS Code</span> 🔥
 			</MaskContainer>
 		</div>

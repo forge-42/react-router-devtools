@@ -4,51 +4,98 @@ import { useEffect, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { Tooltip } from "react-tooltip"
 import type { RequestEvent } from "../../../shared/request-event"
+import { cx } from "../../styles/use-styles"
+import { useStyles } from "../../styles/use-styles"
 import { METHOD_COLORS } from "../../tabs/TimelineTab"
 import { Tag } from "../Tag"
 import { NetworkBar } from "./NetworkBar"
-import { REQUEST_BORDER_COLORS, RequestDetails } from "./RequestDetails"
+import { RequestDetails } from "./RequestDetails"
 
 interface Props {
 	requests: RequestEvent[]
 	width: number
 }
 
-const BAR_HEIGHT = 20
-const BAR_PADDING = 8
+const BAR_HEIGHT = 16
+const BAR_PADDING = 6
 const TIME_COLUMN_INTERVAL = 1000 // 1 second
 const _MIN_SCALE = 0.1
 const _MAX_SCALE = 10
 const FUTURE_BUFFER = 1000 // 2 seconds ahead
 const INACTIVE_THRESHOLD = 100 // 1 seconds
 
-const TYPE_COLORS = {
-	loader: "bg-green-500",
-	"client-loader": "bg-blue-500",
-	action: "bg-yellow-500",
-	"client-action": "bg-purple-500",
-	"custom-event": "bg-white",
-}
 const TYPE_TEXT_COLORS = {
 	loader: "text-green-500",
 	"client-loader": "text-blue-500",
 	action: "text-yellow-500",
 	"client-action": "text-purple-500",
+	middleware: "text-orange-500",
+	"client-middleware": "text-pink-400",
 	"custom-event": "text-white",
 }
 
+type EventType =
+	| "loader"
+	| "client-loader"
+	| "action"
+	| "client-action"
+	| "middleware"
+	| "client-middleware"
+	| "custom-event"
+
+const EVENT_TYPE_FILTERS: { value: EventType | "all"; label: string; color: string }[] = [
+	{ value: "all", label: "All Events", color: "#ffffff" },
+	{ value: "loader", label: "Loader", color: "#4ade80" },
+	{ value: "client-loader", label: "Client Loader", color: "#60a5fa" },
+	{ value: "action", label: "Action", color: "#FFD700" },
+	{ value: "client-action", label: "Client Action", color: "#ef4444" },
+	{ value: "middleware", label: "Middleware", color: "#FFA500" },
+	{ value: "client-middleware", label: "Client Middleware", color: "#FF69B4" },
+	{ value: "custom-event", label: "Custom Event", color: "#ffffff" },
+]
+
 const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 	const containerRef = useRef<HTMLDivElement>(null)
+	const { styles } = useStyles()
 	const [scale, _setScale] = useState(0.1)
 	const [isDragging, setIsDragging] = useState(false)
 	const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 })
 	const [selectedRequestIndex, setSelectedRequest] = useState<number | null>(null)
 	const [now, setNow] = useState(Date.now())
-	const selectedRequest = selectedRequestIndex !== null ? requests[selectedRequestIndex] : null
+	const [activeTypeFilter, setActiveTypeFilter] = useState<EventType | "all">("all")
+	const [activeRouteFilters, setActiveRouteFilters] = useState<Set<string>>(new Set())
+
+	// Get unique routes from all requests
+	const uniqueRoutes = Array.from(new Set(requests.map((req) => req.routeId))).sort()
+
+	// Filter requests based on active filters
+	let filteredRequests = requests
+
+	// Apply type filter
+	if (activeTypeFilter !== "all") {
+		filteredRequests = filteredRequests.filter((req) => req.type === activeTypeFilter)
+	}
+
+	// Apply route filters (if any selected)
+	if (activeRouteFilters.size > 0) {
+		filteredRequests = filteredRequests.filter((req) => activeRouteFilters.has(req.routeId))
+	}
+
+	// Get the selected request from the filtered list
+	const selectedRequest = selectedRequestIndex !== null ? filteredRequests[selectedRequestIndex] : null
+
 	// Check if there are any active requests
-	const hasActiveRequests = requests.some(
+	const hasActiveRequests = filteredRequests.some(
 		(req) => !req.endTime || (req.endTime && now - req.endTime < INACTIVE_THRESHOLD)
 	)
+
+	// Reset selected index when filters change and current selection is out of bounds
+	useEffect(() => {
+		if (selectedRequestIndex !== null && selectedRequestIndex >= filteredRequests.length) {
+			setSelectedRequest(null)
+		}
+	}, [selectedRequestIndex, filteredRequests.length])
+
 	useEffect(() => {
 		if (!hasActiveRequests) {
 			return
@@ -57,11 +104,11 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 		return () => clearInterval(interval)
 	}, [hasActiveRequests])
 
-	const minTime = Math.min(...requests.map((r) => r.startTime))
+	const minTime = Math.min(...filteredRequests.map((r) => r.startTime))
 	const maxTime = hasActiveRequests
 		? now + FUTURE_BUFFER
-		: requests.length > 0
-			? Math.max(...requests.map((r) => r.endTime || r.startTime)) + 1000
+		: filteredRequests.length > 0
+			? Math.max(...filteredRequests.map((r) => r.endTime || r.startTime)) + 1000
 			: now
 	const duration = maxTime - minTime
 	const pixelsPerMs = scale
@@ -134,84 +181,233 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 		if (e.key === "ArrowLeft" && order > 0) {
 			onChangeRequest(order - 1)
 		}
-		if (e.key === "ArrowRight" && order < requests.length - 1) {
+		if (e.key === "ArrowRight" && order < filteredRequests.length - 1) {
 			onChangeRequest(order + 1)
 		}
 	})
-	return (
-		<div className="relative">
-			<div className="flex">
-				<div>
-					<div className="h-5 flex items-center border-b border-gray-700 mb-1   pb-2">Requests</div>
-					<div style={{ gap: BAR_PADDING }} className=" pr-4 flex flex-col z-50 ">
-						{requests.map((request, index) => (
-							<div
-								style={{ height: BAR_HEIGHT }}
-								key={request.id + request.startTime}
-								className="flex gap-2 items-center"
-							>
-								<button
-									type="button"
-									className={`flex w-full items-center focus-visible:outline-none gap-2 px-2 py-0.5 text-md text-white border rounded ${index === selectedRequestIndex ? `${REQUEST_BORDER_COLORS[request.type]}` : "border-transparent"}`}
-									onClick={(e) => handleBarClick(e, request, index)}
-								>
-									<div
-										data-tooltip-id={`${request.id}${request.startTime}`}
-										data-tooltip-html={`<div>This was triggered by ${request.type.startsWith("a") ? "an" : "a"} <span class="font-bold ${TYPE_TEXT_COLORS[request.type]}">${request.type}</span> request</div>`}
-										data-tooltip-place="top"
-										className={`size-2 p-1 ${TYPE_COLORS[request.type]}`}
-									/>
 
-									<Tooltip place="top" id={`${request.id}${request.startTime}`} />
-									<div className="pr-4">
-										<div className="whitespace-nowrap">{request.id}</div>
+	const toggleRouteFilter = (route: string) => {
+		setActiveRouteFilters((prev) => {
+			const newFilters = new Set(prev)
+			if (newFilters.has(route)) {
+				newFilters.delete(route)
+			} else {
+				newFilters.add(route)
+			}
+			return newFilters
+		})
+	}
+
+	const clearRouteFilters = () => {
+		setActiveRouteFilters(new Set())
+	}
+
+	return (
+		<div className={styles.network.waterfall.container}>
+			{/* Type Filter Bar */}
+			<div className={styles.network.waterfall.filterBar}>
+				<div className={styles.network.waterfall.filterLabel}>Type:</div>
+				<div className={styles.network.waterfall.filterButtons}>
+					{EVENT_TYPE_FILTERS.map((filter) => (
+						<button
+							key={filter.value}
+							type="button"
+							className={cx(
+								styles.network.waterfall.filterButton,
+								activeTypeFilter === filter.value && styles.network.waterfall.filterButtonActive
+							)}
+							style={{
+								borderColor: activeTypeFilter === filter.value ? filter.color : "transparent",
+								color: activeTypeFilter === filter.value ? filter.color : "#9ca3af",
+							}}
+							onClick={() => setActiveTypeFilter(filter.value)}
+						>
+							<span className={styles.network.waterfall.filterColorCircle} style={{ backgroundColor: filter.color }} />
+							{filter.label}
+							{filter.value !== "all" && (
+								<span className={styles.network.waterfall.filterCount}>
+									({requests.filter((r) => r.type === filter.value).length})
+								</span>
+							)}
+							{filter.value === "all" && (
+								<span className={styles.network.waterfall.filterCount}>({requests.length})</span>
+							)}
+						</button>
+					))}
+				</div>
+			</div>
+
+			{/* Route Filter Bar */}
+			<div className={styles.network.waterfall.filterBar}>
+				<div className={styles.network.waterfall.filterLabel}>
+					Routes:
+					{activeRouteFilters.size > 0 && (
+						<span className={styles.network.waterfall.filterCount} style={{ marginLeft: "0.25rem" }}>
+							({activeRouteFilters.size} selected)
+						</span>
+					)}
+				</div>
+				<div className={styles.network.waterfall.filterButtons}>
+					<button
+						type="button"
+						className={cx(
+							styles.network.waterfall.filterButton,
+							activeRouteFilters.size === 0 && styles.network.waterfall.filterButtonActive
+						)}
+						style={{
+							borderColor: activeRouteFilters.size === 0 ? "#ffffff" : "transparent",
+							color: activeRouteFilters.size === 0 ? "#ffffff" : "#9ca3af",
+						}}
+						onClick={clearRouteFilters}
+					>
+						All Routes
+						<span className={styles.network.waterfall.filterCount}>({uniqueRoutes.length})</span>
+					</button>
+					{uniqueRoutes.map((route) => {
+						const isActive = activeRouteFilters.has(route)
+						const routeCount = requests.filter((r) => r.routeId === route).length
+						return (
+							<button
+								key={route}
+								type="button"
+								className={cx(
+									styles.network.waterfall.filterButton,
+									isActive && styles.network.waterfall.filterButtonActive
+								)}
+								style={{
+									borderColor: isActive ? "#60a5fa" : "transparent",
+									color: isActive ? "#60a5fa" : "#9ca3af",
+								}}
+								onClick={() => toggleRouteFilter(route)}
+							>
+								{route}
+								<span className={styles.network.waterfall.filterCount}>({routeCount})</span>
+							</button>
+						)
+					})}
+				</div>
+			</div>
+
+			{/* Results summary */}
+			{(activeTypeFilter !== "all" || activeRouteFilters.size > 0) && (
+				<div className={styles.network.waterfall.filterSummary}>
+					Showing {filteredRequests.length} of {requests.length} events
+					{activeRouteFilters.size > 0 && (
+						<button type="button" className={styles.network.waterfall.clearFiltersButton} onClick={clearRouteFilters}>
+							Clear route filters
+						</button>
+					)}
+				</div>
+			)}
+
+			<div className={styles.network.waterfall.flexContainer}>
+				<div>
+					<div className={styles.network.waterfall.requestsHeader}>Requests</div>
+					<div style={{ gap: BAR_PADDING }} className={styles.network.waterfall.requestsList}>
+						{filteredRequests.map((request, index) => {
+							const borderColorClass =
+								request.type === "loader"
+									? styles.network.waterfall.requestButtonGreen
+									: request.type === "client-loader"
+										? styles.network.waterfall.requestButtonBlue
+										: request.type === "action"
+											? styles.network.waterfall.requestButtonYellow
+											: request.type === "client-action"
+												? styles.network.waterfall.requestButtonPurple
+												: request.type === "middleware"
+													? styles.network.waterfall.requestButtonOrange
+													: request.type === "client-middleware"
+														? styles.network.waterfall.requestButtonPinkLight
+														: styles.network.waterfall.requestButtonWhite
+
+							const indicatorColorClass =
+								request.type === "loader"
+									? styles.network.waterfall.requestIndicatorGreen
+									: request.type === "client-loader"
+										? styles.network.waterfall.requestIndicatorBlue
+										: request.type === "action"
+											? styles.network.waterfall.requestIndicatorYellow
+											: request.type === "client-action"
+												? styles.network.waterfall.requestIndicatorPurple
+												: request.type === "middleware"
+													? styles.network.waterfall.requestIndicatorOrange
+													: request.type === "client-middleware"
+														? styles.network.waterfall.requestIndicatorPinkLight
+														: styles.network.waterfall.requestIndicatorWhite
+
+							return (
+								<div
+									style={{ height: BAR_HEIGHT }}
+									key={request.id + request.startTime}
+									className={styles.network.waterfall.requestRow}
+								>
+									<button
+										type="button"
+										className={cx(
+											styles.network.waterfall.requestButton,
+											index === selectedRequestIndex && borderColorClass
+										)}
+										onClick={(e) => handleBarClick(e, request, index)}
+									>
+										<div
+											data-tooltip-id={`${request.id}${request.startTime}`}
+											data-tooltip-html={`<div>This was triggered by ${request.type.startsWith("a") ? "an" : "a"} <span class="font-bold ${TYPE_TEXT_COLORS[request.type]}">${request.type}</span> request</div>`}
+											data-tooltip-place="top"
+											className={cx(styles.network.waterfall.requestIndicator, indicatorColorClass)}
+										/>
+
+										<Tooltip place="top" id={`${request.id}${request.startTime}`} />
+										<div className={styles.network.waterfall.requestId}>
+											<div className={styles.network.waterfall.requestIdText}>{request.id}</div>
+										</div>
+									</button>
+									<div className={styles.network.waterfall.methodTag}>
+										{request?.method && (
+											<Tag size="small" color={METHOD_COLORS[request.method]}>
+												{request.method}
+											</Tag>
+										)}
 									</div>
-								</button>
-								<div className="flex items-center ml-auto">
-									{request?.method && (
-										<Tag className="!px-1 !py-0 text-[0.7rem]" color={METHOD_COLORS[request.method]}>
-											{request.method}
-										</Tag>
-									)}
 								</div>
-							</div>
-						))}
+							)
+						})}
 					</div>
 				</div>
 				<div
 					ref={containerRef}
-					className="relative overflow-x-auto scrollbar-hide flex"
-					style={{
-						height: Math.min(requests.length * (BAR_HEIGHT + BAR_PADDING) + 24, window.innerHeight - 200),
-						cursor: isDragging ? "grabbing" : "grab",
-					}}
+					className={cx(
+						styles.network.waterfall.scrollContainer,
+						isDragging ? styles.network.waterfall.scrollContainerGrabbing : styles.network.waterfall.scrollContainerGrab
+					)}
 					onMouseDown={handleMouseDown}
 					onMouseMove={handleMouseMove}
 					onMouseUp={handleMouseUp}
 					onMouseLeave={handleMouseUp}
 				>
-					<div className="relative" style={{ width: scaledWidth }}>
-						<div className="absolute top-0 left-0 right-0 h-5 border-b border-gray-700">
+					<div className={styles.network.waterfall.chartContainer} style={{ width: scaledWidth }}>
+						<div className={styles.network.waterfall.timelineHeader}>
 							{Array.from({ length: timeColumns }).map((_, i) => (
 								<div
 									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 									key={i}
-									className="absolute top-0 h-full border-r-none border-t-none border-b-none !border-l border-white border-l-2 text-sm text-white "
+									className={styles.network.waterfall.timeColumn}
 									style={{
 										left: i * TIME_COLUMN_INTERVAL * pixelsPerMs,
 									}}
 								>
-									<span className="ml-1">{i}s</span>
+									<span className={styles.network.waterfall.timeLabel}>{i}s</span>
 									<div
-										className="absolute -left-[1px] border-l  stroke-5 border-dashed border-gray-700 "
-										style={{ height: BAR_HEIGHT * requests.length + 1 + (BAR_PADDING * requests.length + 1), width: 1 }}
+										className={styles.network.waterfall.timeDivider}
+										style={{
+											height: BAR_HEIGHT * filteredRequests.length + 1 + (BAR_PADDING * filteredRequests.length + 1),
+										}}
 									/>
 								</div>
 							))}
 						</div>
 
-						<AnimatePresence>
-							{requests.map((request, index) => (
+						<AnimatePresence mode="popLayout">
+							{filteredRequests.map((request, index) => (
 								<NetworkBar
 									key={request.id + request.startTime}
 									request={request}
@@ -229,39 +425,18 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 					</div>
 				</div>
 			</div>
-			<div className="w-full">
-				{selectedRequest && (
-					<AnimatePresence>
-						<RequestDetails
-							total={requests.length}
-							index={selectedRequestIndex}
-							request={selectedRequest}
-							onChangeRequest={onChangeRequest}
-							onClose={onClose}
-						/>
-					</AnimatePresence>
-				)}
-			</div>
-			{/* 		<div className="sticky top-0 z-10 bg-gray-900 p-2 border-b border-gray-700 flex items-center gap-2">
-				<button
-					type="button"
-					className="p-1 hover:bg-gray-700 rounded"
-					onClick={() => setScale((s) => Math.min(MAX_SCALE, s + 0.1))}
-				>
-					<div id="zoom-in" className="w-4 h-4" />
-				</button>
-				<button
-					type="button"
-					className="p-1 hover:bg-gray-700 rounded"
-					onClick={() => setScale((s) => Math.max(MIN_SCALE, s - 0.1))}
-				>
-					<div id="zoom-out" className="w-4 h-4" />
-				</button>
-				<button type="button" className="p-1 hover:bg-gray-700 rounded" onClick={handleReset}>
-					<div id="rotate-ccw" className="w-4 h-4" />
-				</button>
-				<div className="text-sm text-gray-400">Scale: {scale.toFixed(2)}x</div>
-			</div> */}
+			{selectedRequest && (
+				<AnimatePresence mode="wait">
+					<RequestDetails
+						key={selectedRequest.id + selectedRequest.startTime}
+						total={filteredRequests.length}
+						index={selectedRequestIndex}
+						request={selectedRequest}
+						onChangeRequest={onChangeRequest}
+						onClose={onClose}
+					/>
+				</AnimatePresence>
+			)}
 		</div>
 	)
 }

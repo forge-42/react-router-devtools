@@ -1,5 +1,6 @@
 import type { SVGProps } from "react"
-import { cn } from "../util.js"
+import { cx } from "../../styles/use-styles.js"
+import { useStyles } from "../../styles/use-styles.js"
 import type { IconName } from "./icons/types.js"
 
 enum IconSize {
@@ -16,6 +17,7 @@ type IconSizes = keyof typeof IconSize
 
 interface IconProps extends SVGProps<SVGSVGElement> {
 	name: IconName
+	title?: string
 	testId?: string
 	className?: string
 	size?: IconSizes
@@ -28,12 +30,14 @@ const strokeIcon: Partial<IconName>[] = []
  * Icon component wrapper for SVG icons.
  * @returns SVG icon as a react component
  */
-export const Icon = ({ name, testId, className, size = "sm", ...props }: IconProps) => {
+export const Icon = ({ name, title, testId, className, size = "sm", ...props }: IconProps) => {
+	const { styles } = useStyles()
 	const iconSize = IconSize[size]
 	const isEmptyFill = emptyFill.includes(name)
 	const isStrokeIcon = strokeIcon.includes(name)
-	const iconClasses = cn("inline-block flex-shrink-0", className, isEmptyFill && "fill-transparent")
+	const iconClasses = cx(styles.icon.base, className, isEmptyFill && styles.icon.fillTransparent)
 	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: i don't want titles on hover
 		<svg
 			className={iconClasses}
 			fill={isEmptyFill ? "none" : "currentColor"}
@@ -44,7 +48,6 @@ export const Icon = ({ name, testId, className, size = "sm", ...props }: IconPro
 			data-name={name}
 			{...props}
 		>
-			<title>{name}</title>
 			<defs>
 				<symbol
 					id="Layout"

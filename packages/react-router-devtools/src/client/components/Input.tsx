@@ -1,35 +1,30 @@
-import clsx from "clsx"
+import { cx, useStyles } from "../styles/use-styles.js"
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	label?: string
 	hint?: string
 }
 
-export const Label = ({ className, children, ...props }: React.HTMLProps<HTMLLabelElement>) => {
+const Label = ({ className, children, ...props }: React.HTMLProps<HTMLLabelElement>) => {
+	const { styles } = useStyles()
 	return (
-		<label htmlFor={props.name} className={clsx("block text-white text-sm", className)} {...props}>
+		<label htmlFor={props.name} className={cx(styles.input.label, className)} {...props}>
 			{children}
 		</label>
 	)
 }
 
-export const Hint = ({ children }: React.HTMLProps<HTMLParagraphElement>) => {
-	return <p className="text-sm text-gray-500">{children}</p>
+const Hint = ({ children }: React.HTMLProps<HTMLParagraphElement>) => {
+	const { styles } = useStyles()
+	return <p className={styles.input.hint}>{children}</p>
 }
 
 const Input = ({ className, name, label, hint, ...props }: InputProps) => {
+	const { styles } = useStyles()
 	return (
-		<div className="flex w-full flex-col gap-1">
+		<div className={styles.input.container}>
 			{label && <Label htmlFor={name}>{label}</Label>}
-			<input
-				name={name}
-				id={name}
-				className={clsx(
-					"w-full rounded transition-all text-white border border-gray-400 hover:border-gray-400/50 bg-[#121212] px-2 py-1 text-sm",
-					className
-				)}
-				{...props}
-			/>
+			<input name={name} id={name} className={cx(styles.input.input, className)} {...props} />
 			{hint && <Hint>{hint}</Hint>}
 		</div>
 	)

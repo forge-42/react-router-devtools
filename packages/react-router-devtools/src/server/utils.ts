@@ -1,9 +1,8 @@
 import chalk from "chalk"
 import type { ActionFunctionArgs, LoaderFunctionArgs, UNSAFE_DataWithResponseInit } from "react-router"
-import { bigIntReplacer } from "../shared/bigint-util.js"
 import { sendEvent } from "../shared/send-event.js"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
-import { actionLog, errorLog, infoLog, loaderLog, redirectLog } from "./logger.js"
+import { actionLog, errorLog, infoLog, loaderLog, middlewareLog, redirectLog } from "./logger.js"
 import { diffInMs, secondsToHuman } from "./perf.js"
 
 export const analyzeCookies = (routeId: string, config: DevToolsServerConfig, headers: Headers) => {
@@ -223,47 +222,6 @@ export const extractHeadersFromResponseOrRequest = (
 	return Object.fromEntries(headers.entries())
 }
 
-const storeAndEmitActionOrLoaderInfo = async (
-	type: "action" | "loader",
-	routeId: string,
-	response: unknown,
-	end: number,
-	args: LoaderFunctionArgs | ActionFunctionArgs
-) => {
-	const responseHeaders = extractHeadersFromResponseOrRequest(response)
-	const requestHeaders = extractHeadersFromResponseOrRequest(args.request)
-
-	// create the event
-	const event = {
-		type,
-		data: {
-			id: routeId,
-			executionTime: end,
-			timestamp: new Date().getTime(),
-			responseData: isDataFunctionResponse(response) ? response.data : response,
-			requestHeaders,
-			responseHeaders,
-		},
-	}
-	if (typeof process === "undefined") {
-		return
-	}
-	const port = process.rdt_port
-
-	if (port) {
-		fetch(`http://localhost:${port}/__rrdt`, {
-			method: "POST",
-			body: JSON.stringify(event, bigIntReplacer),
-		})
-			.then(async (res) => {
-				if (res.ok) {
-					await res.text()
-				}
-			})
-			.catch(() => {})
-	}
-}
-
 // biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
 export const isDataFunctionResponse = (res: any): res is UNSAFE_DataWithResponseInit<any> => {
 	return res?.type && res.type === "DataWithResponseInit" && res.data && res.init
@@ -284,6 +242,7 @@ export const analyzeLoaderOrAction =
 				method: args.request.method,
 				url: args.request.url,
 				id: routeId,
+				routeId: routeId,
 			})
 			let aborted = false
 			args.request.signal.addEventListener("abort", () => {
@@ -295,6 +254,7 @@ export const analyzeLoaderOrAction =
 					startTime,
 					endTime: Date.now(),
 					id: routeId,
+					routeId: routeId,
 					method: args.request.method,
 					aborted: true,
 				})
@@ -305,7 +265,6 @@ export const analyzeLoaderOrAction =
 				unAwaited(() => {
 					const end = diffInMs(start)
 					const endTime = Date.now()
-					storeAndEmitActionOrLoaderInfo(type, routeId, res, end, args)
 					logTrigger(routeId, type, end)
 					analyzeDeferred(routeId, start, res)
 					analyzeHeaders(routeId, res)
@@ -317,6 +276,7 @@ export const analyzeLoaderOrAction =
 							endTime,
 							data: res,
 							id: routeId,
+							routeId: routeId,
 							url: args.request.url,
 							method: args.request.method,
 							// biome-ignore lint/suspicious/noExplicitAny: we don't know the type
@@ -329,3 +289,54 @@ export const analyzeLoaderOrAction =
 				errorHandler(routeId, err, true)
 			}
 		}
+
+// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
+export const analyzeMiddleware = (middleware: any, routeId: string, index: number, middlewareName?: string) => {
+	// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
+	return async (args: any, next: any) => {
+		const start = performance.now()
+		const startTime = Date.now()
+		const name = middlewareName || middleware.name || `Anonymous ${index}`
+
+		middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} started`)
+
+		// Send start event
+		const headers = Object.fromEntries(args.request.headers.entries())
+		sendEvent({
+			type: "middleware",
+			url: args.request.url,
+			headers,
+			startTime,
+			id: routeId,
+			routeId: routeId,
+			method: args.request.method,
+			middlewareName: name,
+			middlewareIndex: index,
+		})
+
+		try {
+			const result = await middleware(args, next)
+			const end = diffInMs(start)
+
+			middlewareLog(`${chalk.blueBright(routeId)} - ${chalk.white(name)} ended - ${chalk.white(`${end}ms`)}`)
+
+			// Send end event
+			sendEvent({
+				type: "middleware",
+				url: args.request.url,
+				headers,
+				startTime,
+				endTime: Date.now(),
+				id: routeId,
+				routeId: routeId,
+				method: args.request.method,
+				middlewareName: name,
+				middlewareIndex: index,
+			})
+
+			return result
+		} catch (err) {
+			errorHandler(routeId, err, true)
+		}
+	}
+}

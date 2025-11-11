@@ -1,39 +1,38 @@
 import clsx from "clsx"
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router"
 import { RDTContextProvider } from "./context/RDTContext.js"
-import { useSettingsContext } from "./context/useRDTContext.js"
-import { useReactTreeListeners } from "./hooks/useReactTreeListeners.js"
+import { useFindRouteOutlets } from "./hooks/useReactTreeListeners.js"
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js"
 import { useTimelineHandler } from "./hooks/useTimelineHandler.js"
 import { ContentPanel } from "./layout/ContentPanel.js"
 import { MainPanel } from "./layout/MainPanel.js"
 import { Tabs } from "./layout/Tabs.js"
 import type { ReactRouterDevtoolsProps } from "./react-router-dev-tools.js"
+// Import to ensure global reset styles are injected
+import "./styles/use-styles.js"
+import { RequestProvider } from "./context/requests/request-context.js"
 import { REACT_ROUTER_DEV_TOOLS } from "./utils/storage.js"
 
 export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
 	mainPanelClassName?: string
 	className?: string
 }
-const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const Embedded = ({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 	useTimelineHandler()
-	useReactTreeListeners()
+	useFindRouteOutlets()
 	useSetRouteBoundaries()
-	const { settings } = useSettingsContext()
-	const { position } = settings
-	const leftSideOriented = position.includes("left")
-	const url = useLocation().search
-	const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin))
-	if (settings.requireUrlFlag && !url.includes(settings.urlFlag)) return null
+
 	return (
 		<div
 			id={REACT_ROUTER_DEV_TOOLS}
-			className={clsx("react-router-dev-tools react-router-dev-tools-reset h-full flex-row w-full", className)}
+			style={{
+				height: "100%",
+			}}
+			className={clsx("react-router-dev-tools", "h-full flex-row w-full", className)}
 		>
 			<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
-				<Tabs plugins={plugins} />
-				<ContentPanel leftSideOriented={leftSideOriented} plugins={plugins} />
+				<Tabs />
+				<ContentPanel />
 			</MainPanel>
 		</div>
 	)
@@ -52,14 +51,16 @@ function useHydrated() {
 	return hydrated
 }
 
-const EmbeddedDevTools = ({ plugins, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const EmbeddedDevTools = ({ config, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 	const hydrated = useHydrated()
 
 	if (!hydrated) return null
 
 	return (
-		<RDTContextProvider>
-			<Embedded mainPanelClassName={mainPanelClassName} className={className} plugins={plugins} />
+		<RDTContextProvider config={config}>
+			<RequestProvider>
+				<Embedded mainPanelClassName={mainPanelClassName} className={className} />
+			</RequestProvider>
 		</RDTContextProvider>
 	)
 }

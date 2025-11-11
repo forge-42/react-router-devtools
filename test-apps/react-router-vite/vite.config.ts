@@ -1,23 +1,12 @@
 import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { reactRouterDevTools, defineRdtConfig } from "react-router-devtools"
-
-import inspect from "vite-plugin-inspect"
+import { reactRouterDevTools, defineRdtConfig } from "../../packages/react-router-devtools/dist/index"
 const config = defineRdtConfig({
   client: {
-    enableInspector: true,
-    defaultOpen: false,
-    position: "top-right",
-    requireUrlFlag: false,
-    liveUrls: [
-      { url: "https://forge42.dev", name: "Production" },
-      {
-      url: "https://forge42.dev/staging",
-      name: "Staging",
-    }],
+
+
   },
-  enhancedLogs: true,
   pluginDir: "./plugins",
   includeInProd: {
     client: true,
@@ -27,19 +16,17 @@ const config = defineRdtConfig({
     // suppressDeprecationWarning: true,
   server:  {
     serverTimingThreshold: 250,
-  }
+  },
 });
 
 export default defineConfig({
   plugins: [
-    inspect(),
-    reactRouterDevTools( config),
+    //inspect(),
+    reactRouterDevTools( config)  ,
     reactRouter(),
     tsconfigPaths()
   ],
-  optimizeDeps: {
-    noDiscovery: true
-  },
+
   server: {
     open: true,
     port: 3000,

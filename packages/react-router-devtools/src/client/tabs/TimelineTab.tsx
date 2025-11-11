@@ -1,8 +1,11 @@
+import { TabContent } from "../components/TabContent.js"
+import { TabHeader } from "../components/TabHeader.js"
 import { type TAG_COLORS, Tag } from "../components/Tag.js"
 import { Icon } from "../components/icon/Icon.js"
 import { JsonRenderer } from "../components/jsonRenderer.js"
 import type { FormEvent, RedirectEvent, TimelineEvent } from "../context/timeline/types.js"
 import { useTimelineContext } from "../context/useRDTContext.js"
+import { useStyles } from "../styles/use-styles.js"
 
 const Translations: Record<TimelineEvent["type"], string> = {
 	REDIRECT: "Normal Page navigation",
@@ -15,14 +18,13 @@ const Translations: Record<TimelineEvent["type"], string> = {
 }
 
 const RedirectEventComponent = (event: RedirectEvent) => {
+	const { styles } = useStyles()
 	return (
-		<div className="mb-4">
-			<time className="mb-2 block text-sm font-normal leading-none text-gray-500">
-				Navigated to url: "{event.to + event.search}"
-			</time>
-			<p className="mb-4 text-base font-normal text-gray-400">{event.hash}</p>
+		<div className={styles.timelineTab.eventContainer}>
+			<time className={styles.timelineTab.eventTime}>Navigated to url: "{event.to + event.search}"</time>
+			<p className={styles.timelineTab.eventText}>{event.hash}</p>
 			{event.responseData && (
-				<p className="mb-4 text-base font-normal text-gray-400">
+				<p className={styles.timelineTab.eventText}>
 					Data received:
 					<JsonRenderer data={event.responseData} />
 				</p>
@@ -32,26 +34,38 @@ const RedirectEventComponent = (event: RedirectEvent) => {
 }
 
 const FormEventComponent = (event: FormEvent) => {
-	const firstPart =
-		event.type === "ACTION_REDIRECT"
-			? `Redirect from "${event.to}" to "${event.from}"`
-			: `Submission to url: "${event.to}"`
+	const { styles } = useStyles()
+	const isRedirect = event.type === "ACTION_REDIRECT"
 	const responseData = event.responseData
 	return (
-		<div className="mb-4">
-			<time className="mb-2 block text-sm font-normal leading-none text-gray-500">
-				{firstPart} | encType: {event.encType}{" "}
-				{"fetcherKey" in event && typeof event.fetcherKey !== "undefined" ? `| Fetcher Key: ${event.fetcherKey}` : ""}
-			</time>
-			<div className="flex gap-8">
+		<div className={styles.timelineTab.eventContainer}>
+			<div className={styles.timelineTab.eventInfoGrid}>
+				<div className={styles.timelineTab.eventInfoItem}>
+					<span className={styles.timelineTab.eventInfoLabel}>{isRedirect ? "Redirect from" : "Submission URL"}:</span>
+					<span className={styles.timelineTab.eventInfoValue}>
+						{isRedirect ? `"${event.to}" to "${event.from}"` : `"${event.to}"`}
+					</span>
+				</div>
+				<div className={styles.timelineTab.eventInfoItem}>
+					<span className={styles.timelineTab.eventInfoLabel}>encType:</span>
+					<span className={styles.timelineTab.eventInfoValue}>{event.encType}</span>
+				</div>
+				{"fetcherKey" in event && typeof event.fetcherKey !== "undefined" && (
+					<div className={styles.timelineTab.eventInfoItem}>
+						<span className={styles.timelineTab.eventInfoLabel}>Fetcher Key:</span>
+						<span className={styles.timelineTab.eventInfoValue}>{String(event.fetcherKey)}</span>
+					</div>
+				)}
+			</div>
+			<div className={styles.timelineTab.eventDataContainer}>
 				{event.data && event.type !== "ACTION_RESPONSE" && (
-					<div className="mb-4 truncate text-base font-normal text-gray-400">
+					<div className={styles.timelineTab.eventData}>
 						Data sent:
 						<JsonRenderer data={event.data} />
 					</div>
 				)}
 				{responseData && (
-					<div className="mb-4 truncate text-base font-normal text-gray-400">
+					<div className={styles.timelineTab.eventData}>
 						Server Response Data:
 						<JsonRenderer data={responseData} />
 					</div>
@@ -70,37 +84,53 @@ export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
 }
 
 const TimelineTab = () => {
+	const { styles } = useStyles()
 	const { timeline, clearTimeline } = useTimelineContext()
 	return (
-		<div className="relative flex h-full flex-col overflow-y-auto p-6 px-6">
-			{timeline.length > 0 && (
-				<button
-					type="button"
-					onClick={() => clearTimeline()}
-					className="absolute right-3 top-0 z-20 cursor-pointer rounded-lg border border-red-500 px-3 py-1 text-sm font-semibold text-white"
-				>
-					Clear
-				</button>
-			)}
-			<ol className="relative">
-				{timeline.map((event) => {
-					return (
-						<li key={event.id} className="mb-2 ml-8 animate-fade-in-left">
-							<span className="absolute -left-3 mt-2 flex h-6 w-6 animate-fade-in items-center justify-center rounded-full bg-blue-900 ring-4 ring-blue-900">
-								<Icon name="Activity" />
-							</span>
-							<h3 className="-mt-3 mb-1 flex items-center gap-2 text-lg font-semibold text-white">
-								{Translations[event.type]}
-								{event?.method && <Tag color={METHOD_COLORS[event.method]}>{event.method}</Tag>}
-							</h3>
-							{event.type === "REDIRECT" || event.type === "FETCHER_REDIRECT" ? (
-								<RedirectEventComponent {...event} />
-							) : (
-								<FormEventComponent {...event} />
-							)}
-						</li>
-					)
-				})}
+		<div className={styles.timelineTab.container}>
+			<TabHeader
+				icon={<Icon name="Activity" />}
+				title="Timeline"
+				gradientDirection="rtl"
+				rightContent={
+					<>
+						<span className={styles.timelineTab.headerCount}>{timeline.length}</span>
+						{timeline.length > 0 && (
+							<button type="button" onClick={() => clearTimeline()} className={styles.timelineTab.clearButton}>
+								<Icon name="X" />
+								<span>Clear</span>
+							</button>
+						)}
+					</>
+				}
+			/>
+			<ol className={styles.timelineTab.list}>
+				<TabContent>
+					{timeline.map((event) => {
+						return (
+							<li key={event.id} className={styles.timelineTab.item}>
+								<div className={styles.timelineTab.itemHeader}>
+									<span className={styles.timelineTab.icon}>
+										<Icon name="Activity" />
+									</span>
+									<h3 className={styles.timelineTab.title}>{Translations[event.type]}</h3>
+									{event?.method && (
+										<div className={styles.timelineTab.methodTag}>
+											<Tag color={METHOD_COLORS[event.method]}>{event.method}</Tag>
+										</div>
+									)}
+								</div>
+								<div className={styles.timelineTab.itemBody}>
+									{event.type === "REDIRECT" || event.type === "FETCHER_REDIRECT" ? (
+										<RedirectEventComponent {...event} />
+									) : (
+										<FormEventComponent {...event} />
+									)}
+								</div>
+							</li>
+						)
+					})}
+				</TabContent>
 			</ol>
 		</div>
 	)

@@ -1,0 +1,336 @@
+---
+title: React Router Devtools Server Configuration
+summary: "Configure React Router Devtools server logging, including options for silence, cookies, deferred data, actions, loaders, middleware, cache, site clears, and server timings."
+description: Configuration options for the React Router Devtools server
+---
+
+As with the client configuration, we will first see the full configuration type:
+
+```ts
+interface DevToolsServerConfig {
+  silent?: boolean;
+  serverTimingThreshold?: number;
+  logs?: {
+    cookies?: boolean;
+    defer?: boolean;
+    actions?: boolean;
+    loaders?: boolean;
+    cache?: boolean;
+    siteClear?: boolean;
+    serverTimings?: boolean;
+    middleware?: boolean;
+  };
+}
+```
+
+## `silent`
+
+When `true`, the server will not log anything to the console. This is useful for production environments or when you want to completely disable server-side logging.
+
+**Default:** `false` (in development), `true` (in production)
+
+**Example:**
+```ts
+import { reactRouterDevTools } from "react-router-devtools";
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      server: {
+        silent: true, // Disable all server logs
+      }
+    }),
+    reactRouter(),
+  ],
+});
+```
+
+<InfoAlert>
+The `silent` option is a global toggle. If you want granular control over specific log types, leave `silent` as `false` and configure individual log options in the `logs` object.
+</InfoAlert>
+
+## `serverTimingThreshold`
+
+This option sets the threshold (in milliseconds) for server timings to be logged in the console with different colors.
+
+- If the server timing is **greater than** this threshold, it will be logged in **red** (indicating potential performance issues)
+- If the server timing is **less than or equal to** this threshold, it will be logged in **green**
+
+**Default:** `Number.POSITIVE_INFINITY` (all timings shown in green)
+
+**Example:**
+```ts
+import { reactRouterDevTools } from "react-router-devtools";
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      server: {
+        serverTimingThreshold: 100, // Timings > 100ms shown in red
+      }
+    }),
+    reactRouter(),
+  ],
+});
+```
+
+## `logs`
+
+This object allows you to configure individual server log types. Each key is a log type and the value is a boolean indicating whether to log that type.
+
+**All log types are `true` by default**, so you don't have to provide anything. If you want granular control, you can selectively disable specific log types. Alternatively, use the `silent` option to turn off all logs at once.
+
+### `cookies`
+
+When `true`, the server will log all cookies sent by the server in the `Set-Cookie` header.
+
+**Default:** `true`
+
+**What gets logged:**
+- Cookie names and values
+- Cookie attributes (domain, path, secure, httpOnly, etc.)
+- When cookies are set or modified
+
+**Example:**
+```ts
+logs: {
+  cookies: false, // Disable cookie logging
+}
+```
+
+### `defer`
+
+When `true`, the server will log all deferred actions and loaders.
+
+**Default:** `true`
+
+**What gets logged:**
+- The location where defer was called
+- The keys that were deferred
+- The time it took for each deferred promise to resolve
+- Any errors that occurred during deferred resolution
+
+**Example:**
+```ts
+logs: {
+  defer: true, // Log deferred data
+}
+```
+
+### `actions`
+
+When `true`, the server will log all action functions that are executed.
+
+**Default:** `true`
+
+**What gets logged:**
+- Action route ID
+- Request method (POST, PUT, DELETE, etc.)
+- Execution time
+- Return status
+
+**Example:**
+```ts
+logs: {
+  actions: true, // Log all actions
+}
+```
+
+### `loaders`
+
+When `true`, the server will log all loader functions that are executed.
+
+**Default:** `true`
+
+**What gets logged:**
+- Loader route ID
+- Request URL
+- Execution time
+- Return status
+
+**Example:**
+```ts
+logs: {
+  loaders: true, // Log all loaders
+}
+```
+
+### `middleware`
+
+When `true`, the server will log all middleware function executions.
+
+**Default:** `true`
+
+**What gets logged:**
+- Middleware function route ID
+- Execution context
+- Execution time
+- Any errors or return values
+
+**Example:**
+```ts
+logs: {
+  middleware: true, // Log middleware calls
+}
+```
+
+<InfoAlert>
+Middleware logging is particularly useful for debugging request processing pipelines and understanding the order of middleware execution.
+</InfoAlert>
+
+### `cache`
+
+When `true`, the server will log all loaders and actions that return a `Cache-Control` header.
+
+**Default:** `true`
+
+**What gets logged:**
+- Route ID
+- Cache-Control header value
+- Cache strategy (max-age, s-maxage, etc.)
+- Cache directives (public, private, no-cache, etc.)
+
+**Example:**
+```ts
+logs: {
+  cache: true, // Log cache headers
+}
+```
+
+### `siteClear`
+
+When `true`, the server will log when the site cache is cleared or when any response includes the `Clear-Site-Data` header.
+
+**Default:** `true`
+
+**What gets logged:**
+- Routes that triggered cache clearing
+- Clear-Site-Data header values
+- Types of data being cleared (cache, cookies, storage, etc.)
+
+**Example:**
+```ts
+logs: {
+  siteClear: true, // Log cache clear events
+}
+```
+
+### `serverTimings`
+
+When `true`, the server will log all server timings that are returned with a request via the `Server-Timing` header.
+
+**Default:** `true`
+
+**What gets logged:**
+- Timing metric names
+- Duration values
+- Descriptions
+- Color-coded based on `serverTimingThreshold`
+
+**Example:**
+```ts
+logs: {
+  serverTimings: true, // Log server timing headers
+}
+```
+
+## Complete Configuration Example
+
+Here's a complete example showing all server configuration options:
+
+```ts
+import { defineConfig } from 'vite'
+import { reactRouter } from '@react-router/dev/vite'
+import { reactRouterDevTools } from "react-router-devtools"
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      server: {
+        // Global toggle - turns off ALL logging
+        silent: false,
+        
+        // Server timing threshold (in milliseconds)
+        // Timings above this will be logged in red
+        serverTimingThreshold: 100,
+        
+        // Granular log configuration
+        logs: {
+          cookies: true,       // Log Set-Cookie headers
+          defer: true,         // Log deferred loaders/actions
+          actions: true,       // Log action executions
+          loaders: true,       // Log loader executions
+          middleware: true,    // Log middleware executions
+          cache: true,         // Log Cache-Control headers
+          siteClear: true,     // Log Clear-Site-Data headers
+          serverTimings: true, // Log Server-Timing headers
+        }
+      }
+    }),
+    reactRouter(),
+  ],
+})
+```
+
+## Production Configuration
+
+For production environments, you typically want to disable all server logging:
+
+```ts
+import { reactRouterDevTools } from "react-router-devtools"
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      server: {
+        silent: true, // Disable all logs in production
+      },
+      includeInProd: {
+        server: true, // Include server utilities but with silent logging
+      }
+    }),
+    reactRouter(),
+  ],
+})
+```
+
+Alternatively, you can set `process.rdt_config` at runtime in production:
+
+```ts
+// In your server entry file
+if (process.env.NODE_ENV === 'production') {
+  process.rdt_config = {
+    silent: true,
+  }
+}
+```
+
+## Selective Logging Example
+
+Enable only specific log types you care about:
+
+```ts
+import { reactRouterDevTools } from "react-router-devtools"
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      server: {
+        silent: false,
+        serverTimingThreshold: 50, // Flag slow operations > 50ms
+        logs: {
+          cookies: false,       // Don't log cookies
+          defer: true,          // Log deferred data
+          actions: true,        // Log actions
+          loaders: false,       // Don't log loaders (too noisy)
+          middleware: true,     // Log middleware
+          cache: true,          // Log cache headers
+          siteClear: false,     // Don't log cache clears
+          serverTimings: true,  // Log performance timings
+        }
+      }
+    }),
+    reactRouter(),
+  ],
+})
+```

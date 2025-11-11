@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { memo, useEffect, useMemo, useRef, useState } from "react"
 import JsonView from "../../external/react-json-view/index.js"
 import { customTheme } from "../../external/react-json-view/theme/custom.js"
 import { useSettingsContext } from "../context/useRDTContext.js"
+import { useStyles } from "../styles/use-styles.js"
 
 interface JsonRendererProps {
 	data: string | Record<string, unknown>
@@ -13,7 +14,8 @@ const isPromise = (value: any): value is Promise<any> => {
 	return value && typeof value.then === "function"
 }
 
-const JsonRenderer = ({ data, expansionLevel }: JsonRendererProps) => {
+const JsonRendererComponent = ({ data, expansionLevel }: JsonRendererProps) => {
+	const { styles } = useStyles()
 	const { settings } = useSettingsContext()
 	const ref = useRef(true)
 	useEffect(() => {
@@ -63,12 +65,14 @@ const JsonRenderer = ({ data, expansionLevel }: JsonRendererProps) => {
 	}, [data])
 
 	if (typeof json === "string") {
-		return <div className="rdt-max-w-xs rdt-text-green-600">{json}</div>
+		return <div className={styles.jsonRenderer.stringValue}>{json}</div>
 	}
 
 	return (
 		<JsonView highlightUpdates style={customTheme} collapsed={expansionLevel ?? settings.expansionLevel} value={json} />
 	)
 }
+
+const JsonRenderer = memo(JsonRendererComponent)
 
 export { JsonRenderer }

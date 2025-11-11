@@ -42,32 +42,6 @@ export function isLeafRoute(route: Route) {
 	return getRouteType(route) === "ROUTE"
 }
 
-const ROUTE_FILLS = {
-	GREEN: "fill-green-500 text-white",
-	BLUE: "fill-blue-500 text-white",
-	PURPLE: "fill-purple-500 text-white",
-} as const
-
-const UNDISCOVERED_ROUTE_FILLS = {
-	GREEN: "fill-green-500/20 text-white",
-	BLUE: "fill-blue-500/20 text-white",
-	PURPLE: "fill-purple-500/20 text-white",
-}
-
-export function getRouteColor(route: Route) {
-	const isDiscovered = !!window.__reactRouterManifest?.routes[route.id]
-	const FILL = isDiscovered ? ROUTE_FILLS : UNDISCOVERED_ROUTE_FILLS
-	switch (getRouteType(route)) {
-		case "ROOT":
-			return FILL.PURPLE
-
-		case "ROUTE":
-			return FILL.GREEN
-
-		case "LAYOUT":
-			return FILL.BLUE
-	}
-}
 export type ExtendedRoute = EntryRoute & {
 	url: string
 	file?: string
@@ -90,21 +64,36 @@ export const constructRoutePath = (route: ExtendedRoute, routeWildcards: RouteWi
 	return { pathToOpen, path, hasWildcard }
 }
 
-export const createExtendedRoutes = () => {
-	if (!window.__reactRouterManifest) {
+export const createExtendedRoutes = (routes?: Record<string, EntryRoute>) => {
+	const manifestRoutes = routes ?? window.__reactRouterManifest?.routes
+	if (!manifestRoutes) {
 		return []
 	}
 	return (
-		Object.values(window.__reactRouterManifest.routes)
+		Object.values(manifestRoutes)
 			.map((route) => {
 				return {
 					...route,
-					// biome-ignore lint/style/noNonNullAssertion: we know this is defined
-					url: convertReactRouterPathToUrl(window.__reactRouterManifest!.routes, route),
+					url: convertReactRouterPathToUrl(manifestRoutes, route),
 					errorBoundary: findParentErrorBoundary(route),
 				}
 			})
 			// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
 			.filter((route) => isLeafRoute(route as any))
 	)
+}
+
+/**
+ * Converts a route module path to a clean route identifier
+ * Example: "/app/routes/admin/users.tsx" => "routes/admin/users"
+ * Example: "src/routes/admin/users.tsx" => "routes/admin/users"
+ * @param modulePath - The module path from the route manifest
+ * @returns The cleaned route identifier without the first directory segment and file extension
+ */
+export const getRouteIdFromModule = (modulePath: string): string => {
+	// Remove file extension
+	const withoutExtension = modulePath.split(".").slice(0, -1).join(".")
+	// Split by "/" and remove the first segment (e.g., "app", "src", etc.)
+	const segments = withoutExtension.split("/").filter(Boolean) // filter(Boolean) removes empty strings from leading "/"
+	return segments.slice(1).join("/")
 }

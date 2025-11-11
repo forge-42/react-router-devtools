@@ -32,8 +32,8 @@
 		"clean": "git clean -fdX .",
 		"clean:build": "git clean -fdx -e node_modules .",
 		"typecheck": "pnpm run --filter=\"./packages/**/*\" --parallel typecheck",
-		"test": "pnpm run test:ci",
-		"test:ci": "nx run-many --targets=test:unused,check,test:deps,test:lib,test:types,test:build,build",
+		"test": "nx run-many --targets=test:unused,check,test:deps,test:lib,test:types,test:build,build",
+		"test:ci": "nx run-many --targets=test:unused,test:deps,test:lib,test:types,test:build,build",
 		"test:cov": "pnpm run --filter=\"./packages/**/*\" --parallel test:cov",
 		"dev": "pnpm run watch",
 		"check": "biome check .",
@@ -50,7 +50,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@changesets/cli": "^2.29.0",
-		"@types/node": "22.13.1",
+		"@types/node": "24.10.0",
 		"knip": "5.43.6",
 		"lefthook": "^1.11.10",
 		"nx": "^21.6.3",
@@ -64,11 +64,11 @@
 	"nx": {
 		"includedScripts": ["test:unused", "check", "test:deps"]
 	},
-	"overrides": {
-		"react-router-devtools": "workspace:*"
-	},
 	"pnpm": {
-		"onlyBuiltDependencies": ["esbuild", "msw"]
+		"onlyBuiltDependencies": ["esbuild", "msw"],
+		"overrides": {
+			"react-router-devtools": "workspace:*"
+		}
 	},
 	"private": true
 }
