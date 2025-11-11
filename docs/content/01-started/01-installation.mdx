@@ -47,6 +47,10 @@ export default defineConfig({
 Make sure your plugin is BEFORE the react router one!
 </WarningAlert>
 
+
+react-router-devtools uses @tanstack/devtools as the base for the UI, you can refer to their
+[documentation](https://tanstack.com/devtools/latest/docs/overview) for more information on how to use the devtools interface.
+
 ### CloudFlare
 
 If you're trying to spin it up on CF, try adding this to your `optimizeDeps` in your `vite.config.js` file:
@@ -54,9 +58,6 @@ If you're trying to spin it up on CF, try adding this to your `optimizeDeps` in 
 optimizeDeps: {
   include: [
     // other optimized deps
-    "beautify",
-    "react-diff-viewer-continued",
-    "classnames",
     "@bkrem/react-transition-group",
   ],
 },

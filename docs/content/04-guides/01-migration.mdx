@@ -1,26 +1,196 @@
 ---
 title: "Migration guide"
-summary: "Learn how to migrate from remix-development-tools to React Router Devtools by updating your vite.config.ts plugin setup."
-description: "Migration guide from remix-development-tools"
+summary: "Learn how to migrate from react-router-devtools v5 to v6 "
+description: "Migration guide from react-router-devtools v5 to v6"
 ---
+
+## Migration from react-router-devtools v5 to v6
 
 ### vite.config.ts
 
-If you're migrating your `remix-development-tools` from v4.x to react-router v7 and you were already running it as
-a Vite plugin here is all you need to do:
+If you're migrating your `react-router-devtools` from v5 to v6 and you were already running it as
+a Vite plugin, a lot of the configuration has been offloaded to TanStack DevTools. So you will
+need to update your `vite.config.ts` file to include the new configuration options.
 
-```diff
-import { defineConfig } from 'vite';
-- import { vitePlugin as remix } from '@remix-run/dev';
-+ import { reactRouter } from '@react-router/dev/vite';
-- import { remixDevTools } from 'remix-development-tools'
-+ import { reactRouterDevTools } from 'react-router-devtools'
-
-export default defineConfig({
--  plugins: [remixDevTools(), remix()],
-+  plugins: [reactRouterDevTools(), reactRouter()],
+Another thing that has changed is the way plugins are configured. In v6, instead of exporting a function
+component like so:
+```tsx
+export const yourPlugin = () => ({
+	name: "your-plugin",
+	component: <jsx>YourPluginComponent</jsx>
 })
 ```
 
+You now export it as a plain object like the following, and also the `component` has been changed to `render`:
+```tsx
+export const yourPlugin = {
+	name: "your-plugin",
+	render: <jsx>YourPluginComponent</jsx>
+}
+```
 
-And that's it! You should be good to go. If you have any issues, please reach out to us.
+<InfoAlert>
+We use the following plugin documentation so you can export your plugins like this:
+https://tanstack.com/devtools/latest/docs/third-party-plugins
+</InfoAlert>
+
+And that's it! You should be good to go. If you have any issues, please reach out.
+
+### Breaking Changes
+
+#### 1. TanStack DevTools Integration
+
+React Router Devtools v6 now integrates with [TanStack DevTools](https://tanstack.com/devtools), providing enhanced debugging capabilities and a more powerful devtools experience.
+
+**What this means:**
+- The devtools UI now includes TanStack DevTools panels alongside React Router specific features
+- You can now configure TanStack-specific behavior through the plugin configuration
+- Enhanced query and state inspection capabilities
+
+#### 2. Configuration Structure Changes
+
+The configuration API has been expanded to support TanStack integration:
+
+**Before (v5):**
+```ts
+import { reactRouterDevTools, defineRdtConfig } from "react-router-devtools";
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      client: {
+        expansionLevel: 2,
+        routeBoundaryGradient: "gotham",
+				position: "bottom-right",        // Position of the devtools trigger
+
+      },
+      server: {
+        silent: false,
+        logs: {
+          loaders: true,
+          actions: true,
+        }
+      },
+      pluginDir: "./plugins",
+      includeInProd: {
+        client: false,
+        server: false,
+      }
+    }),
+    reactRouter(),
+  ],
+});
+```
+
+**After (v6):**
+```ts
+import { reactRouterDevTools, defineRdtConfig } from "react-router-devtools";
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      // Client configuration (unchanged)
+      client: {
+        expansionLevel: 2,
+        routeBoundaryGradient: "gotham",
+      },
+      // Server configuration (unchanged)
+      server: {
+        silent: false,
+        logs: {
+          loaders: true,
+          actions: true,
+        }
+      },
+      // Plugin directory (unchanged)
+      pluginDir: "./plugins",
+      // Production inclusion (expanded)
+      includeInProd: {
+        client: false,
+        server: false,
+        devTools: false, // NEW: Control TanStack DevTools in production
+      },
+      // NEW: TanStack DevTools configuration
+      tanstackConfig: {
+        position: "bottom-right",
+        // Other TanStack config options
+      },
+      // NEW: TanStack event bus configuration
+      tanstackClientBusConfig: {
+        // Custom event bus config
+      },
+      // NEW: TanStack Vite plugin configuration
+      tanstackViteConfig: {
+        // Custom Vite plugin config for TanStack
+      }
+    }),
+    reactRouter(),
+  ],
+});
+```
+
+### New Configuration Options
+
+#### `tanstackConfig`
+
+Configure the TanStack DevTools behavior and appearance:
+
+```ts
+tanstackConfig?: {
+  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right"
+
+  // Additional TanStack configuration options
+}
+```
+
+<InfoAlert>
+The `customTrigger` option is automatically set and cannot be configured as React Router Devtools manages the trigger internally.
+
+The full config is here:
+https://tanstack.com/devtools/latest/docs/configuration
+</InfoAlert>
+
+#### `tanstackClientBusConfig`
+
+Configure the TanStack client event bus for advanced use cases:
+
+```ts
+tanstackClientBusConfig?: {
+  // ClientEventBusConfig options from @tanstack/devtools
+}
+```
+
+#### `tanstackViteConfig`
+
+Configure the TanStack Vite plugin directly:
+
+```ts
+tanstackViteConfig?: {
+  // TanStackDevtoolsViteConfig options from @tanstack/devtools-vite
+}
+```
+
+#### `includeInProd.devTools`
+
+New option to control whether TanStack DevTools are included in production builds:
+
+```ts
+includeInProd: {
+  client: false,
+  server: false,
+  devTools: false, // NEW: Control TanStack DevTools inclusion
+}
+```
+
+You also need to set `removeDevtoolsOnBuild` to `false` in the `tanstackViteConfig` if you want to include TanStack DevTools in production:
+
+```ts
+tanstackViteConfig: {
+	removeDevtoolsOnBuild: false, // Set to false to include in production
+}
+```
+
+### Plugin System Changes
+
+The plugin system remains largely unchanged, but plugins now have access to enhanced capabilities through TanStack integration.
+The only changes are the rename from `component` to `render` and exporting plugins as plain objects instead of functions.

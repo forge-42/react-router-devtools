@@ -13,11 +13,13 @@ To shuffle through the requests, press the `←` and `→` keys.
 
 ## Request types
 
-There are four types of requests in react-router-devtools:
+There are six types of data handling exports in react-router-devtools:
 - **client-loader** - A client-loader is a request that is initiated by the client and is used to load data for a route.
 - **client-action** - A client-action is a request that is initiated by the client and is used to submit data to a route.
 - **loader** - A loader is a request that is initiated by the server and is used to load data for a route.
 - **action** - An action is a request that is initiated by the server and is used to submit data to a route.
+- **middleware** - A middleware is run before and after all your loaders on the server
+- **client-middleware** - A client-middleware is run before and after all your client-loaders on the client
 
 <InfoAlert>
   Each of these is colored differently for you to be able to quickly identify them.
@@ -25,8 +27,17 @@ There are four types of requests in react-router-devtools:
 - client-loader - blue
 - action - purple
 - client-action - yellow
+- middleware - orange
+- client-middleware - pink
 -	aborted requests - red
+
 </InfoAlert>
+
+
+## Filtering
+
+You can filter the requests by their type by clicking on the filter buttons at the top of the network tab.
+You can also filter by route as well
 
 ## Request info
 

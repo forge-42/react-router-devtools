@@ -4,6 +4,17 @@ summary: "The Devtools context provides tracing utilities for loaders and action
 description: "Using the devtools context to trace events and send them to the network tab"
 ---
 
+## TanStack DevTools Integration
+
+React Router Devtools v6+ integrates with [TanStack DevTools](https://tanstack.com/devtools), providing enhanced debugging capabilities alongside React Router specific features. The devtools now include:
+
+- React Router specific tabs (Active Page, Routes, Network, Timeline, Settings)
+- TanStack DevTools panels for advanced state inspection
+- Unified debugging experience with seamless integration
+
+You can configure TanStack-specific behavior through the [general configuration](/configuration/general#tanstack-devtools-integration).
+
+---
 
 ## Devtools extended context
 
@@ -19,9 +30,9 @@ export const loader = async ({ request, devTools }: LoaderFunctionArgs) => {
   const tracing = devTools?.tracing;
   // tracing is a set of utilities to be used in your data fetching functions to trace events
   // in network tab of react-router-devtools
-  const startTime = tracing.start("my-event")
+  const end = tracing.start("my-event")
   // do something here, eg DB call
-  tracing.end("my-event", startTime!)
+  end()
   return "data"
 }
 ```
@@ -33,9 +44,9 @@ export const action = async ({ request, devTools }: ActionFunctionArgs) => {
   const tracing = devTools?.tracing;
   // tracing is a set of utilities to be used in your data fetching functions to trace events
   // in network tab of react-router-devtools
-  const startTime = tracing?.start("my-event")
+  const end = tracing?.start("my-event")
   // do something
-  tracing?.end("my-event", startTime!)
+  end()
   return "data"
 }
 ```
@@ -47,9 +58,9 @@ export const clientLoader = async ({ request, devTools }: ClientLoaderFunctionAr
   const tracing = devTools?.tracing;
   // tracing is a set of utilities to be used in your data fetching functions to trace events
   // in network tab of react-router-devtools
-  const startTime = tracing?.start("my-event")
+  const end = tracing?.start("my-event")
   // do something
-  tracing?.end("my-event", startTime!)
+   end()
   return "data"
 }
 ```
@@ -59,9 +70,9 @@ export const clientAction = async ({ request, devTools }: ClientActionFunctionAr
   const tracing = devTools?.tracing;
   // tracing is a set of utilities to be used in your data fetching functions to trace events
   // in network tab of react-router-devtools
-  const startTime = tracing?.start("my-event")
+  const end = tracing?.start("my-event")
   // do something
-  tracing?.end("my-event", startTime!)
+   end()
   return "data"
 }
 ```
@@ -103,10 +114,9 @@ const loader = async ({ request, devTools }: LoaderFunctionArgs) => {
 The tracing object contains all the utilities related to network tab tracing feature of react-router-devtools.
 
 
-There are three functions you can use:
+There are two functions you can use:
 - trace
 - start
-- end
 
 
 
@@ -143,18 +153,18 @@ This is used together with `end` to trace the time of the event.
 export const loader = async ({ request, devTools }: LoaderFunctionArgs) => {
   const tracing = devTools?.tracing;
   // this will be traced in the network tab of react-router-devtools
-  const startTime = tracing?.start("my-event")
+  const end = tracing?.start("my-event")
   // do something here, eg DB call
 
   // End the trace
-  tracing?.end("my-event", startTime!)
+   end()
   return "data"
 }
 ```
 
 <WarningAlert title="Warning">
- This function relies on you using the `end` with the same name as the start event, otherwise
-you will end up having a never ending loading bar in the network tab!
+ This function relies on you using the `end`returned from it, otherwise the event
+ will never end in your devtools
 </WarningAlert>
 
 
@@ -164,32 +174,4 @@ you will end up having a never ending loading bar in the network tab!
 
 #### Returns
 
-The start time of the event
-
-### end
-
-The `end` function is a function that will end a trace for the name provided to it and return the end time.
-
-```ts
-export const loader = async ({ request, devTools }: LoaderFunctionArgs) => {
-  const tracing = devTools?.tracing;
-  // this will be traced in the network tab of react-router-devtools
-  const startTime = tracing?.start("get user")
-  // do something here, eg DB call
-  const user = await getUser();
-  // End the trace
-  tracing?.end("get user", startTime!, { user })
-  return "data"
-
-}
-```
-
-#### Parameters
-
-- `name` - The name of the event
-- `startTime` - The start time of the sendEvent
-- `data` - The data to be sent with the event
-
-#### Returns
-
-The data provided in the last parameter
+The end trace function
