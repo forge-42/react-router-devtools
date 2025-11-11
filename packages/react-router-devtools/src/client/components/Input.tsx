@@ -5,7 +5,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	hint?: string
 }
 
-export const Label = ({ className, children, ...props }: React.HTMLProps<HTMLLabelElement>) => {
+const Label = ({ className, children, ...props }: React.HTMLProps<HTMLLabelElement>) => {
 	const { styles } = useStyles()
 	return (
 		<label htmlFor={props.name} className={cx(styles.input.label, className)} {...props}>
@@ -14,7 +14,7 @@ export const Label = ({ className, children, ...props }: React.HTMLProps<HTMLLab
 	)
 }
 
-export const Hint = ({ children }: React.HTMLProps<HTMLParagraphElement>) => {
+const Hint = ({ children }: React.HTMLProps<HTMLParagraphElement>) => {
 	const { styles } = useStyles()
 	return <p className={styles.input.hint}>{children}</p>
 }

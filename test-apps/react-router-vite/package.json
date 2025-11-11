@@ -10,8 +10,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@react-router/dev": "^7.9.3",
-    "@react-router/node": "^7.9.3",
+    "@react-router/dev": "7.9.3",
+    "@react-router/node": "7.9.3",
     "@react-router/serve": "7.9.3",
     "isbot": "^5.1.27",
     "react": "^19.1.0",

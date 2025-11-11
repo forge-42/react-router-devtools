@@ -1,13 +1,9 @@
 
 import {
-  ActionFunctionArgs,
-  Link,
-  LoaderFunctionArgs,
-  MetaFunction,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  type MetaFunction,
   Outlet,
-  useFetcher,
-  useLoaderData,
-  useSubmit,
 } from "react-router";
 
 export const meta: MetaFunction = () => {
@@ -32,11 +28,7 @@ export default function Index() {
   data.append("test", "test");
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <p>
-        <p>
 
-        </p>
-      </p>
       <Outlet />
     </div>
   );

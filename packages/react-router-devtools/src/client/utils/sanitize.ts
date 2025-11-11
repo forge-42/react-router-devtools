@@ -84,7 +84,3 @@ const constructTree = (routes: any, parentId?: string): RawNodeDatum[] => {
 export const createRouteTree = (routes: RouteManifest | undefined) => {
 	return constructTree(routes)
 }
-
-export const uppercaseFirstLetter = (str: string) => {
-	return str.charAt(0).toUpperCase() + str.slice(1)
-}

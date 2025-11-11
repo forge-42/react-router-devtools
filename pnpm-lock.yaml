@@ -54,7 +54,7 @@ importers:
         specifier: 1.3.0
         version: 1.3.0(typescript@5.9.3)
       '@react-router/node':
-        specifier: ^7.5.3
+        specifier: 7.9.3
         version: 7.9.3(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
       '@tsparticles/engine':
         specifier: ^3.3.0
@@ -99,7 +99,7 @@ importers:
         specifier: 15.4.0
         version: 15.4.0(i18next@24.2.2(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-router:
-        specifier: ^7.5.3
+        specifier: ^7.9.3
         version: 7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-router-hono-server:
         specifier: 2.10.0
@@ -133,7 +133,7 @@ importers:
         specifier: 1.34.0
         version: 1.34.0
       '@react-router/dev':
-        specifier: ^7.5.3
+        specifier: 7.9.3
         version: 7.9.3(@react-router/serve@7.9.3(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3))(@types/node@22.13.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(tsx@4.19.2)(typescript@5.9.3)(vite@6.3.6(@types/node@22.13.1)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.19.2)(yaml@2.8.1))(yaml@2.8.1)
       '@tailwindcss/typography':
         specifier: 0.5.16
@@ -265,9 +265,6 @@ importers:
       beautify:
         specifier: ^0.0.8
         version: 0.0.8
-      bippy:
-        specifier: ^0.3.7
-        version: 0.3.27(@types/react@19.2.0)(react@19.2.0)
       chalk:
         specifier: 5.4.1
         version: 5.4.1
@@ -391,7 +388,7 @@ importers:
         specifier: ^7.9.3
         version: 7.9.3(express@5.1.0)(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
       '@react-router/node':
-        specifier: ^7.9.3
+        specifier: 7.9.3
         version: 7.9.3(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
       compression:
         specifier: ^1.7.5
@@ -416,7 +413,7 @@ importers:
         version: 7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
     devDependencies:
       '@react-router/dev':
-        specifier: ^7.9.3
+        specifier: 7.9.3
         version: 7.9.3(@react-router/serve@7.9.3(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3))(@types/node@22.13.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(tsx@4.19.2)(typescript@5.9.3)(vite@6.3.6(@types/node@22.13.1)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.19.2)(yaml@2.8.1))(yaml@2.8.1)
       '@tailwindcss/postcss':
         specifier: ^4.1.5
@@ -470,10 +467,10 @@ importers:
   test-apps/react-router-vite:
     dependencies:
       '@react-router/dev':
-        specifier: ^7.9.3
+        specifier: 7.9.3
         version: 7.9.3(@react-router/serve@7.9.3(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3))(@types/node@22.13.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(tsx@4.19.2)(typescript@5.9.3)(vite@6.3.6(@types/node@22.13.1)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.19.2)(yaml@2.8.1))(yaml@2.8.1)
       '@react-router/node':
-        specifier: ^7.9.3
+        specifier: 7.9.3
         version: 7.9.3(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(typescript@5.9.3)
       '@react-router/serve':
         specifier: 7.9.3
@@ -2547,11 +2544,6 @@ packages:
     peerDependencies:
       '@types/react': ^19.2.0
 
-  '@types/react-reconciler@0.28.9':
-    resolution: {integrity: sha512-HHM3nxyUZ3zAylX8ZEyrDNd2XZOnQ0D5XfunJF5FLQnZbHHYq4UWvW1QfelQNXv1ICNkwYhfxjwfnqivYB6bFg==}
-    peerDependencies:
-      '@types/react': '*'
-
   '@types/react@19.2.0':
     resolution: {integrity: sha512-1LOH8xovvsKsCBq1wnT4ntDUdCJKmnEakhsuoUSy6ExlHCkGP2hqnatagYTgFk6oeL0VU31u7SNjunPN+GchtA==}
 
@@ -2844,11 +2836,6 @@ packages:
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
-
-  bippy@0.3.27:
-    resolution: {integrity: sha512-0k9M+yXcgUDpMgSl+7QjYRqUk8Ud4Z18uL7m34AKkkXy7Fi79Yl8q2pdyDGOyb0uhmRzHgJUOsAIYW1qvlnGaA==}
-    peerDependencies:
-      react: '>=17.0.1'
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -8979,10 +8966,6 @@ snapshots:
     dependencies:
       '@types/react': 19.2.0
 
-  '@types/react-reconciler@0.28.9(@types/react@19.2.0)':
-    dependencies:
-      '@types/react': 19.2.0
-
   '@types/react@19.2.0':
     dependencies:
       csstype: 3.1.3
@@ -9310,13 +9293,6 @@ snapshots:
       is-windows: 1.0.2
 
   binary-extensions@2.3.0: {}
-
-  bippy@0.3.27(@types/react@19.2.0)(react@19.2.0):
-    dependencies:
-      '@types/react-reconciler': 0.28.9(@types/react@19.2.0)
-      react: 19.2.0
-    transitivePeerDependencies:
-      - '@types/react'
 
   bl@4.1.0:
     dependencies:

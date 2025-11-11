@@ -24,28 +24,6 @@ const useRDTContext = () => {
 	}
 }
 
-export const useServerInfo = () => {
-	const { state, dispatch } = useRDTContext()
-	const { server } = state
-	const setServerInfo = useCallback(
-		(serverInfo: Partial<ReactRouterDevtoolsState["server"]>) => {
-			dispatch({
-				type: "SET_SERVER_INFO",
-				payload: {
-					...server,
-					...serverInfo,
-					routes: {
-						...server?.routes,
-						...serverInfo?.routes,
-					},
-				},
-			})
-		},
-		[dispatch, server]
-	)
-	return { server, setServerInfo }
-}
-
 export const useSettingsContext = () => {
 	const { dispatch, state } = useRDTContext()
 	const { settings } = state
@@ -61,20 +39,6 @@ export const useSettingsContext = () => {
 	return { setSettings, settings }
 }
 
-export const usePersistOpen = () => {
-	const { dispatch, state } = useRDTContext()
-	const { persistOpen } = state
-	const setPersistOpen = useCallback(
-		(persistOpen: boolean) => {
-			dispatch({
-				type: "SET_PERSIST_OPEN",
-				payload: persistOpen,
-			})
-		},
-		[dispatch]
-	)
-	return { persistOpen, setPersistOpen }
-}
 /**
  * Returns an object containing functions and state related to the timeline context.
  * @returns {Object} An object containing the following properties:
@@ -97,5 +61,3 @@ export const useTimelineContext = () => {
 
 	return { setTimelineEvent, timeline, clearTimeline }
 }
-
-export { useRDTContext }

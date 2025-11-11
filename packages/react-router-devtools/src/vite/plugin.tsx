@@ -2,7 +2,6 @@ import { devtools } from "@tanstack/devtools-vite"
 import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import type { DevToolsServerConfig } from "../server/config.js"
-import type { ActionEvent, LoaderEvent } from "../server/event-queue.js"
 import { eventClient } from "../shared/event-client.js"
 import { runner } from "./node-server.js"
 import { processPlugins } from "./utils.js"
@@ -23,8 +22,6 @@ declare global {
 	}
 }
 
-// Module-level route info storage
-const routeInfo = new Map<string, { loader: LoaderEvent[]; action: ActionEvent[] }>()
 // Module-level routes map storage
 const routesMap = new Map<string, Route[]>()
 // Cache for appDir
@@ -133,7 +130,7 @@ const setupEventListeners = () => {
 	if (listenersSetUp) return
 	listenersSetUp = true
 
-	const unsubscribe1 = eventClient.on("routes-tab-mounted", async () => {
+	const unsubscribe = eventClient.on("routes-tab-mounted", async () => {
 		// Always try to load routes when tab mounts (in case they weren't loaded before)
 		await loadRoutes()
 
@@ -141,13 +138,8 @@ const setupEventListeners = () => {
 		eventClient.emit("routes-info", flatRoutes)
 	})
 
-	const unsubscribe2 = eventClient.on("request-all-route-info", () => {
-		const allRouteInfo = Object.fromEntries(routeInfo.entries())
-		eventClient.emit("all-route-info", allRouteInfo)
-	})
-
-	// Return unsubscribe functions in case we need them
-	return { unsubscribe1, unsubscribe2 }
+	// Return unsubscribe function in case we need it
+	return unsubscribe
 }
 
 type ReactRouterViteConfig = {

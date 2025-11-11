@@ -1,5 +1,5 @@
 
-import { ActionFunctionArgs, data, Link, LoaderFunctionArgs, MetaFunction, Outlet, useFetcher, useLoaderData, useSubmit } from "react-router";
+import { type ActionFunctionArgs, data, type LoaderFunctionArgs, type MetaFunction, Outlet, useFetcher, useLoaderData, useSubmit } from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
@@ -36,7 +36,7 @@ export default function IndexRoute() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix 4</h1>
-      <form />
+
         <Outlet />
     </div>
   );

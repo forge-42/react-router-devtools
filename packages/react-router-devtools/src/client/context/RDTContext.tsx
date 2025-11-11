@@ -36,7 +36,7 @@ export const getSettings = () => {
 	}
 }
 
-export const getExistingStateFromStorage = (config?: RdtClientConfig & { editorName?: string }) => {
+const getExistingStateFromStorage = (config?: RdtClientConfig & { editorName?: string }) => {
 	const existingState = getStorageItem(REACT_ROUTER_DEV_TOOLS_STATE)
 	const settings = getSettings()
 

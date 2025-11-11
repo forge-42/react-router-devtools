@@ -1,19 +1,7 @@
-import type { ActionEvent, LoaderEvent } from "../../server/event-queue.js"
 import type { Tabs } from "../tabs/index.js"
 import { cutArrayToFirstN } from "../utils/common.js"
 import type { TimelineEvent } from "./timeline/types.js"
 
-export const defaultServerRouteState: ServerRouteInfo = {
-	highestExecutionTime: 0,
-	lowestExecutionTime: 0,
-	averageExecutionTime: 0,
-	loaderTriggerCount: 0,
-	actionTriggerCount: 0,
-	lastAction: {},
-	lastLoader: {},
-	loaders: [],
-	actions: [],
-}
 // Gradient keys for use with Goober styles
 export const ROUTE_BOUNDARY_GRADIENTS = {
 	sea: "sea",
@@ -25,27 +13,7 @@ export const ROUTE_BOUNDARY_GRADIENTS = {
 	silver: "silver",
 } as const
 
-export const RouteBoundaryOptions = Object.keys(ROUTE_BOUNDARY_GRADIENTS) as (keyof typeof ROUTE_BOUNDARY_GRADIENTS)[]
 export type RouteWildcards = Record<string, Record<string, string> | undefined>
-
-export type ServerRouteInfo = {
-	actions?: Omit<ActionEvent["data"], "id">[]
-	loaders?: Omit<LoaderEvent["data"], "id">[]
-	lowestExecutionTime: number
-	highestExecutionTime: number
-	averageExecutionTime: number
-	loaderTriggerCount: number
-	actionTriggerCount: number
-	lastAction: Partial<Omit<ActionEvent["data"], "id">>
-	lastLoader: Partial<Omit<LoaderEvent["data"], "id">>
-}
-
-export type ServerInfo = {
-	port?: number
-	routes?: {
-		[key: string]: ServerRouteInfo
-	}
-}
 
 export type ReactRouterDevtoolsState = {
 	timeline: TimelineEvent[]
@@ -73,13 +41,11 @@ export type ReactRouterDevtoolsState = {
 
 		withServerDevTools: boolean
 	}
-	server?: ServerInfo
 	persistOpen: boolean
 }
 
 export const initialState: ReactRouterDevtoolsState = {
 	timeline: [],
-	server: undefined,
 	settings: {
 		editorName: "VSCode",
 		routeBoundaryGradient: "watermelon",
@@ -126,11 +92,6 @@ type SetPersistOpenAction = {
 	payload: boolean
 }
 
-type SetServerInfo = {
-	type: "SET_SERVER_INFO"
-	payload: ServerInfo
-}
-
 /** Aggregate of all action types */
 export type ReactRouterDevtoolsActions =
 	| SetTimelineEvent
@@ -138,7 +99,6 @@ export type ReactRouterDevtoolsActions =
 	| SetSettings
 	| SetWholeState
 	| SetIsSubmittedAction
-	| SetServerInfo
 	| SetPersistOpenAction
 
 export const rdtReducer = (
@@ -146,11 +106,6 @@ export const rdtReducer = (
 	{ type, payload }: ReactRouterDevtoolsActions
 ): ReactRouterDevtoolsState => {
 	switch (type) {
-		case "SET_SERVER_INFO":
-			return {
-				...state,
-				server: payload,
-			}
 		case "SET_SETTINGS":
 			return {
 				...state,

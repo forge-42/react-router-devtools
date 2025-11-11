@@ -59,9 +59,7 @@
 			"require": "./dist/client.css"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/forge-42/react-router-devtools.git"
@@ -116,11 +114,9 @@
 		"@types/babel__core": "^7.20.5",
 		"@types/babel__generator": "^7.27.0",
 		"@types/babel__traverse": "^7.28.0",
-		"@types/beautify": "^0.0.3",
 		"@types/node": "22.13.1",
 		"@vitest/coverage-v8": "3.0.5",
 		"@vitest/ui": "3.0.5",
-		"autoprefixer": "^10.4.20",
 		"happy-dom": "16.8.1",
 		"jest-preview": "^0.3.1",
 		"npm-run-all": "4.1.5",
@@ -138,21 +134,16 @@
 		"@babel/traverse": "^7.26.10",
 		"@babel/types": "^7.26.10",
 		"@radix-ui/react-accordion": "^1.2.2",
-		"@radix-ui/react-select": "^2.1.5",
 		"@tanstack/devtools-event-client": "^0.3.3",
 		"@tanstack/devtools-vite": "^0.3.11",
 		"@tanstack/react-devtools": "^0.8.0",
-		"beautify": "^0.0.8",
 		"chalk": "5.4.1",
 		"clsx": "2.1.1",
-		"date-fns": "^4.1.0",
 		"framer-motion": "^11.0.8",
 		"goober": "^2.1.18",
 		"react-d3-tree": "^3.6.4",
-		"react-diff-viewer-continued": "^4.0.5",
 		"react-hotkeys-hook": "^4.6.1",
-		"react-tooltip": "^5.28.0",
-		"tailwind-merge": "3.0.1"
+		"react-tooltip": "^5.28.0"
 	},
 	"optionalDependencies": {
 		"@biomejs/cli-darwin-arm64": "^1.9.4",

@@ -1,6 +1,5 @@
 import chalk from "chalk"
 import type { ActionFunctionArgs, LoaderFunctionArgs, UNSAFE_DataWithResponseInit } from "react-router"
-import { eventClient } from "../shared/event-client.js"
 import { sendEvent } from "../shared/send-event.js"
 import { type DevToolsServerConfig, getConfig } from "./config.js"
 import { actionLog, errorLog, infoLog, loaderLog, middlewareLog, redirectLog } from "./logger.js"
@@ -223,66 +222,6 @@ export const extractHeadersFromResponseOrRequest = (
 	return Object.fromEntries(headers.entries())
 }
 
-/**
- * Converts BigInt values to strings in an object/array structure
- * This allows the data to be serialized to JSON without errors
- */
-// biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
-const serializeBigInt = (obj: any): any => {
-	if (obj === null || obj === undefined) {
-		return obj
-	}
-
-	if (typeof obj === "bigint") {
-		return obj.toString()
-	}
-
-	if (Array.isArray(obj)) {
-		return obj.map(serializeBigInt)
-	}
-
-	if (typeof obj === "object") {
-		const result: Record<string, unknown> = {}
-		for (const [key, value] of Object.entries(obj)) {
-			result[key] = serializeBigInt(value)
-		}
-		return result
-	}
-
-	return obj
-}
-
-const storeAndEmitActionOrLoaderInfo = async (
-	type: "action" | "loader",
-	routeId: string,
-	response: unknown,
-	end: number,
-	args: LoaderFunctionArgs | ActionFunctionArgs
-) => {
-	const responseHeaders = extractHeadersFromResponseOrRequest(response)
-	const requestHeaders = extractHeadersFromResponseOrRequest(args.request)
-
-	const responseData = isDataFunctionResponse(response) ? response.data : response
-
-	// create the event data matching LoaderEvent["data"] / ActionEvent["data"] type
-	const eventData = {
-		id: routeId,
-		executionTime: end,
-		timestamp: new Date().getTime(),
-		responseData: serializeBigInt(responseData),
-		requestHeaders: requestHeaders || {},
-		responseHeaders: responseHeaders || {},
-		requestData: undefined, // TODO: Extract request data if needed (e.g., formData for actions)
-	}
-
-	// Emit the event via event client
-	if (type === "loader") {
-		eventClient.emit("loader-event", eventData)
-	} else {
-		eventClient.emit("action-event", eventData)
-	}
-}
-
 // biome-ignore lint/suspicious/noExplicitAny: we don't care about the type
 export const isDataFunctionResponse = (res: any): res is UNSAFE_DataWithResponseInit<any> => {
 	return res?.type && res.type === "DataWithResponseInit" && res.data && res.init
@@ -326,7 +265,6 @@ export const analyzeLoaderOrAction =
 				unAwaited(() => {
 					const end = diffInMs(start)
 					const endTime = Date.now()
-					storeAndEmitActionOrLoaderInfo(type, routeId, res, end, args)
 					logTrigger(routeId, type, end)
 					analyzeDeferred(routeId, start, res)
 					analyzeHeaders(routeId, res)
