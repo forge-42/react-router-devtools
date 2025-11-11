@@ -1,4 +1,6 @@
+import type { ClientEventBusConfig, TanStackDevtoolsConfig } from "@tanstack/devtools"
 import { devtools } from "@tanstack/devtools-vite"
+import type { TanStackDevtoolsViteConfig } from "@tanstack/devtools-vite"
 import { type Plugin, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import type { DevToolsServerConfig } from "../server/config.js"
@@ -151,6 +153,9 @@ type ReactRouterViteConfig = {
 		server?: boolean
 		devTools?: boolean
 	}
+	tanstackConfig?: Omit<Partial<TanStackDevtoolsConfig>, "customTrigger">
+	tanstackClientBusConfig?: Partial<ClientEventBusConfig>
+	tanstackViteConfig?: TanStackDevtoolsViteConfig
 }
 
 type Route = {
@@ -193,7 +198,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		if (!extensions.some((ext) => id.endsWith(ext))) {
 			return
 		}
-		if (id.includes("node_modules") || id.includes("dist") || id.includes("build") || id.includes("?")) {
+		if (id.includes("node_modules") || id.includes("?")) {
 			return
 		}
 
@@ -217,11 +222,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		process.rdt_config = serverConfig
 	}
 	return [
-		...devtools({
-			eventBusConfig: {
-				debug: true,
-			},
-		}),
+		...devtools(args?.tanstackViteConfig),
 
 		{
 			name: "react-router-devtools",
@@ -240,10 +241,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					...config.optimizeDeps,
 					include: [
 						...(config.optimizeDeps?.include ?? []),
-						"react-router-devtools > beautify",
-						"react-router-devtools > react-diff-viewer-continued",
 						"react-router-devtools > react-d3-tree",
-						"react-router-devtools > classnames",
 						"react-router-devtools > @bkrem/react-transition-group",
 						"react-router-devtools/client",
 						"react-router-devtools/context",
@@ -260,7 +258,12 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : []
 				const pluginNames = plugins.map((p) => p.name)
 				const pluginImports = plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n")
-				const config = `{ "config": ${JSON.stringify(clientConfig)}, "plugins": "[${pluginNames.join(",")}]" }`
+				const config = `{
+				"config": ${JSON.stringify(clientConfig)},
+				"plugins": "[${pluginNames.join(",")}]",
+				"tanstackConfig": ${JSON.stringify(args?.tanstackConfig || {})},
+				"tanstackClientBusConfig": ${JSON.stringify(args?.tanstackClientBusConfig || {})}
+				}`
 				return injectRdtClient(code, config, pluginImports, id)
 			},
 		},
@@ -311,7 +314,7 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 		},
 		{
 			enforce: "pre",
-			name: "react-router-devtools:custom-server",
+			name: "react-router-devtools:grab-port",
 			apply(config) {
 				// Custom server is only needed in development for piping events to the client
 				return config.mode === "development"

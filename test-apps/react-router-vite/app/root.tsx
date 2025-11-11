@@ -60,19 +60,19 @@ export const loader = ({context, devTools }: LoaderFunctionArgs) => {
     }, 2000);
   });
   console.log("loader called");
-  const start =devTools?.tracing.start("test")!;
-  devTools?.tracing.end("test", start);
+  const end =devTools?.tracing.start("test")!;
+  end();
   return  data({ message: "Hello World", mainPromise, bigInt: BigInt(10) },  );
 }
 
 export const action =async  ({devTools}: ActionFunctionArgs) => {
-  const start = devTools?.tracing.start("action submission")
+  const end = devTools?.tracing.start("action submission")
   await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("test");
     }, 2000);
   });
-  devTools?.tracing.end("action submission", start!)
+  end?.();
   console.log("action called");
   return  ({ message: "Hello World", bigInt: BigInt(10) });
 }

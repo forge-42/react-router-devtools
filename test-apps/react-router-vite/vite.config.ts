@@ -9,7 +9,6 @@ const config = defineRdtConfig({
 
 
   },
-  enhancedLogs: true,
   pluginDir: "./plugins",
   includeInProd: {
     client: true,
@@ -19,13 +18,13 @@ const config = defineRdtConfig({
     // suppressDeprecationWarning: true,
   server:  {
     serverTimingThreshold: 250,
-  }
+  },
 });
 
 export default defineConfig({
   plugins: [
     inspect(),
-    reactRouterDevTools( config) as any,
+    reactRouterDevTools( config)  ,
     reactRouter(),
     tsconfigPaths()
   ],

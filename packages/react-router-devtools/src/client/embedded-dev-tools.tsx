@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import { useEffect, useState } from "react"
 import { RDTContextProvider } from "./context/RDTContext.js"
-import { useReactTreeListeners } from "./hooks/useReactTreeListeners.js"
+import { useFindRouteOutlets } from "./hooks/useReactTreeListeners.js"
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js"
 import { useTimelineHandler } from "./hooks/useTimelineHandler.js"
 import { ContentPanel } from "./layout/ContentPanel.js"
@@ -17,12 +17,10 @@ export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
 	mainPanelClassName?: string
 	className?: string
 }
-const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const Embedded = ({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 	useTimelineHandler()
-	useReactTreeListeners()
+	useFindRouteOutlets()
 	useSetRouteBoundaries()
-
-	const plugins = pluginArray?.map((plugin) => (typeof plugin === "function" ? plugin() : plugin))
 
 	return (
 		<div
@@ -33,8 +31,8 @@ const Embedded = ({ plugins: pluginArray, mainPanelClassName, className }: Embed
 			className={clsx("react-router-dev-tools", "h-full flex-row w-full", className)}
 		>
 			<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
-				<Tabs plugins={plugins} />
-				<ContentPanel plugins={plugins} />
+				<Tabs />
+				<ContentPanel />
 			</MainPanel>
 		</div>
 	)
@@ -53,15 +51,15 @@ function useHydrated() {
 	return hydrated
 }
 
-const EmbeddedDevTools = ({ plugins, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const EmbeddedDevTools = ({ config, mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 	const hydrated = useHydrated()
 
 	if (!hydrated) return null
 
 	return (
-		<RDTContextProvider>
+		<RDTContextProvider config={config}>
 			<RequestProvider>
-				<Embedded mainPanelClassName={mainPanelClassName} className={className} plugins={plugins} />
+				<Embedded mainPanelClassName={mainPanelClassName} className={className} />
 			</RequestProvider>
 		</RDTContextProvider>
 	)

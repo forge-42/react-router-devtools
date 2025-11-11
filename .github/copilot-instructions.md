@@ -24,3 +24,5 @@ Write tests for any new functionality.
 When defining new types, first check if the types exist somewhere and re-use them, do not create new types that are similar to existing ones.
 
 When modifying existing functionality, ensure backward compatibility unless there's a strong reason to introduce breaking changes. If breaking changes are necessary, document them clearly in the relevant documentation files.
+
+If `pnpm run test` fails because of check, you can run `pnpm run check:fix` to fix the issues automatically.

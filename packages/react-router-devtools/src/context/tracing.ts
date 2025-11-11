@@ -46,10 +46,10 @@ export const traceStart = (type: NetworkRequestType, args: AllDataFunctionArgs, 
 		headers: {},
 		method: args.request.method,
 	})
-	return startTime
+	return () => traceEnd(type, args, routeId)(name, startTime)
 }
 
-export const traceEnd =
+const traceEnd =
 	(type: NetworkRequestType, args: AllDataFunctionArgs, routeId: string) =>
 	<T>(name: string, startTime: number, data?: T) => {
 		const isServer = type === "action" || type === "loader"

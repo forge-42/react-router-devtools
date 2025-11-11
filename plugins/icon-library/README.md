@@ -7,20 +7,32 @@ This plugin allows you to see all your project icons in a new tab in react route
 ## How to use
 
 ### Vite
-1. Create a plugin directory in your project. (eg on the root you can create a `your-path-here` folder)
-2. Copy the code from the plugin located in this folder. and paste it into there (eg `your-path-here/icon-library.tsx`)
+1. Create a plugin directory in your project. (eg on the root you can create a `plugins` folder)
+2. Copy the code from the plugin located in this folder and paste it into there (eg `plugins/icon-library.tsx`)
 3. Specify the plugin directory in your vite config via the `pluginDir` option:
 
 ```js
-  // vite.config.js
-  export default {
-    plugins: [reactRouterDevTools({ pluginDir: './your-path-here' })]
-  }
+// vite.config.js
+import { reactRouterDevTools } from 'react-router-devtools'
+
+export default {
+  plugins: [
+    reactRouterDevTools({
+      pluginDir: './plugins'
+    })
+  ]
+}
 ```
+
+4. The plugin will be automatically imported and added to the TanStack devtools tabs.
+
+**Note:** Plugins are only loaded in development mode for performance reasons.
 
 ## How it works
 
 The plugin will use all the icons in your project that are provided to it and will display them in a grid with different sizes.
+
+The plugin is automatically loaded by the Vite plugin and appears as a new tab in the TanStack devtools interface.
 
 You can click on the icon to copy the code of the icon to your clipboard.
 

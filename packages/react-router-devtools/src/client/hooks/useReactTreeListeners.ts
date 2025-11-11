@@ -3,7 +3,7 @@ import { useNavigation } from "react-router"
 
 export const ROUTE_CLASS = "outlet-route"
 
-export function useReactTreeListeners() {
+export function useFindRouteOutlets() {
 	const navigation = useNavigation()
 
 	// biome-ignore lint/suspicious/noExplicitAny: we don't know the type

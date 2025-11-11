@@ -3,7 +3,6 @@ import type { ParseResult } from "@babel/parser"
 import type { NodePath } from "@babel/traverse"
 
 import { gen, parse, t, trav } from "./babel"
-const ALL_EXPORTS = ["links"]
 
 const transform = (ast: ParseResult<Babel.File>, clientConfig: string) => {
 	const hocs: Array<[string, Babel.Identifier]> = []
@@ -28,9 +27,6 @@ const transform = (ast: ParseResult<Babel.File>, clientConfig: string) => {
 			t.objectProperty(t.identifier(key), key === "plugins" ? t.arrayExpression(value as any) : t.valueToNode(value))
 		)
 	)
-	function uppercaseFirstLetter(str: string) {
-		return str.charAt(0).toUpperCase() + str.slice(1)
-	}
 	const transformations: Array<() => void> = []
 	trav(ast, {
 		ExportDeclaration(path) {
@@ -49,43 +45,6 @@ const transform = (ast: ParseResult<Babel.File>, clientConfig: string) => {
 				return
 			}
 			if (path.isExportNamedDeclaration()) {
-				const decl = path.get("declaration")
-
-				if (decl.isVariableDeclaration()) {
-					for (const varDeclarator of decl.get("declarations")) {
-						const id = varDeclarator.get("id")
-						const init = varDeclarator.get("init")
-						const expr = init.node
-						if (!expr) return
-						if (!id.isIdentifier()) return
-						const { name } = id.node
-
-						if (!ALL_EXPORTS.includes(name)) return
-
-						const uid = getHocUid(path, `with${uppercaseFirstLetter(name)}Wrapper`)
-						init.replaceWith(t.callExpression(uid, [expr, t.identifier("rdtStylesheet")]))
-					}
-
-					return
-				}
-
-				if (decl.isFunctionDeclaration()) {
-					const { id } = decl.node
-					if (!id) return
-					const { name } = id
-					if (!ALL_EXPORTS.includes(name)) return
-
-					const uid = getHocUid(path, `with${uppercaseFirstLetter(name)}Wrapper`)
-					decl.replaceWith(
-						t.variableDeclaration("const", [
-							t.variableDeclarator(
-								t.identifier(name),
-								t.callExpression(uid, [toFunctionExpression(decl.node), t.identifier("rdtStylesheet")])
-							),
-						])
-					)
-				}
-
 				// Handle `export { App as default };`
 				const specifiers = path.node.specifiers
 				for (const specifier of specifiers) {
@@ -127,10 +86,6 @@ const transform = (ast: ParseResult<Babel.File>, clientConfig: string) => {
 			t.importDeclaration(
 				hocs.map(([name, identifier]) => t.importSpecifier(identifier, t.identifier(name))),
 				t.stringLiteral("react-router-devtools/client")
-			),
-			t.importDeclaration(
-				[t.importDefaultSpecifier(t.identifier("rdtStylesheet"))],
-				t.stringLiteral("react-router-devtools/client.css?url")
 			)
 		)
 	}
@@ -152,12 +107,6 @@ export function injectRdtClient(code: string, clientConfig: string, pluginImport
 	const generatedOutput = gen(ast, { sourceMaps: true, sourceFileName: filePath, filename: id })
 	const output = `${pluginImports}\n${generatedOutput.code}`
 
-	if (!output.includes("export const links")) {
-		return {
-			code: [output, "", `export const links = () => [{ rel: "stylesheet", href: rdtStylesheet }];`].join("\n"),
-			map: generatedOutput.map,
-		}
-	}
 	return {
 		code: output,
 		map: generatedOutput.map,

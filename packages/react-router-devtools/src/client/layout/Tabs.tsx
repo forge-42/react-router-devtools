@@ -11,11 +11,6 @@ declare global {
 	}
 }
 
-interface TabsProps {
-	setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>
-	plugins?: TabType[]
-}
-
 const Tab = ({
 	tab,
 	activeTab,
@@ -48,11 +43,11 @@ const Tab = ({
 	)
 }
 
-const Tabs = ({ plugins }: TabsProps) => {
+const Tabs = () => {
 	const { settings } = useSettingsContext()
 	const { styles } = useStyles()
 	const { activeTab } = settings
-	const { visibleTabs } = useTabs(plugins)
+	const { visibleTabs } = useTabs()
 	const scrollRef = useHorizontalScroll()
 
 	return (

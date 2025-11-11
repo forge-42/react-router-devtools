@@ -1384,6 +1384,15 @@ const stylesFactory = (theme: "light" | "dark") => {
 				padding: 0.25rem 0.5rem;
 				font-size: 0.875rem;
 			`,
+			strokeYellow: css`
+				stroke: #eab308 !important;
+			`,
+			strokeGray: css`
+				stroke: #9ca3af !important;
+			`,
+			strokeGrayMuted: css`
+				stroke: rgba(156, 163, 175, 0.2) !important;
+			`,
 		},
 
 		// RouteSegmentInfo
@@ -2603,6 +2612,7 @@ const stylesFactory = (theme: "light" | "dark") => {
 					z-index: 10;
 					display: none;
 					height: 100%;
+					min-width: 270px;
 					width: 33.333333%;
 					overflow-y: auto;
 

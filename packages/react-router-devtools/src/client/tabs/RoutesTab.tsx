@@ -70,15 +70,17 @@ const RoutesTab = () => {
 					<div className={styles.routesTab.treeContainer}>
 						<Tree
 							translate={{ x: window.innerWidth / 2 - (isTreeView && activeRoute ? 0 : 0), y: 30 }}
-							pathClassFunc={(link) =>
+							pathClassFunc={(link) => {
 								// biome-ignore lint/suspicious/noExplicitAny: need to suppress it as it's always defined
-								activeRoutes.includes((link.target.data.attributes as any).id)
-									? "stroke-yellow-500"
-									: // biome-ignore lint/suspicious/noExplicitAny: need to suppress it as it's always defined
-										window.__reactRouterManifest?.routes?.[(link.target.data.attributes as any).id]
-										? "stroke-gray-400"
-										: "stroke-gray-400/20"
-							}
+								const targetId = (link.target.data.attributes as any).id
+								if (activeRoutes.includes(targetId)) {
+									return styles.routesTab.strokeYellow
+								}
+								if (window.__reactRouterManifest?.routes?.[targetId]) {
+									return styles.routesTab.strokeGray
+								}
+								return styles.routesTab.strokeGrayMuted
+							}}
 							renderCustomNodeElement={(props) =>
 								RouteNode({
 									...props,

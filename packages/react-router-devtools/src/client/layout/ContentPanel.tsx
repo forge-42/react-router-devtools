@@ -3,14 +3,9 @@ import { useTabs } from "../hooks/useTabs.js"
 import { cx } from "../styles/use-styles.js"
 import { useStyles } from "../styles/use-styles.js"
 import { TimelineTab } from "../tabs/TimelineTab.js"
-import type { Tab } from "../tabs/index.js"
 
-interface ContentPanelProps {
-	plugins?: Tab[]
-}
-
-const ContentPanel = ({ plugins }: ContentPanelProps) => {
-	const { Component, hideTimeline, isPluginTab, activeTab } = useTabs(plugins)
+const ContentPanel = () => {
+	const { Component, hideTimeline, activeTab } = useTabs()
 	const { styles } = useStyles()
 
 	return (
@@ -18,7 +13,6 @@ const ContentPanel = ({ plugins }: ContentPanelProps) => {
 			<div
 				className={cx(
 					styles.layout.contentPanel.mainContent,
-					isPluginTab && styles.layout.contentPanel.mainContentUnset,
 					activeTab === "page" && styles.layout.contentPanel.mainContentPageTab
 				)}
 			>
