@@ -50,7 +50,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@changesets/cli": "^2.29.0",
-		"@types/node": "22.13.1",
+		"@types/node": "24.10.0",
 		"knip": "5.43.6",
 		"lefthook": "^1.11.10",
 		"nx": "^21.6.3",

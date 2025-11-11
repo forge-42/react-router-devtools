@@ -10,9 +10,9 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@react-router/dev": "7.9.3",
-    "@react-router/node": "7.9.3",
-    "@react-router/serve": "7.9.3",
+    "@react-router/dev": "7.9.5",
+    "@react-router/node": "7.9.5",
+    "@react-router/serve": "7.9.5",
     "isbot": "^5.1.27",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -24,8 +24,8 @@
     "@types/react-dom": "^19.1.2",
     "eslint": "^9.19.0",
     "react-router-devtools": "^5.1.3",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2",
     "vite-plugin-inspect": "^10.1.0",
     "vite-tsconfig-paths": "5.1.4"
   },
