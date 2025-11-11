@@ -1,3 +1,4 @@
+import { memo } from "react"
 import type { UIMatch } from "react-router"
 import { convertBigIntToString } from "../../shared/bigint-util.js"
 import { useSettingsContext } from "../context/useRDTContext.js"
@@ -28,7 +29,7 @@ const getLoaderData = (data: string | Record<string, any>) => {
 	return convertBigIntToString(data)
 }
 
-export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
+const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown>; i: number }) => {
 	const { styles } = useStyles()
 
 	const isDev = typeof import.meta.hot !== "undefined"
@@ -126,3 +127,5 @@ export const RouteSegmentInfo = ({ route, i }: { route: UIMatch<unknown, unknown
 		</RouteSegmentCard>
 	)
 }
+
+export const MemoizedRouteSegmentInfo = memo(RouteSegmentInfo)

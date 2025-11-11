@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { memo, useEffect, useMemo, useRef, useState } from "react"
 import JsonView from "../../external/react-json-view/index.js"
 import { customTheme } from "../../external/react-json-view/theme/custom.js"
 import { useSettingsContext } from "../context/useRDTContext.js"
@@ -14,7 +14,7 @@ const isPromise = (value: any): value is Promise<any> => {
 	return value && typeof value.then === "function"
 }
 
-const JsonRenderer = ({ data, expansionLevel }: JsonRendererProps) => {
+const JsonRendererComponent = ({ data, expansionLevel }: JsonRendererProps) => {
 	const { styles } = useStyles()
 	const { settings } = useSettingsContext()
 	const ref = useRef(true)
@@ -72,5 +72,7 @@ const JsonRenderer = ({ data, expansionLevel }: JsonRendererProps) => {
 		<JsonView highlightUpdates style={customTheme} collapsed={expansionLevel ?? settings.expansionLevel} value={json} />
 	)
 }
+
+const JsonRenderer = memo(JsonRendererComponent)
 
 export { JsonRenderer }

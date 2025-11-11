@@ -1,4 +1,4 @@
-import { type MouseEvent, useEffect, useState } from "react"
+import { type MouseEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { useMatches, useNavigate } from "react-router"
 import { eventClient } from "../../shared/event-client.js"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/Accordion.js"
@@ -19,17 +19,23 @@ const RoutesTab = () => {
 	const { styles } = useStyles()
 	const matches = useMatches()
 	const navigate = useNavigate()
-	const activeRoutes = matches.map((match) => match.id)
+	// Memoize active routes to avoid recreating array on every render
+	const activeRoutes = useMemo(() => matches.map((match) => match.id), [matches])
 	const { settings } = useSettingsContext()
 	const { routeWildcards, routeViewMode } = settings
 	const [activeRoute, setActiveRoute] = useState<ExtendedRoute | null>(null)
 	const [routes, setRoutes] = useState<ExtendedRoute[]>(createExtendedRoutes() as ExtendedRoute[])
 	const [treeRoutes, setTreeRoutes] = useState(createRouteTree(window.__reactRouterManifest?.routes))
 	const isTreeView = routeViewMode === "tree"
-	const openNewRoute = (path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-		e?.preventDefault()
-		navigate(path)
-	}
+
+	// Memoize openNewRoute callback to prevent recreating on every render
+	const openNewRoute = useCallback(
+		(path: string) => (e?: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+			e?.preventDefault()
+			navigate(path)
+		},
+		[navigate]
+	)
 
 	useEffect(function fetchAllRoutesOnMount() {
 		// Listen for routes info response from the server FIRST
