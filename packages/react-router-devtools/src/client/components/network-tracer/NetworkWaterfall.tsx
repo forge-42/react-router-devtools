@@ -363,7 +363,7 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 									</button>
 									<div className={styles.network.waterfall.methodTag}>
 										{request?.method && (
-											<Tag className="!px-1 !py-0 text-[0.7rem]" color={METHOD_COLORS[request.method]}>
+											<Tag size="small" color={METHOD_COLORS[request.method]}>
 												{request.method}
 											</Tag>
 										)}
@@ -379,9 +379,6 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 						styles.network.waterfall.scrollContainer,
 						isDragging ? styles.network.waterfall.scrollContainerGrabbing : styles.network.waterfall.scrollContainerGrab
 					)}
-					style={{
-						height: Math.min(filteredRequests.length * (BAR_HEIGHT + BAR_PADDING) + 24, window.innerHeight - 200),
-					}}
 					onMouseDown={handleMouseDown}
 					onMouseMove={handleMouseMove}
 					onMouseUp={handleMouseUp}
@@ -440,26 +437,6 @@ const NetworkWaterfall: React.FC<Props> = ({ requests, width }) => {
 					/>
 				</AnimatePresence>
 			)}
-			{/* 		<div className="sticky top-0 z-10 bg-gray-900 p-2 border-b border-gray-700 flex items-center gap-2">
-				<button
-					type="button"
-					className="p-1 hover:bg-gray-700 rounded"
-					onClick={() => setScale((s) => Math.min(MAX_SCALE, s + 0.1))}
-				>
-					<div id="zoom-in" className="w-4 h-4" />
-				</button>
-				<button
-					type="button"
-					className="p-1 hover:bg-gray-700 rounded"
-					onClick={() => setScale((s) => Math.max(MIN_SCALE, s - 0.1))}
-				>
-					<div id="zoom-out" className="w-4 h-4" />
-				</button>
-				<button type="button" className="p-1 hover:bg-gray-700 rounded" onClick={handleReset}>
-					<div id="rotate-ccw" className="w-4 h-4" />
-				</button>
-				<div className="text-sm text-gray-400">Scale: {scale.toFixed(2)}x</div>
-			</div> */}
 		</div>
 	)
 }

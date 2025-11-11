@@ -13,13 +13,19 @@ interface TagProps {
 	color: keyof typeof TAG_COLORS
 	children: ReactNode
 	className?: string
+	size?: "small" | "default"
 }
 
-const Tag = ({ color, children, className }: TagProps) => {
+const Tag = ({ color, children, className, size = "default" }: TagProps) => {
 	const { styles } = useStyles()
 	return (
 		<span
-			className={cx(styles.tag.base, styles.tag[color.toLowerCase() as Lowercase<keyof typeof TAG_COLORS>], className)}
+			className={cx(
+				styles.tag.base,
+				size === "small" && styles.tag.small,
+				styles.tag[color.toLowerCase() as Lowercase<keyof typeof TAG_COLORS>],
+				className
+			)}
 		>
 			{children}
 		</span>

@@ -242,7 +242,6 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 					include: [
 						...(config.optimizeDeps?.include ?? []),
 						"react-router-devtools > react-d3-tree",
-						"react-router-devtools > @bkrem/react-transition-group",
 						"react-router-devtools/client",
 						"react-router-devtools/context",
 						"react-router-devtools/server",

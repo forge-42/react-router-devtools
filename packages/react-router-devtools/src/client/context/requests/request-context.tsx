@@ -9,7 +9,7 @@ const RequestContext = createContext<{
 }>({ requests: [], removeAllRequests: () => {}, isLimitReached: false })
 
 const requestMap = new Map<string, RequestEvent>()
-const MAX_REQUESTS = 42
+const MAX_REQUESTS = 60
 
 export const RequestProvider = ({ children }: { children: ReactNode }) => {
 	const [requests, setRequests] = useState<RequestEvent[]>([])

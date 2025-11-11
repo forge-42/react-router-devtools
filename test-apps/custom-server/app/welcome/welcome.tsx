@@ -1,3 +1,4 @@
+import { Form } from "react-router";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
 
@@ -9,6 +10,14 @@ export function Welcome({ message }: { message: string }) {
           <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
             {message}
           </h1>
+          <Form>
+            <button
+              type="submit"
+              className="rounded-full bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
+            >
+              Get Started
+            </button>
+          </Form>
           <div className="w-[500px] max-w-[100vw] p-4">
             <img
               src={logoLight}
