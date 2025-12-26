@@ -55,9 +55,7 @@
 			"default": "./dist/server.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/forge-42/react-router-devtools.git"
@@ -107,7 +105,7 @@
 		"@react-router/dev": "7.9.5",
 		"@react-router/node": "7.9.5",
 		"@react-router/serve": "7.9.5",
-		"@tanstack/devtools": "^0.8.1",
+		"@tanstack/devtools": "^0.10.1",
 		"@testing-library/dom": "^10.4.1",
 		"@testing-library/react": "16.3.0",
 		"@types/babel__core": "^7.20.5",
@@ -133,9 +131,9 @@
 		"@babel/traverse": "^7.28.5",
 		"@babel/types": "^7.28.5",
 		"@radix-ui/react-accordion": "^1.2.12",
-		"@tanstack/devtools-event-client": "^0.3.4",
-		"@tanstack/devtools-vite": "^0.3.11",
-		"@tanstack/react-devtools": "^0.8.1",
+		"@tanstack/devtools-event-client": "^0.4.0",
+		"@tanstack/devtools-vite": "^0.4.0",
+		"@tanstack/react-devtools": "^0.9.0",
 		"chalk": "5.6.2",
 		"clsx": "2.1.1",
 		"framer-motion": "^12.23.24",
