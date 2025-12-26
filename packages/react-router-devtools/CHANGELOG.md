@@ -1,5 +1,11 @@
 # react-router-devtools
 
+## 6.0.1
+
+### Patch Changes
+
+- 34e393d: Bump versions
+
 ## 6.0.0
 
 ### Major Changes
