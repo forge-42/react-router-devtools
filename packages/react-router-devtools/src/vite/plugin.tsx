@@ -11,6 +11,7 @@ import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
 import { injectRdtClient } from "./utils/inject-client.js"
 import { injectContext } from "./utils/inject-context.js"
 import { augmentMiddlewareFunctions } from "./utils/middleware-augment.js"
+import { isTypegenContext } from "./utils/detect-typegen.js"
 // this should mirror the types in server/config.ts as well as they are bundled separately.
 declare global {
 	interface Window {
@@ -170,6 +171,11 @@ type Route = {
 export const defineRdtConfig = (config: ReactRouterViteConfig) => config
 
 export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (args) => {
+	// Return empty array in typegen context (disable DevTools)
+	if (isTypegenContext()) {
+		return []
+	}
+
 	const serverConfig = args?.server || {}
 	const clientConfig = {
 		...args?.client,
