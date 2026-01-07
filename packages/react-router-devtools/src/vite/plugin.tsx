@@ -1,3 +1,4 @@
+import fs from "node:fs"
 import type { ClientEventBusConfig, TanStackDevtoolsConfig } from "@tanstack/devtools"
 import { devtools } from "@tanstack/devtools-vite"
 import type { TanStackDevtoolsViteConfig } from "@tanstack/devtools-vite"
@@ -7,6 +8,7 @@ import type { DevToolsServerConfig } from "../server/config.js"
 import { eventClient } from "../shared/event-client.js"
 import { runner } from "./node-server.js"
 import { processPlugins } from "./utils.js"
+import { addRouteTypes } from "./utils/codegen.js"
 import { augmentDataFetchingFunctions } from "./utils/data-functions-augment.js"
 import { injectRdtClient } from "./utils/inject-client.js"
 import { injectContext } from "./utils/inject-context.js"
@@ -156,6 +158,10 @@ type ReactRouterViteConfig = {
 	tanstackConfig?: Omit<Partial<TanStackDevtoolsConfig>, "customTrigger">
 	tanstackClientBusConfig?: Partial<ClientEventBusConfig>
 	tanstackViteConfig?: TanStackDevtoolsViteConfig
+	/** Experimental codegen feature to automatically add type annotations to route exports */
+	experimental_codegen?: {
+		enabled: boolean
+	}
 }
 
 type Route = {
@@ -311,6 +317,67 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				return finalCode
 			},
 		},
+		// Codegen plugin - watches for file changes and adds type annotations to route exports
+		...(args?.experimental_codegen?.enabled
+			? [
+					(() => {
+						// Set to track recently processed files to avoid infinite loops
+						const recentlyProcessed = new Set<string>()
+						const DEBOUNCE_MS = 100
+
+						return {
+							name: "react-router-devtools:codegen",
+							apply(config) {
+								return config.mode === "development"
+							},
+							async watchChange(id, change) {
+								// Only process on create or update
+								if (change.event !== "create" && change.event !== "update") {
+									return
+								}
+
+								// Skip if recently processed (debounce)
+								if (recentlyProcessed.has(id)) {
+									return
+								}
+
+								// Ensure routes are loaded
+								await ensureRoutesLoaded()
+
+								// Check if it's a route file
+								const routeId = isTransformable(id)
+								if (!routeId) {
+									return
+								}
+
+								try {
+									// Read the file
+									const code = await fs.promises.readFile(id, "utf-8")
+
+									// Transform the code
+									const result = addRouteTypes(code, id)
+
+									// Only write if modifications were made
+									if (result.modified) {
+										// Add to recently processed set
+										recentlyProcessed.add(id)
+
+										// Write the file
+										await fs.promises.writeFile(id, result.code, "utf-8")
+
+										// Remove from set after debounce period
+										setTimeout(() => {
+											recentlyProcessed.delete(id)
+										}, DEBOUNCE_MS)
+									}
+								} catch (_e) {
+									// Silently ignore errors (invalid syntax, etc.)
+								}
+							},
+						} satisfies Plugin
+					})(),
+				]
+			: []),
 		{
 			enforce: "pre",
 			name: "react-router-devtools:grab-port",

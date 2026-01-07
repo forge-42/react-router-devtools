@@ -21,6 +21,9 @@ type ReactRouterViteConfig = {
   tanstackConfig?: Omit<Partial<TanStackDevtoolsConfig>, "customTrigger">
   tanstackClientBusConfig?: Partial<ClientEventBusConfig>
   tanstackViteConfig?: TanStackDevtoolsViteConfig
+  experimental_codegen?: {
+    enabled: boolean
+  }
 }
 ```
 
@@ -188,6 +191,83 @@ You can find more info on TanStack specific configuration options here:
 https://tanstack.com/devtools/latest/docs/plugin-configuration
 </InfoAlert>
 
+## Experimental Codegen
+
+The `experimental_codegen` option enables automatic type annotation generation for your React Router route exports. When enabled, the plugin will automatically add type annotations to your route exports (loader, action, default component, etc.) when files are created or modified.
+
+```ts
+experimental_codegen?: {
+  enabled: boolean  // Default: false
+}
+```
+
+### What it does
+
+When you create or edit a route file, the plugin will automatically:
+
+1. Add the Route type import from `./+types/{filename}`
+2. Add type annotations to exported functions like `loader`, `action`, `clientLoader`, `clientAction`, `meta`, `links`, `headers`, `ErrorBoundary`, and `HydrateFallback`
+3. Add type annotations to the default exported component
+4. Add type annotations to `middleware` and `clientMiddleware` array exports
+
+### Example
+
+**Before (what you write):**
+```tsx
+export const loader = ({ request }) => {
+  return { data: "hello" }
+}
+
+export const middleware = []
+
+export default function MyRoute({ loaderData }) {
+  return <div>{loaderData.data}</div>
+}
+```
+
+**After (automatically transformed):**
+```tsx
+import type { Route } from "./+types/my-route";
+
+export const loader = ({ request }: Route.LoaderArgs) => {
+  return { data: "hello" }
+}
+
+export const middleware: Route.MiddlewareFunction[] = []
+
+export default function MyRoute({ loaderData }: Route.ComponentProps) {
+  return <div>{loaderData.data}</div>
+}
+```
+
+### Configuration
+
+To enable this feature, add the `experimental_codegen` option to your config:
+
+```ts
+import { reactRouterDevTools } from "react-router-devtools";
+
+export default defineConfig({
+  plugins: [
+    reactRouterDevTools({
+      experimental_codegen: {
+        enabled: true
+      }
+    }),
+    reactRouter(),
+  ],
+});
+```
+
+<WarningAlert title="Experimental Feature">
+This feature is experimental and may change in future versions. It modifies your source files directly, so make sure you have version control in place before enabling it.
+
+**Notes:**
+- Only functions with parameters will have types added (functions with no parameters are skipped)
+- Exports that already have type annotations are skipped
+- The type import path follows React Router v7 conventions: `./+types/{filename}`
+</WarningAlert>
+
 ## Complete Configuration Example
 
 Here's a complete example showing all general configuration options:
@@ -237,6 +317,11 @@ const rdtConfig = defineRdtConfig({
   // TanStack Vite plugin configuration (advanced)
   tanstackViteConfig: {
     // Custom Vite plugin config if needed
+  },
+
+  // Experimental codegen for automatic type annotations
+  experimental_codegen: {
+    enabled: true
   }
 })
 

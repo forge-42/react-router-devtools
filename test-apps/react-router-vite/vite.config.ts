@@ -12,6 +12,9 @@ const config = defineRdtConfig({
     client: true,
     server: true
   },
+  experimental_codegen: {
+    enabled: true,
+  },
     // Set this option to true to suppress deprecation warnings
     // suppressDeprecationWarning: true,
   server:  {
