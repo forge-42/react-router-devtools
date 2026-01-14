@@ -14,7 +14,7 @@ const isPromise = (value: any): value is Promise<any> => {
 	return value && typeof value.then === "function"
 }
 
-const JsonRendererComponent = ({ data, expansionLevel }: JsonRendererProps) => {
+const JsonRendererComponent = memo(({ data, expansionLevel }: JsonRendererProps) => {
 	const { styles } = useStyles()
 	const { settings } = useSettingsContext()
 	const ref = useRef(true)
@@ -71,7 +71,7 @@ const JsonRendererComponent = ({ data, expansionLevel }: JsonRendererProps) => {
 	return (
 		<JsonView highlightUpdates style={customTheme} collapsed={expansionLevel ?? settings.expansionLevel} value={json} />
 	)
-}
+})
 
 const JsonRenderer = memo(JsonRendererComponent)
 

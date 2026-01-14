@@ -46,7 +46,7 @@ const Tab = memo(
 	}
 )
 
-const Tabs = () => {
+const Tabs = memo(() => {
 	const { settings } = useSettingsContext()
 	const { styles } = useStyles()
 	const { activeTab } = settings
@@ -62,6 +62,6 @@ const Tabs = () => {
 			</div>
 		</div>
 	)
-}
+})
 
 export { Tabs }

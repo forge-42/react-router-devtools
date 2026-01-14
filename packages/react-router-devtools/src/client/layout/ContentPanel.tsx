@@ -1,10 +1,10 @@
-import { Fragment } from "react"
+import { Fragment, memo } from "react"
 import { useTabs } from "../hooks/useTabs.js"
 import { cx } from "../styles/use-styles.js"
 import { useStyles } from "../styles/use-styles.js"
 import { TimelineTab } from "../tabs/TimelineTab.js"
 
-const ContentPanel = () => {
+const ContentPanel = memo(() => {
 	const { Component, hideTimeline, activeTab } = useTabs()
 	const { styles } = useStyles()
 
@@ -29,6 +29,6 @@ const ContentPanel = () => {
 			)}
 		</div>
 	)
-}
+})
 
 export { ContentPanel }
