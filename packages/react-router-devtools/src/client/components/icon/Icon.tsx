@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import { type SVGProps, memo } from "react"
 import { cx } from "../../styles/use-styles.js"
 import { useStyles } from "../../styles/use-styles.js"
 import type { IconName } from "./icons/types.js"
@@ -30,7 +30,7 @@ const strokeIcon: Partial<IconName>[] = []
  * Icon component wrapper for SVG icons.
  * @returns SVG icon as a react component
  */
-export const Icon = ({ name, title, testId, className, size = "sm", ...props }: IconProps) => {
+export const Icon = memo(({ name, title, testId, className, size = "sm", ...props }: IconProps) => {
 	const { styles } = useStyles()
 	const iconSize = IconSize[size]
 	const isEmptyFill = emptyFill.includes(name)
@@ -316,4 +316,4 @@ export const Icon = ({ name, title, testId, className, size = "sm", ...props }: 
 			<use href={`#${name}`} />
 		</svg>
 	)
-}
+})
