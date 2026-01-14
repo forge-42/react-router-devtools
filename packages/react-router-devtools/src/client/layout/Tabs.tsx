@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { useSettingsContext } from "../context/useRDTContext.js"
 import { useHorizontalScroll } from "../hooks/useHorizontalScroll.js"
 import { useTabs } from "../hooks/useTabs.js"
@@ -11,39 +12,41 @@ declare global {
 	}
 }
 
-const Tab = ({
-	tab,
-	activeTab,
-	className,
-	onClick,
-}: {
-	tab: TabType
-	activeTab?: string
-	className?: string
-	onClick?: () => void
-}) => {
-	const { setSettings } = useSettingsContext()
-	const { styles } = useStyles()
+const Tab = memo(
+	({
+		tab,
+		activeTab,
+		className,
+		onClick,
+	}: {
+		tab: TabType
+		activeTab?: string
+		className?: string
+		onClick?: () => void
+	}) => {
+		const { setSettings } = useSettingsContext()
+		const { styles } = useStyles()
 
-	return (
-		<button
-			data-testid={tab.id}
-			onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabsType }))}
-			title={typeof tab.name === "string" ? tab.name : undefined}
-			type="button"
-			className={cx(
-				"group",
-				styles.layout.tabs.tab,
-				activeTab !== tab.id && styles.layout.tabs.tabInactive,
-				activeTab === tab.id && styles.layout.tabs.tabActive
-			)}
-		>
-			<div className={cx(className, styles.layout.tabs.tabIcon)}>{tab.icon}</div>
-		</button>
-	)
-}
+		return (
+			<button
+				data-testid={tab.id}
+				onClick={() => (onClick ? onClick() : setSettings({ activeTab: tab.id as TabsType }))}
+				title={typeof tab.name === "string" ? tab.name : undefined}
+				type="button"
+				className={cx(
+					"group",
+					styles.layout.tabs.tab,
+					activeTab !== tab.id && styles.layout.tabs.tabInactive,
+					activeTab === tab.id && styles.layout.tabs.tabActive
+				)}
+			>
+				<div className={cx(className, styles.layout.tabs.tabIcon)}>{tab.icon}</div>
+			</button>
+		)
+	}
+)
 
-const Tabs = () => {
+const Tabs = memo(() => {
 	const { settings } = useSettingsContext()
 	const { styles } = useStyles()
 	const { activeTab } = settings
@@ -59,6 +62,6 @@ const Tabs = () => {
 			</div>
 		</div>
 	)
-}
+})
 
 export { Tabs }

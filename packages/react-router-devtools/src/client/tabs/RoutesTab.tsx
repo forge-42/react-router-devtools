@@ -50,7 +50,7 @@ const RoutesTab = () => {
 			}
 
 			// Add root from manifest
-			routeObject.root = window.__reactRouterManifest?.routes?.root
+			routeObject.root = { ...window.__reactRouterManifest?.routes?.root }
 
 			// Update tree view routes with merged data
 			setTreeRoutes(createRouteTree(routeObject))
@@ -63,9 +63,7 @@ const RoutesTab = () => {
 		// Request routes info from the server AFTER listener is set up
 		eventClient.emit("routes-tab-mounted", {})
 
-		return () => {
-			unsubscribe()
-		}
+		return unsubscribe
 	}, [])
 	return (
 		<div className={styles.routesTab.wrapper}>

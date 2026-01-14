@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { cx } from "../styles/use-styles.js"
 import { useStyles } from "../styles/use-styles.js"
 
@@ -8,7 +9,7 @@ interface MainPanelProps {
 	className?: string
 }
 
-const MainPanel = ({ children, isOpen, className }: MainPanelProps) => {
+const MainPanel = memo(({ children, isOpen, className }: MainPanelProps) => {
 	const { styles } = useStyles()
 
 	return (
@@ -26,6 +27,6 @@ const MainPanel = ({ children, isOpen, className }: MainPanelProps) => {
 			{children}
 		</div>
 	)
-}
+})
 
 export { MainPanel }

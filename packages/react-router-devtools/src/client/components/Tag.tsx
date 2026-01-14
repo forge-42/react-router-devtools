@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import { type ReactNode, memo } from "react"
 import { cx, useStyles } from "../styles/use-styles.js"
 
 export const TAG_COLORS = {
@@ -16,7 +16,7 @@ interface TagProps {
 	size?: "small" | "default"
 }
 
-const Tag = ({ color, children, className, size = "default" }: TagProps) => {
+const Tag = memo(({ color, children, className, size = "default" }: TagProps) => {
 	const { styles } = useStyles()
 	return (
 		<span
@@ -30,6 +30,6 @@ const Tag = ({ color, children, className, size = "default" }: TagProps) => {
 			{children}
 		</span>
 	)
-}
+})
 
 export { Tag }

@@ -21,7 +21,7 @@ export function useFindRouteOutlets() {
 	const styleNearestElement = useCallback((fiberNode: any) => {
 		if (!fiberNode) return
 
-		if (fiberNode.stateNode) {
+		if (typeof fiberNode?.stateNode?.classList?.add === "function") {
 			return fiberNode.stateNode.classList.add(ROUTE_CLASS)
 		}
 		styleNearestElement(fiberNode.child)

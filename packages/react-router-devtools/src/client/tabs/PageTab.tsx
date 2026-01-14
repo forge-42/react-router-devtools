@@ -13,7 +13,7 @@ const PageTab = () => {
 	const { revalidate, state } = useRevalidator()
 
 	// Memoize reversed routes to avoid creating new array on every render
-	const reversedRoutes = useMemo(() => routes.toReversed(), [routes])
+	const reversedRoutes = useMemo(() => [...routes.toReversed()], [routes])
 
 	return (
 		<>

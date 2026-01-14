@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { RDTContextProvider } from "./context/RDTContext.js"
 import { useFindRouteOutlets } from "./hooks/useReactTreeListeners.js"
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js"
@@ -10,18 +10,25 @@ import { Tabs } from "./layout/Tabs.js"
 import type { ReactRouterDevtoolsProps } from "./react-router-dev-tools.js"
 // Import to ensure global reset styles are injected
 import "./styles/use-styles.js"
+import { devtoolsEventClient } from "@tanstack/devtools-client"
 import { RequestProvider } from "./context/requests/request-context.js"
 import { REACT_ROUTER_DEV_TOOLS } from "./utils/storage.js"
-
 export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
 	mainPanelClassName?: string
 	className?: string
 }
-const Embedded = ({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const Embedded = memo(({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 	useTimelineHandler()
 	useFindRouteOutlets()
 	useSetRouteBoundaries()
 
+	const [isOpen, setIsOpen] = useState(true)
+	useEffect(() => {
+		const cleanup = devtoolsEventClient.on("trigger-toggled", (e) => {
+			setIsOpen(e.payload.isOpen)
+		})
+		return cleanup
+	}, [])
 	return (
 		<div
 			id={REACT_ROUTER_DEV_TOOLS}
@@ -30,13 +37,15 @@ const Embedded = ({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 			}}
 			className={clsx("react-router-dev-tools", "h-full flex-row w-full", className)}
 		>
-			<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
-				<Tabs />
-				<ContentPanel />
-			</MainPanel>
+			{isOpen ? (
+				<MainPanel className={mainPanelClassName} isEmbedded isOpen={true}>
+					<Tabs />
+					<ContentPanel />
+				</MainPanel>
+			) : null}
 		</div>
 	)
-}
+})
 
 let hydrating = true
 

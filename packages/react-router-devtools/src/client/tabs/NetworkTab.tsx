@@ -7,7 +7,6 @@ import { useStyles } from "../styles/use-styles.js"
 export const NetworkTab = () => {
 	const { styles } = useStyles()
 	const { requests, removeAllRequests, isLimitReached } = useRequestContext()
-
 	return (
 		<div className={styles.networkTab.wrapper}>
 			<TabHeader
