@@ -11,6 +11,7 @@ import type { ReactRouterDevtoolsProps } from "./react-router-dev-tools.js"
 // Import to ensure global reset styles are injected
 import "./styles/use-styles.js"
 import { devtoolsEventClient } from "@tanstack/devtools-client"
+import { RequestProvider } from "./context/requests/request-context.js"
 import { REACT_ROUTER_DEV_TOOLS } from "./utils/storage.js"
 export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
 	mainPanelClassName?: string
@@ -66,7 +67,9 @@ const EmbeddedDevTools = ({ config, mainPanelClassName, className }: EmbeddedDev
 
 	return (
 		<RDTContextProvider config={config}>
-			<Embedded mainPanelClassName={mainPanelClassName} className={className} />
+			<RequestProvider>
+				<Embedded mainPanelClassName={mainPanelClassName} className={className} />
+			</RequestProvider>
 		</RDTContextProvider>
 	)
 }
