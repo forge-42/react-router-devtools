@@ -23,9 +23,10 @@ const Embedded = ({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 
 	const [isOpen, setIsOpen] = useState(true)
 	useEffect(() => {
-		devtoolsEventClient.on("trigger-toggled", (e) => {
+		const cleanup = devtoolsEventClient.on("trigger-toggled", (e) => {
 			setIsOpen(e.payload.isOpen)
 		})
+		return cleanup
 	}, [])
 	return (
 		<div
