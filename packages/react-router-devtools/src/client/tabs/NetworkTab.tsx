@@ -1,10 +1,17 @@
 import { TabHeader } from "../components/TabHeader.js"
 import { Icon } from "../components/icon/Icon.js"
 import NetworkPanel from "../components/network-tracer/NetworkPanel.js"
-import { useRequestContext } from "../context/requests/request-context.js"
+import { RequestProvider, useRequestContext } from "../context/requests/request-context.js"
 import { useStyles } from "../styles/use-styles.js"
 
 export const NetworkTab = () => {
+	return (
+		<RequestProvider>
+			<NetworkTabBase />
+		</RequestProvider>
+	)
+}
+const NetworkTabBase = () => {
 	const { styles } = useStyles()
 	const { requests, removeAllRequests, isLimitReached } = useRequestContext()
 
