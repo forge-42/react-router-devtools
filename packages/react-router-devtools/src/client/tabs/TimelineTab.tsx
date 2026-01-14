@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { TabContent } from "../components/TabContent.js"
 import { TabHeader } from "../components/TabHeader.js"
 import { type TAG_COLORS, Tag } from "../components/Tag.js"
@@ -17,7 +18,7 @@ const Translations: Record<TimelineEvent["type"], string> = {
 	FETCHER_RESPONSE: "Fetcher action response",
 }
 
-const RedirectEventComponent = (event: RedirectEvent) => {
+const RedirectEventComponent = memo((event: RedirectEvent) => {
 	const { styles } = useStyles()
 	return (
 		<div className={styles.timelineTab.eventContainer}>
@@ -31,9 +32,9 @@ const RedirectEventComponent = (event: RedirectEvent) => {
 			)}
 		</div>
 	)
-}
+})
 
-const FormEventComponent = (event: FormEvent) => {
+const FormEventComponent = memo((event: FormEvent) => {
 	const { styles } = useStyles()
 	const isRedirect = event.type === "ACTION_REDIRECT"
 	const responseData = event.responseData
@@ -73,7 +74,7 @@ const FormEventComponent = (event: FormEvent) => {
 			</div>
 		</div>
 	)
-}
+})
 
 export const METHOD_COLORS: Record<string, keyof typeof TAG_COLORS> = {
 	GET: "GREEN",

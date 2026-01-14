@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { RDTContextProvider } from "./context/RDTContext.js"
 import { useFindRouteOutlets } from "./hooks/useReactTreeListeners.js"
 import { useSetRouteBoundaries } from "./hooks/useSetRouteBoundaries.js"
@@ -16,7 +16,7 @@ export interface EmbeddedDevToolsProps extends ReactRouterDevtoolsProps {
 	mainPanelClassName?: string
 	className?: string
 }
-const Embedded = ({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
+const Embedded = memo(({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 	useTimelineHandler()
 	useFindRouteOutlets()
 	useSetRouteBoundaries()
@@ -44,7 +44,7 @@ const Embedded = ({ mainPanelClassName, className }: EmbeddedDevToolsProps) => {
 			) : null}
 		</div>
 	)
-}
+})
 
 let hydrating = true
 
