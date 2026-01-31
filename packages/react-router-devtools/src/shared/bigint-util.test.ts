@@ -63,4 +63,67 @@ describe("convertBigIntToString", () => {
 		const result = convertBigIntToString(123)
 		expect(result).toBe(123)
 	})
+
+	it("should replace circular references with [Circular]", () => {
+		const o: Record<string, unknown> = {}
+		o.self = o
+		const result = convertBigIntToString(o)
+		expect(result).toEqual({ self: "[Circular]" })
+	})
+
+	it("should replace circular reference at depth 1 with [Circular]", () => {
+		const root: Record<string, unknown> = { a: 1 }
+		root.nested = { b: 2, back: root }
+		const result = convertBigIntToString(root)
+		expect(result).toEqual({
+			a: 1,
+			nested: { b: 2, back: "[Circular]" },
+		})
+	})
+
+	it("should not replace shared (non-circular) references with [Circular]", () => {
+		const shared = { x: 1, y: 2 }
+		const root = { a: shared, b: shared }
+		const result = convertBigIntToString(root)
+		expect(result).toEqual({
+			a: { x: 1, y: 2 },
+			b: { x: 1, y: 2 },
+		})
+	})
+
+	it("should replace deep acyclic structure beyond maxDepth with [Max depth reached]", () => {
+		let deep: Record<string, unknown> = {}
+		const root = deep
+		for (let i = 0; i < 60; i++) {
+			deep.next = {}
+			deep = deep.next as Record<string, unknown>
+		}
+		const result = convertBigIntToString(root)
+		let current: unknown = result
+		let depth = 0
+		while (current !== null && typeof current === "object" && "next" in current) {
+			current = (current as Record<string, unknown>).next
+			depth++
+		}
+		expect(depth).toBe(50)
+		expect(current).toBe("[Max depth reached]")
+	})
+
+	it("should traverse deeper when maxDepth option is increased", () => {
+		let deep: Record<string, unknown> = {}
+		const root = deep
+		for (let i = 0; i < 60; i++) {
+			deep.next = {}
+			deep = deep.next as Record<string, unknown>
+		}
+		const result = convertBigIntToString(root, { maxDepth: 100 })
+		let current: unknown = result
+		let depth = 0
+		while (current !== null && typeof current === "object" && "next" in current) {
+			current = (current as Record<string, unknown>).next
+			depth++
+		}
+		expect(depth).toBe(60)
+		expect(current).toEqual({})
+	})
 })
