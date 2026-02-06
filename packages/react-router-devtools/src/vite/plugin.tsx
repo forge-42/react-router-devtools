@@ -2,10 +2,11 @@ import fs from "node:fs"
 import type { ClientEventBusConfig, TanStackDevtoolsConfig } from "@tanstack/devtools"
 import { devtools } from "@tanstack/devtools-vite"
 import type { TanStackDevtoolsViteConfig } from "@tanstack/devtools-vite"
-import { type Plugin, normalizePath } from "vite"
+import { type Plugin, type ResolvedConfig, normalizePath } from "vite"
 import type { RdtClientConfig } from "../client/context/RDTContext.js"
 import type { DevToolsServerConfig } from "../server/config.js"
 import { eventClient } from "../shared/event-client.js"
+import { createViteIntegratedEventBus } from "./https-event-bus.js"
 import { runner } from "./node-server.js"
 import { processPlugins } from "./utils.js"
 import { addRouteTypes } from "./utils/codegen.js"
@@ -186,6 +187,8 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	const includeServer = args?.includeInProd?.server ?? false
 	const includeDevtools = args?.includeInProd?.devTools ?? false
 	let port = 5173
+	let isHttps = false
+	let resolvedConfig: ResolvedConfig | null = null
 	// Get appDir synchronously from cache (will be populated when first route loads)
 	const appDir = cachedAppDir || "./app"
 	const appDirName = appDir.replace("./", "")
@@ -227,8 +230,79 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 	if (typeof process !== "undefined") {
 		process.rdt_config = serverConfig
 	}
+
+	// Merge tanstack config - we'll handle the event bus ourselves when HTTPS is detected
+	const tanstackConfig: TanStackDevtoolsViteConfig = {
+		...args?.tanstackViteConfig,
+	}
+
 	return [
-		...devtools(args?.tanstackViteConfig),
+		// Plugin to detect HTTPS and set up the integrated event bus
+		{
+			name: "react-router-devtools:https-setup",
+			enforce: "pre" as const,
+			apply(config) {
+				return config.mode === "development"
+			},
+			configResolved(config) {
+				resolvedConfig = config
+				isHttps = !!config.server.https
+				port = config.server.port ?? 5173
+
+				// If HTTPS is enabled, disable the tanstack event bus server
+				// We'll use our own integrated one that works with Vite's HTTPS server
+				if (isHttps && tanstackConfig.eventBusConfig?.enabled !== false) {
+					tanstackConfig.eventBusConfig = {
+						...tanstackConfig.eventBusConfig,
+						enabled: false,
+					}
+				}
+			},
+			configureServer(server) {
+				// If HTTPS is enabled, set up our integrated event bus on Vite's server
+				if (isHttps) {
+					createViteIntegratedEventBus(server)
+				}
+			},
+		},
+
+		// Plugin to transform client code to use correct protocol (wss:// instead of ws://)
+		{
+			name: "react-router-devtools:https-client-transform",
+			enforce: "pre" as const,
+			apply(config) {
+				return config.mode === "development"
+			},
+			transform(code, id) {
+				// Transform devtools client code from @tanstack or our bundled client
+				const isDevtoolsCode =
+					id.includes("devtools") && (id.includes("@tanstack") || id.includes("react-router-devtools"))
+				if (!isDevtoolsCode) {
+					return
+				}
+
+				// If HTTPS is enabled, patch the client to use secure protocols and Vite's port
+				if (isHttps && resolvedConfig) {
+					let transformed = code
+					// Replace ws:// with wss://
+					transformed = transformed.replace(/ws:\/\/localhost/g, "wss://localhost")
+					// Replace http://localhost with https://localhost
+					transformed = transformed.replace(/http:\/\/localhost/g, "https://localhost")
+					// Replace the devtools port with Vite's port
+					transformed = transformed.replace(/__TANSTACK_DEVTOOLS_PORT__/g, String(port))
+					// Replace hardcoded default port 4206 with Vite's port
+					transformed = transformed.replace(/localhost:4206/g, `localhost:${port}`)
+					// Also replace template string port references
+					transformed = transformed.replace(/\$\{this\.#port\}/g, String(port))
+
+					if (transformed !== code) {
+						return { code: transformed, map: null }
+					}
+				}
+			},
+		},
+
+		...devtools(tanstackConfig),
 
 		{
 			name: "react-router-devtools",
@@ -243,14 +317,21 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				}
 			},
 			config(config) {
+				// When HTTPS is detected, we need to exclude the client from pre-bundling
+				// so our transform plugin can patch the WebSocket URLs
+				const needsTransform = !!config.server?.https
 				config.optimizeDeps = {
 					...config.optimizeDeps,
 					include: [
 						...(config.optimizeDeps?.include ?? []),
 						"react-router-devtools > react-d3-tree",
-						"react-router-devtools/client",
-						"react-router-devtools/context",
-						"react-router-devtools/server",
+						...(needsTransform
+							? []
+							: ["react-router-devtools/client", "react-router-devtools/context", "react-router-devtools/server"]),
+					],
+					exclude: [
+						...(config.optimizeDeps?.exclude ?? []),
+						...(needsTransform ? ["react-router-devtools/client", "@tanstack/devtools-event-bus"] : []),
 					],
 				}
 			},
@@ -263,11 +344,22 @@ export const reactRouterDevTools: (args?: ReactRouterViteConfig) => Plugin[] = (
 				const plugins = pluginDir && process.env.NODE_ENV === "development" ? await processPlugins(pluginDir) : []
 				const pluginNames = plugins.map((p) => p.name)
 				const pluginImports = plugins.map((plugin) => `import { ${plugin.name} } from "${plugin.path}";`).join("\n")
+				// Merge HTTPS-aware client bus config when HTTPS is detected
+				const clientBusConfig = {
+					...(args?.tanstackClientBusConfig || {}),
+					...(isHttps
+						? {
+								protocol: "wss" as const,
+								port: port,
+								host: "localhost",
+							}
+						: {}),
+				}
 				const config = `{
 				"config": ${JSON.stringify(clientConfig)},
 				"plugins": "[${pluginNames.join(",")}]",
 				"tanstackConfig": ${JSON.stringify(args?.tanstackConfig || {})},
-				"tanstackClientBusConfig": ${JSON.stringify(args?.tanstackClientBusConfig || {})}
+				"tanstackClientBusConfig": ${JSON.stringify(clientBusConfig)}
 				}`
 				return injectRdtClient(code, config, pluginImports, id)
 			},
