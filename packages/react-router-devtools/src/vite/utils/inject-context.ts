@@ -33,7 +33,17 @@ const transform = (ast: ParseResult<Babel.File>, routeId: string) => {
 				if (!t.isImportSpecifier(specifier) || !t.isIdentifier(specifier.imported)) {
 					continue
 				}
-				const name = specifier.imported.name
+				const importedName = specifier.imported.name
+				const localName = specifier.local.name
+				// Handle aliased imports where local name is a target export
+				// e.g., import { myLoader as loader }
+				if (ALL_EXPORTS.includes(localName) && !ALL_EXPORTS.includes(importedName)) {
+					const uniqueName = path.scope.generateUidIdentifier(localName)
+					imports.push([localName, uniqueName])
+					path.scope.rename(localName, uniqueName.name)
+					continue
+				}
+				const name = importedName
 				if (!ALL_EXPORTS.includes(name)) {
 					continue
 				}

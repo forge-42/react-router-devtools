@@ -630,4 +630,71 @@ describe("middleware augmentation", () => {
 			expect(result.code).toContain('"authMiddleware"')
 		})
 	})
+
+	describe("aliased import transforms", () => {
+		it("should transform aliased middleware import where local name is middleware", () => {
+			const result = augmentMiddlewareFunctions(
+				`
+				import { authMiddleware as middleware } from "./middlewares";
+				export { middleware };
+				`,
+				"test",
+				"/file/path"
+			)
+			// Should skip transformation for re-exported imported middleware
+			// The aliased import handler renames it but since it's imported and re-exported, it skips
+			expect(result.code).toContain("authMiddleware")
+		})
+
+		it("should transform aliased clientMiddleware import where local name is clientMiddleware", () => {
+			const result = augmentMiddlewareFunctions(
+				`
+				import { clientAuthMiddleware as clientMiddleware } from "./middlewares";
+				export { clientMiddleware };
+				`,
+				"test",
+				"/file/path"
+			)
+			// Should skip transformation for re-exported imported middleware
+			expect(result.code).toContain("clientAuthMiddleware")
+		})
+
+		it("should handle aliased middleware import used in array", () => {
+			const result = augmentMiddlewareFunctions(
+				`
+				import { someAuthFn as authMiddleware } from "./auth";
+				export const middleware = [authMiddleware];
+				`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+				import { withMiddlewareWrapperSingle as _withMiddlewareWrapperSingle } from "react-router-devtools/server";
+				import { someAuthFn as authMiddleware } from "./auth";
+				export const middleware = [
+					_withMiddlewareWrapperSingle(authMiddleware, "test", 0, "authMiddleware")
+				];
+			`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+
+		it("should handle aliased clientMiddleware import used in array", () => {
+			const result = augmentMiddlewareFunctions(
+				`
+				import { someClientAuthFn as clientAuthMiddleware } from "./auth";
+				export const clientMiddleware = [clientAuthMiddleware];
+				`,
+				"test",
+				"/file/path"
+			)
+			const expected = removeWhitespace(`
+				import { withClientMiddlewareWrapperSingle as _withClientMiddlewareWrapperSingle } from "react-router-devtools/client";
+				import { someClientAuthFn as clientAuthMiddleware } from "./auth";
+				export const clientMiddleware = [
+					_withClientMiddlewareWrapperSingle(clientAuthMiddleware, "test", 0, "clientAuthMiddleware")
+				];
+			`)
+			expect(removeWhitespace(result.code)).toStrictEqual(expected)
+		})
+	})
 })

@@ -622,6 +622,99 @@ describe("transform", () => {
 	})
 })
 
+describe("aliased import transforms", () => {
+	it("should transform aliased loader import where local name is loader", () => {
+		const result = injectContext(
+			`
+			import { myLoader as loader } from "./loaders";
+			export { loader };
+			`,
+			"test",
+			"/file/path"
+		)
+		const expected = removeWhitespace(`
+			import { withLoaderContextWrapper as _withLoaderContextWrapper } from "react-router-devtools/context";
+			import { myLoader as _loader } from "./loaders";
+			export const loader = _withLoaderContextWrapper(_loader, "test");
+		`)
+		expect(removeWhitespace(result.code)).toStrictEqual(expected)
+	})
+
+	it("should transform aliased action import where local name is action", () => {
+		const result = injectContext(
+			`
+			import { myLoaderAction as action } from "./actions";
+			export { action };
+			`,
+			"test",
+			"/file/path"
+		)
+		const expected = removeWhitespace(`
+			import { withActionContextWrapper as _withActionContextWrapper } from "react-router-devtools/context";
+			import { myLoaderAction as _action } from "./actions";
+			export const action = _withActionContextWrapper(_action, "test");
+		`)
+		expect(removeWhitespace(result.code)).toStrictEqual(expected)
+	})
+
+	it("should transform aliased clientLoader import where local name is clientLoader", () => {
+		const result = injectContext(
+			`
+			import { myLoaderClientLoader as clientLoader } from "./loaders";
+			export { clientLoader };
+			`,
+			"test",
+			"/file/path"
+		)
+		const expected = removeWhitespace(`
+			import { withClientLoaderContextWrapper as _withClientLoaderContextWrapper } from "react-router-devtools/context";
+			import { myLoaderClientLoader as _clientLoader } from "./loaders";
+			export const clientLoader = _withClientLoaderContextWrapper(_clientLoader, "test");
+		`)
+		expect(removeWhitespace(result.code)).toStrictEqual(expected)
+	})
+
+	it("should transform aliased clientAction import where local name is clientAction", () => {
+		const result = injectContext(
+			`
+			import { myLoaderClientAction as clientAction } from "./actions";
+			export { clientAction };
+			`,
+			"test",
+			"/file/path"
+		)
+		const expected = removeWhitespace(`
+			import { withClientActionContextWrapper as _withClientActionContextWrapper } from "react-router-devtools/context";
+			import { myLoaderClientAction as _clientAction } from "./actions";
+			export const clientAction = _withClientActionContextWrapper(_clientAction, "test");
+		`)
+		expect(removeWhitespace(result.code)).toStrictEqual(expected)
+	})
+
+	it("should transform aliased loader import and update usages in code", () => {
+		const result = injectContext(
+			`
+			import { myLoader as loader } from "./loaders";
+			const test = () => {
+				return loader();
+			}
+			export { loader };
+			`,
+			"test",
+			"/file/path"
+		)
+		const expected = removeWhitespace(`
+			import { withLoaderContextWrapper as _withLoaderContextWrapper } from "react-router-devtools/context";
+			import { myLoader as _loader } from "./loaders";
+			const test = () => {
+				return _loader();
+			};
+			export const loader = _withLoaderContextWrapper(_loader, "test");
+		`)
+		expect(removeWhitespace(result.code)).toStrictEqual(expected)
+	})
+})
+
 it("should transform the re-exports when it's re-exported from another file with multiple re-exports", () => {
 	const result = injectContext(
 		`
