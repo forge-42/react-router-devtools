@@ -1,0 +1,83 @@
+---
+title: React Router Devtools Client Configuration
+summary: "The client configuration lets you customize React Router Devtools behavior through the Vite plugin, including expansion level and route boundary gradient settings."
+description: Configuration options for the React Router Devtools client
+---
+
+Before we explain all the possible options here is the client configuration Typescript type:
+
+```ts
+type RdtClientConfig = {
+    expansionLevel: number;
+    routeBoundaryGradient: "sea" | "hyper" | "gotham" | "gray" | "watermelon" | "ice" | "silver";
+}
+```
+
+<InfoAlert>
+Configuration can only be set through the Vite plugin. The settings are applied when the devtools are loaded.
+</InfoAlert>
+
+Let's go through each option and see what it does.
+
+## Expansion Level
+
+This option is used to set the initial expansion level of the returned JSON data in the **Active Page** tab. The default value is `1`.
+
+If you open up the **Active Page** and look at the returned loader data with expansion level set to 1, it will look like this:
+
+```ts
+"data": {
+    "property": "value"
+}
+```
+
+If you set the expansion level to 0, the returned loader data will be collapsed:
+
+```ts
+"data": { ... } +
+```
+
+## Route Boundary Gradient
+
+This option is used to set the color of the route boundary gradient. The possible values are:
+- `sea`
+- `hyper`
+- `gotham`
+- `gray`
+- `watermelon`
+- `ice`
+- `silver`
+
+<InfoAlert>
+This changes the color of the route boundary gradient in the **Active Page** tab. When you click the "Show Route Boundary" button on a route segment in the panel, it will highlight the route's boundaries with this gradient.
+</InfoAlert>
+
+The default value is `watermelon`.
+
+## Creating a custom configuration
+
+To create a custom configuration you can use the following code snippet:
+
+  ```ts
+  import { defineRdtConfig } from "react-router-devtools";
+
+  const customConfig = defineRdtConfig({
+    client: {
+      expansionLevel: 2,
+      routeBoundaryGradient: "gotham",
+    }
+  });
+
+  export default customConfig;
+  ```
+
+Then you can use this configuration in your `vite.config.js` file like this:
+
+```ts
+import customConfig from "./rdt.config";
+import { reactRouterDevTools } from "react-router-devtools";
+
+export default defineConfig({
+  plugins: [reactRouterDevTools(customConfig)],
+});
+```

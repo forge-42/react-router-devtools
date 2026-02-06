@@ -1,0 +1,61 @@
+{
+	"biome.enabled": true,
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.formatOnSave": true,
+	"//editor.formatOnType": true,
+	"javascript.format.enable": false,
+	"javascript.suggest.autoImports": true,
+	"javascript.suggest.paths": true,
+	"typescript.format.enable": false,
+	"typescript.suggest.paths": true,
+	"typescript.suggest.autoImports": true,
+	"editor.renderWhitespace": "all",
+	"editor.rulers": [120, 160],
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "always",
+		"source.organizeImports": "never",
+		"source.organizeImports.biome": "always",
+		"quickfix.biome": "always"
+	},
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": true,
+	"editor.trimAutoWhitespace": true,
+	"//files.autoSave": "afterDelay",
+	"//files.autoSaveDelay": 250,
+	"files.trimTrailingWhitespace": true,
+	"files.trimTrailingWhitespaceInRegexAndStrings": true,
+	"files.trimFinalNewlines": true,
+	"[yaml]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"[toml]": {
+		"editor.defaultFormatter": "tamasfe.even-better-toml"
+	},
+	"explorer.fileNesting.patterns": {
+		"*.ts": "${basename}.*.${extname}",
+		".env": ".env.*",
+		"*.tsx": "${basename}.*.${extname},${basename}.*.ts",
+		"package.json": "*.json, *.yml, *.config.js, *.config.ts, *.yaml, *.workspace.ts",
+		"readme*": "AUTHORS, Authors, BACKERS*, Backers*, CHANGELOG*, CITATION*, CODEOWNERS, CODE_OF_CONDUCT*, CONTRIBUTING*, CONTRIBUTORS, COPYING*, CREDITS, Changelog*, Citation*, Code_Of_Conduct*, Codeowners, Contributing*, Contributors, Copying*, Credits, GOVERNANCE.MD, Governance.md, HISTORY.MD, History.md, LICENSE*, License*, MAINTAINERS, Maintainers, README-*, README_*, RELEASE_NOTES*, ROADMAP.MD, Readme-*, Readme_*, Release_Notes*, Roadmap.md, SECURITY.MD, SPONSORS*, Security.md, Sponsors*, authors, backers*, changelog*, citation*, code_of_conduct*, codeowners, contributing*, contributors, copying*, credits, governance.md, history.md, license*, maintainers, readme-*, readme_*, release_notes*, roadmap.md, security.md, sponsors*",
+		"Readme*": "AUTHORS, Authors, BACKERS*, Backers*, CHANGELOG*, CITATION*, CODEOWNERS, CODE_OF_CONDUCT*, CONTRIBUTING*, CONTRIBUTORS, COPYING*, CREDITS, Changelog*, Citation*, Code_Of_Conduct*, Codeowners, Contributing*, Contributors, Copying*, Credits, GOVERNANCE.MD, Governance.md, HISTORY.MD, History.md, LICENSE*, License*, MAINTAINERS, Maintainers, README-*, README_*, RELEASE_NOTES*, ROADMAP.MD, Readme-*, Readme_*, Release_Notes*, Roadmap.md, SECURITY.MD, SPONSORS*, Security.md, Sponsors*, authors, backers*, changelog*, citation*, code_of_conduct*, codeowners, contributing*, contributors, copying*, credits, governance.md, history.md, license*, maintainers, readme-*, readme_*, release_notes*, roadmap.md, security.md, sponsors*",
+		"README*": "AUTHORS, Authors, BACKERS*, Backers*, CHANGELOG*, CITATION*, CODEOWNERS, CODE_OF_CONDUCT*, CONTRIBUTING*, CONTRIBUTORS, COPYING*, CREDITS, Changelog*, Citation*, Code_Of_Conduct*, Codeowners, Contributing*, Contributors, Copying*, Credits, GOVERNANCE.MD, Governance.md, HISTORY.MD, History.md, LICENSE*, License*, MAINTAINERS, Maintainers, README-*, README_*, RELEASE_NOTES*, ROADMAP.MD, Readme-*, Readme_*, Release_Notes*, Roadmap.md, SECURITY.MD, SPONSORS*, Security.md, Sponsors*, authors, backers*, changelog*, citation*, code_of_conduct*, codeowners, contributing*, contributors, copying*, credits, governance.md, history.md, license*, maintainers, readme-*, readme_*, release_notes*, roadmap.md, security.md, sponsors*",
+		"Dockerfile": "*.dockerfile, .devcontainer.*, .dockerignore, captain-definition, compose.*, docker-compose.*, dockerfile*"
+	},
+	"eslint.enable": false,
+	"eslint.format.enable": false,
+	"prettier.enable": false,
+	"turbo.useLocalTurbo": true,
+	"evenBetterToml.formatter.alignComments": false,
+	"evenBetterToml.formatter.alignEntries": true,
+	"evenBetterToml.formatter.allowedBlankLines": 1,
+	"evenBetterToml.formatter.columnWidth": 120,
+	"evenBetterToml.formatter.indentEntries": true,
+	"evenBetterToml.formatter.indentTables": true,
+	"evenBetterToml.formatter.trailingNewline": true,
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	}
+}

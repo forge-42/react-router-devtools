@@ -1,0 +1,40 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"defaultBase": "main",
+	"useInferencePlugins": false,
+	"parallel": 5,
+	"namedInputs": {
+		"sharedGlobals": ["{workspaceRoot}/package.json", "{workspaceRoot}/biome.json"],
+		"default": ["sharedGlobals", "{projectRoot}/**/*", "!{projectRoot}/**/*.md"],
+		"production": ["default", "!{projectRoot}/tests/**/*", "!{projectRoot}/eslint.config.js"]
+	},
+	"targetDefaults": {
+		"build": {
+			"cache": true,
+			"dependsOn": ["^build"],
+			"inputs": ["production", "^production"],
+			"outputs": ["{projectRoot}/build", "{projectRoot}/dist"]
+		},
+		"check": {
+			"cache": false
+		},
+		"test:types": {
+			"cache": true,
+			"inputs": ["default", "^production"]
+		},
+		"test:lib": {
+			"cache": true,
+			"dependsOn": ["^build"],
+			"inputs": ["default", "^production"],
+			"outputs": ["{projectRoot}/coverage"]
+		},
+		"test:unused": {
+			"cache": true,
+			"inputs": ["{workspaceRoot}/**/*"]
+		},
+		"test:deps": {
+			"cache": true,
+			"inputs": ["{workspaceRoot}/**/package.json"]
+		}
+	}
+}

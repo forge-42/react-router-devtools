@@ -1,0 +1,63 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"defaultBranch": "main",
+		"useIgnoreFile": true
+	},
+	"formatter": {
+		"ignore": ["test-apps", "docs", "plugins", "external", ".nx"],
+		"enabled": true,
+		"formatWithErrors": false,
+		"indentStyle": "tab",
+		"lineEnding": "lf",
+		"lineWidth": 120
+	},
+	"organizeImports": {
+		"ignore": ["test-apps", "docs", "plugins", "external", ".nx"],
+		"enabled": true
+	},
+	"linter": {
+		"ignore": ["test-apps", "docs", "plugins", "external", ".nx"],
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"recommended": true,
+				"noConsole": "error"
+			},
+			"style": {
+				"recommended": true
+			},
+			"complexity": {
+				"recommended": true
+			},
+			"security": {
+				"recommended": true
+			},
+			"performance": {
+				"recommended": true
+			},
+			"correctness": {
+				"recommended": true,
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error",
+				"noUnusedLabels": "error",
+				"noUnusedFunctionParameters": "error"
+			},
+			"a11y": {
+				"recommended": true
+			},
+			"nursery": {
+				"recommended": true
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded",
+			"trailingCommas": "es5"
+		}
+	}
+}

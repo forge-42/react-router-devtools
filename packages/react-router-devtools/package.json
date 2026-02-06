@@ -1,0 +1,151 @@
+{
+	"name": "react-router-devtools",
+	"description": "Devtools for React Router - debug, trace, find hydration errors, catch bugs and inspect server/client data with react-router-devtools",
+	"author": "Alem Tuzlak",
+	"version": "6.2.0",
+	"license": "MIT",
+	"keywords": [
+		"react-router",
+		"react-router-dev-tools",
+		"react-router-development-tools",
+		"hydration-debugger",
+		"react-router-debugger",
+		"react-router-debugger-ui",
+		"react-router-debugger-ui-react",
+		"view-source",
+		"react-router-logger",
+		"react-router-dev-server",
+		"hydration-mismatch"
+	],
+	"private": false,
+	"type": "module",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			},
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./client": {
+			"import": {
+				"types": "./dist/client.d.ts",
+				"default": "./dist/client.js"
+			},
+			"types": "./dist/client.d.ts",
+			"default": "./dist/client.js"
+		},
+		"./context": {
+			"import": {
+				"types": "./dist/context.d.ts",
+				"default": "./dist/context.js"
+			},
+			"types": "./dist/context.d.ts",
+			"default": "./dist/context.js"
+		},
+		"./server": {
+			"import": {
+				"types": "./dist/server.d.ts",
+				"default": "./dist/server.js"
+			},
+			"types": "./dist/server.d.ts",
+			"default": "./dist/server.js"
+		}
+	},
+	"files": ["dist"],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/forge-42/react-router-devtools.git"
+	},
+	"bugs": {
+		"url": "https://github.com/forge-42/react-router-devtools/issues"
+	},
+	"homepage": "https://react-router-devtools.forge42.dev/",
+	"readme": "https://github.com/forge-42/react-router-devtools#readme",
+	"scripts": {
+		"prepublishOnly": "npm run build",
+		"react-router-vite": "npm run dev -w test-apps/react-router-vite",
+		"react-router-custom": "npm run dev -w test-apps/custom-server",
+		"runner": "npm-run-all -s build -p watch-all",
+		"dev": "npm run runner react-router-vite",
+		"dev:c": "npm run runner react-router-custom",
+		"build": "run-s  tsup:* -- --clean",
+		"watch-all": "npm-run-all -p tsup:index:watch tsup:client:watch tsup:server:watch tsup:context:watch -- --watch",
+		"tsup:index": "tsup",
+		"tsup:index:watch": "tsup --watch",
+		"tsup:client": "tsup --config tsup-client.config.ts",
+		"tsup:context": "tsup --config tsup-context.config.ts",
+		"tsup:server": "tsup --config tsup-server.config.ts",
+		"tsup:context:watch": "npm run tsup:context -- --watch",
+		"tsup:client:watch": "npm run tsup:client -- --watch",
+		"tsup:server:watch": "npm run tsup:server -- --watch",
+		"test:lib": "vitest run",
+		"test:ui": "vitest --ui --api 6532",
+		"test:debug": "jest-preview",
+		"test:live": "npm-run-all -p test:ui test:debug",
+		"test:cov": "vitest run --coverage",
+		"test:types": "tsc --noEmit",
+		"validate": "npm run check && npm run test:types && npm run test",
+		"run:scripts": "tsx",
+		"script": "npm run run:scripts scripts/setup.ts",
+		"icons": "npm run run:scripts scripts/icons.ts"
+	},
+	"peerDependencies": {
+		"@types/react": ">=17",
+		"@types/react-dom": ">=17",
+		"react": ">=17",
+		"react-dom": ">=17",
+		"react-router": ">=7.0.0",
+		"vite": ">=5.0.0 || >=6.0.0"
+	},
+	"devDependencies": {
+		"@react-router/dev": "7.9.5",
+		"@react-router/node": "7.9.5",
+		"@react-router/serve": "7.9.5",
+		"@tanstack/devtools": "^0.10.2",
+		"@testing-library/dom": "^10.4.1",
+		"@testing-library/react": "16.3.0",
+		"@types/babel__core": "^7.20.5",
+		"@types/babel__generator": "^7.27.0",
+		"@types/babel__traverse": "^7.28.0",
+		"@types/node": "24.10.0",
+		"@vitest/coverage-v8": "3.0.5",
+		"@vitest/ui": "3.0.5",
+		"happy-dom": "20.0.10",
+		"jest-preview": "^0.3.2",
+		"npm-run-all": "4.1.5",
+		"tsup": "^8.5.0",
+		"tsx": "4.20.6",
+		"typescript": "^5.9.3",
+		"vite": "^7.2.2",
+		"vite-node": "^5.0.0",
+		"vitest": "3.0.5"
+	},
+	"dependencies": {
+		"@babel/core": "^7.28.5",
+		"@babel/generator": "^7.28.5",
+		"@babel/parser": "^7.28.5",
+		"@babel/traverse": "^7.28.5",
+		"@babel/types": "^7.28.5",
+		"@radix-ui/react-accordion": "^1.2.12",
+		"@tanstack/devtools-client": "^0.0.5",
+		"@tanstack/devtools-event-client": "^0.4.0",
+		"@tanstack/devtools-vite": "^0.4.1",
+		"@tanstack/react-devtools": "^0.9.1",
+		"chalk": "5.6.2",
+		"clsx": "2.1.1",
+		"framer-motion": "^12.23.24",
+		"goober": "^2.1.18",
+		"react-d3-tree": "^3.6.6",
+		"react-hotkeys-hook": "^5.2.1",
+		"react-tooltip": "^5.30.0"
+	},
+	"optionalDependencies": {
+		"@biomejs/cli-darwin-arm64": "^2.3.5",
+		"@rollup/rollup-darwin-arm64": "^4.53.2",
+		"@rollup/rollup-linux-x64-gnu": "^4.53.2"
+	}
+}

@@ -1,0 +1,66 @@
+{
+	"hi": "React Router je zakon!",
+	"navigation": {
+		"back": "Idi nazad",
+		"home": "Nazad na početnu"
+	},
+	"error": {
+		"500": {
+			"title": "Nešto je krenulo po zlu!",
+			"description": "Izgleda da se nešto desilo na serveru."
+		},
+		"404": {
+			"title": "Stranica nije pronađena.",
+			"description": "Izgleda da stranica koju tražite ne postoji."
+		},
+		"403": {
+			"title": "Nemate pristup!",
+			"description": "Izgleda da nemate pristup ovoj stranici."
+		},
+		"200": {
+			"title": "Nešto je krenulo po zlu!",
+			"description": "Izgleda da se nešto desilo na serveru."
+		}
+	},
+	"links": {
+		"previous": "Prethodni",
+		"next": "Sljedeći",
+		"report_an_issue_on_this_page": "Prijavi problem na ovoj stranici",
+		"edit_this_page": "Uredi ovu stranicu"
+	},
+	"p": {
+		"last_update": "Posljednja izmjena:",
+		"version": "Verzija",
+		"all_rights_reserved": "Sva prava zadržana.",
+		"search_by": "Pretraga od"
+	},
+	"buttons": {
+		"copy": "Kopiraj",
+		"copied": "Kopirano",
+		"home": "Nazad na početnu",
+		"back": "Idi nazad",
+		"clear": "Obriši"
+	},
+	"titles": {
+		"good_to_know": "Dobro je znati",
+		"warning": "Upozorenje"
+	},
+	"text": {
+		"result_one": "{{count}} rezultat",
+		"result_other": "{{count}} rezultata",
+		"adjust_search": "Probajte prilagoditi pojmove za pretragu ili provjerite greške u kucanju",
+		"no_results_for": "Nema rezultata za",
+		"start_typing_to_search": "Počnite kucati za pretragu...",
+		"recent_searches": "Nedavne pretrage"
+	},
+	"controls": {
+		"navigate": "Navigiraj",
+		"open": "Otvori",
+		"tab": "Tab",
+		"select": "Odaberi",
+		"cycle": "Kruži"
+	},
+	"placeholders": {
+		"search_documentation": "Pretraži dokumentaciju..."
+	}
+}

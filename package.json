@@ -1,0 +1,74 @@
+{
+	"name": "react-router-devtools-monorepo",
+	"version": "1.0.0",
+	"description": "Devtools for React Router - debug, trace, find hydration errors, catch bugs and inspect server/client data with react-router-devtools",
+	"author": "Alem Tuzlak",
+	"keywords": [
+		"react-router",
+		"react-router-dev-tools",
+		"react-router-development-tools",
+		"hydration-debugger",
+		"react-router-debugger",
+		"react-router-debugger-ui",
+		"react-router-debugger-ui-react",
+		"view-source",
+		"react-router-logger",
+		"react-router-dev-server",
+		"hydration-mismatch"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/forge-42/react-router-devtools.git"
+	},
+	"bugs": {
+		"url": "https://github.com/forge-42/react-router-devtools/issues"
+	},
+	"homepage": "https://react-router-devtools.forge42.dev/",
+	"readme": "https://github.com/forge-42/react-router-devtools#readme",
+	"scripts": {
+		"build": "nx affected --targets=build --exclude=test-apps/**,docs/**",
+		"build:all": "nx run-many --targets=build --exclude=test-apps/**,docs/**",
+		"docs": "pnpm --filter=\"docs\" dev",
+		"clean": "git clean -fdX .",
+		"clean:build": "git clean -fdx -e node_modules .",
+		"typecheck": "pnpm run --filter=\"./packages/**/*\" --parallel typecheck",
+		"test": "nx run-many --targets=test:unused,check,test:deps,test:lib,test:types,test:build,build",
+		"test:ci": "nx run-many --targets=test:unused,test:deps,test:lib,test:types,test:build,build",
+		"test:cov": "pnpm run --filter=\"./packages/**/*\" --parallel test:cov",
+		"dev": "pnpm run watch",
+		"check": "biome check .",
+		"check:fix": "biome check --fix .",
+		"changeset": "changeset",
+		"release": "changeset publish",
+		"local-release": "changeset version && changeset publish",
+		"version": "changeset version",
+		"test:unused": "knip",
+		"test:deps": "sherif -i react-router-devtools -i tailwindcss",
+		"watch": "pnpm run build:all && nx watch --all -- pnpm run build:all"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@changesets/cli": "^2.29.0",
+		"@types/node": "24.10.0",
+		"knip": "5.43.6",
+		"lefthook": "^1.11.10",
+		"nx": "^21.6.3",
+		"sherif": "^1.6.1"
+	},
+	"packageManager": "pnpm@10.18.0",
+	"engines": {
+		"pnpm": ">=10.18.0",
+		"node": ">=20.0.0"
+	},
+	"nx": {
+		"includedScripts": ["test:unused", "check", "test:deps"]
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": ["esbuild", "msw"],
+		"overrides": {
+			"react-router-devtools": "workspace:*"
+		}
+	},
+	"private": true
+}

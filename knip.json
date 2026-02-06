@@ -1,0 +1,12 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"lefthook": true,
+	"workspaces": {
+		".": {
+			"entry": ["scripts/*.ts"]
+		}
+	},
+	"ignore": ["docs/**", "plugins/**"],
+	"ignoreBinaries": ["pkg-pr-new"],
+	"ignoreWorkspaces": ["test-apps/**"]
+}

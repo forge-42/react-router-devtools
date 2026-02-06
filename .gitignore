@@ -128,3 +128,16 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.DS_Store
+**/.DS_Store
+.history
+
+# IDE
+.idea
+.tsup
+.react-router
+.content-collections
+build
+generated-docs
+.nx
